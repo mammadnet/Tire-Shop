@@ -58,6 +58,7 @@ class User(Base):
     name : Mapped[str] = mapped_column(String(20), nullable=False)
     lastname : Mapped[str] = mapped_column(String(20), nullable=False)
     phone : Mapped[str] = mapped_column(String(20), nullable=False)
+    national_number : Mapped[str] = mapped_column(nullable=False)
     
     type : Mapped[str]
     __mapper_args__ = {
