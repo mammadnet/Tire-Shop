@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import Integer, String,DateTime , ForeignKey
+from sqlalchemy import Integer, String, Date, DateTime , ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from connection import Base, engine, session
@@ -67,14 +67,14 @@ class User(Base):
     
 class Admin(User):
     
-    start_date : Mapped[DateTime] = mapped_column(default=datetime.datetime.now(datetime.timezone.utc), use_existing_column=True)
+    start_date = mapped_column(Date ,default=datetime.datetime.now().date(), use_existing_column=True)
     
     __mapper_args__ = {
         "polymorphic_identity": "admin",
     }
     
 class Manager(User):
-    start_date : Mapped[DateTime] = mapped_column(default=datetime.datetime.now(datetime.timezone.utc), use_existing_column=True)
+    start_date = mapped_column(Date, default=datetime.datetime.now().date(), use_existing_column=True)
     
     __mapper_args__ = {
         "polymorphic_identity": "manager",
@@ -82,7 +82,7 @@ class Manager(User):
 
 class Employee(User):
     
-    start_date : Mapped[DateTime] = mapped_column(default=datetime.datetime.now(datetime.timezone.utc), use_existing_column=True)
+    start_date = mapped_column(Date ,default=datetime.datetime.now().date(), use_existing_column=True)
     
     __mapper_args__ = {
         "polymorphic_identity": "employee",
