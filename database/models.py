@@ -44,6 +44,10 @@ class Size(Base):
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     products: Mapped[list['Product']] = relationship(back_populates='size')
     
+    # The size of tire --> width/ratio/rim
+    width :   Mapped[int] = mapped_column()
+    ratio :   Mapped[int] = mapped_column()
+    rim   :   Mapped[int] = mapped_column()
 #----------------------------------------
 
 # Create defined table on database
