@@ -1,4 +1,5 @@
-from sqlalchemy import Integer, String, ForeignKey
+import datetime
+from sqlalchemy import Integer, String,DateTime , ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from connection import Base, engine, session
@@ -50,6 +51,44 @@ class Size(Base):
     rim   :   Mapped[int] = mapped_column()
 #----------------------------------------
 
+
+class User(Base):
+    __tablename__ = 'user'
+    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name : Mapped[str] = mapped_column(String(20), nullable=False)
+    lastname : Mapped[str] = mapped_column(String(20), nullable=False)
+    phone : Mapped[str] = mapped_column(String(20), nullable=False)
+    
+    type : Mapped[str]
+    __mapper_args__ = {
+        "polymorphic_on": "type",
+        "polymorphic_identity": "user",
+    }
+    
+class Admin(User):
+    
+    start_date : Mapped[DateTime] = mapped_column(default=datetime.datetime.now(datetime.timezone.utc), use_existing_column=True)
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "admin",
+    }
+    
+class Manager(User):
+    start_date : Mapped[DateTime] = mapped_column(default=datetime.datetime.now(datetime.timezone.utc), use_existing_column=True)
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "manager",
+    }
+
+class Employee(User):
+    
+    start_date : Mapped[DateTime] = mapped_column(default=datetime.datetime.now(datetime.timezone.utc), use_existing_column=True)
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "employee",
+    }
+        
+    
 # Create defined table on database
 Base.metadata.create_all(engine)
 
