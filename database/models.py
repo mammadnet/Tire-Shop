@@ -22,30 +22,27 @@ class Order(Base):
     name : Mapped[str] = mapped_column(String)
     
 # Many to Many relationship between tire sizes and brands
-class Product_size(Base):
-    __tablename__ = 'product_size'
-    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    product_id : Mapped[int] = mapped_column(ForeignKey('product.id'))
-    size_id : Mapped[int] = mapped_column(ForeignKey('size.id'))
-    
-    product : Mapped['Product'] = relationship(back_populates='size_associations')
-    size : Mapped['Size'] = relationship(back_populates='product_associations')
-    
-
 class Product(Base):
     __tablename__ = 'product'
+    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    product_id : Mapped[int] = mapped_column(ForeignKey('brand.id'))
+    size_id : Mapped[int] = mapped_column(ForeignKey('size.id'))
+    
+    brand : Mapped['Brand'] = relationship(back_populates='products')
+    size : Mapped['Size'] = relationship(back_populates='products')
+
+class Brand(Base):
+    __tablename__ = 'brand'
     
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    brand : Mapped[str] = mapped_column(String(20))
-    size_associations : Mapped[list['Product_size']] = relationship(back_populates='product')
-    sizes : Mapped[list['Size']] = relationship(secondary='product_size', back_populates='products', overlaps='size,product,size_associations')
+    name: Mapped[str] = mapped_column(String(20), unique=True)
+    products: Mapped[list['Product']] = relationship(back_populates='brand')
 
 class Size(Base):
     __tablename__ = 'size'
     
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    products: Mapped[list['Product']] = relationship(secondary='product_size' ,back_populates='sizes', overlaps='product,size_associations,size')
-    product_associations : Mapped[list['Product_size']] = relationship(back_populates='size', overlaps='products,sizes')
+    products: Mapped[list['Product']] = relationship(back_populates='size')
     
 #----------------------------------------
 
