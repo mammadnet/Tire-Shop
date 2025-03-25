@@ -12,6 +12,15 @@ def exist_check_user(by:InstrumentedAttribute, pat):
     subq = exists(User.national_number).where(User.national_number == pat).select()
     exist_check = session.execute(subq).scalar()
     return exist_check
+
+def user_by_username_pass(session:Session, username:str, passwd:str):
+    with session as db:
+        
+        query = select(User).where(User.user_name == username).where(User.hashed_passwd == hashing(passwd))
+        user = db.execute(query).scalar()
+        return user
+    return None
+    
     
 
 
@@ -40,5 +49,10 @@ def create_new_user(session: Session, name:str, lastname:str, phone:str, nationa
     return None
         
 
+def login_permission(session, username, passwd) -> bool:
+    user = user_by_username_pass(session, username, passwd)
+    if user:
+        return True
+    else:
+        return False
 
-create_new_user(session, 'mohsen', 'mohamadian', '123', '12344321', 'admin', 'mohsen', 'hassan')
