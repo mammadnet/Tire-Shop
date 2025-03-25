@@ -6,6 +6,8 @@ from sqlalchemy import select, exists
 
 from connection import session
 
+from utilities import hashing
+
 def exist_check_user(by:InstrumentedAttribute, pat):
     subq = exists(User.national_number).where(User.national_number == pat).select()
     exist_check = session.execute(subq).scalar()
@@ -13,22 +15,24 @@ def exist_check_user(by:InstrumentedAttribute, pat):
     
 
 
-def create_new_user(session: Session, name:str, lastname:str, phone:str, national_number:str, level_type:str) -> User:
+def create_new_user(session: Session, name:str, lastname:str, phone:str, national_number:str, level_type:str, username:str, passwd:str) -> User:
     if level_type == 'admin':
-        new_user = Admin(name=name, lastname=lastname, phone=phone, national_number=national_number)
+        new_user = Admin(name=name, lastname=lastname, phone=phone, national_number=national_number, user_name=username)
     elif level_type == 'manager':
-        new_user = Manager(name=name, lastname=lastname, phone=phone, national_number=national_number)
+        new_user = Manager(name=name, lastname=lastname, phone=phone, national_number=national_number, user_name=username)
     elif level_type == 'employee':
-        new_user = Employee(name=name, lastname=lastname, phone=phone, national_number=national_number)
+        new_user = Employee(name=name, lastname=lastname, phone=phone, national_number=national_number, user_name=username)
     else:
         return None
     
     
     
     with session as db:
-        exist_check = exist_check_user(User.national_number, national_number)
+        exist_national_id_check = exist_check_user(User.national_number, national_number)
+        exist_username_check = exist_check_user(User.user_name, username)
         
-        if not exist_check:
+        if not exist_national_id_check and not exist_username_check:
+            new_user.hashed_passwd = hashing(passwd)
             db.add(new_user)
             db.commit()
             
@@ -37,3 +41,4 @@ def create_new_user(session: Session, name:str, lastname:str, phone:str, nationa
         
 
 
+create_new_user(session, 'mohsen', 'mohamadian', '123', '12344321', 'admin', 'mohsen', 'hassan')
