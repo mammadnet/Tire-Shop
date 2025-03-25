@@ -60,6 +60,9 @@ class User(Base):
     phone : Mapped[str] = mapped_column(String(20), nullable=False)
     national_number : Mapped[str] = mapped_column(nullable=False)
     
+    user_name : Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
+    hashed_passwd : Mapped[str] = mapped_column(String(20), nullable=False)
+    
     type : Mapped[str]
     __mapper_args__ = {
         "polymorphic_on": "type",
