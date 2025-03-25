@@ -6,7 +6,7 @@ from sqlalchemy import select, exists
 
 from connection import session
 
-def exist_chek_user(by:InstrumentedAttribute, pat):
+def exist_check_user(by:InstrumentedAttribute, pat):
     subq = exists(User.national_number).where(User.national_number == pat).select()
     exist_check = session.execute(subq).scalar()
     return exist_check
@@ -26,7 +26,7 @@ def create_new_user(session: Session, name:str, lastname:str, phone:str, nationa
     
     
     with session as db:
-        exist_check = exist_chek_user(User.national_number, national_number)
+        exist_check = exist_check_user(User.national_number, national_number)
         
         if not exist_check:
             db.add(new_user)
