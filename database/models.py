@@ -2,7 +2,7 @@ import datetime
 from sqlalchemy import Integer, String, Date, DateTime , ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from connection import Base, engine, session
+from .connection import Base, engine, session
 
 
 class Customer(Base):
