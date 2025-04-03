@@ -23,3 +23,17 @@ class Input(CTkEntry):
     
     def set_textvariable(self, textvariable):
         self.configure(textvariable=textvariable)
+        
+        
+class Root(CTk):
+    def __init__(self, fullscreen=True, **kwargs):
+        super().__init__(**kwargs)
+        
+        if fullscreen:
+            self.win_max()
+    
+    def win_max(self):
+        max_width = self.winfo_screenwidth()
+        max_height = self.winfo_screenheight()
+        self.geometry('{}x{}+0+0'.format(max_width, max_height))
+        
