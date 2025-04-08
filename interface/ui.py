@@ -1,56 +1,83 @@
 from customtkinter import CTk
 from customtkinter import *
-from widgets import *
+from .widgets import *
 
+from PIL import Image
+import os
 
-root = Root()
-mainFrame = CTkFrame(root, fg_color='red')
+class Login_page:
+    def __init__(self, root, login_action):
+        self.login_action = login_action
+        
+        self.main_frame = CTkFrame(root, fg_color='#494A5F')
 
-# Main container for contain whole widgets of page
-mainFrame.pack(expand=True, fill='both')
+        # Main container for contain whole widgets of page
+        self.main_frame.pack(expand=True, fill='both')
 
+        # Left frame of login page
+        # This frame is for placing the image related to the login page
 
-# Left frame of login page
-# This frame is for placing the image related to the login page
+        left_frame = CTkFrame(self.main_frame, fg_color='blue')
+        left_frame.place(relx=0, rely=0, relwidth=0.6, relheight=1)
 
-left_frame = CTkFrame(mainFrame, fg_color='blue')
-left_frame.place(relx=0, rely=0, relwidth=0.6, relheight=1)
-#-----------------------------------------------
+        # Load background image
+        currentpath = os.path.dirname(os.path.realpath(__file__))
+        back = Image.open(currentpath + '/assets/login-background.png')
+        image = CTkImage(back, size=(back.width*.715, back.height*.715))
+        image_lable = CTkLabel(left_frame, image=image, text='', fg_color='transparent', )
+        image_lable.place(relx=0, rely=0, anchor='nw')
+        #-----------------------------------------------
 
+        # Right frame of login page
+        # This page is for placing the login entry like username and password
+        right_frame = CTkFrame(self.main_frame, fg_color='transparent')
+        right_frame.place(relx=.6, rely=0, relwidth=0.4, relheight=1)
 
-# Right frame of login page
-# This page is for placing the login entry like username and password
-right_frame = CTkFrame(mainFrame, fg_color='green')
-right_frame.place(relx=.6, rely=0, relwidth=0.4, relheight=1)
+        right_frame.rowconfigure((0, 1, 2, 3), weight=1, uniform='a')
+        right_frame.columnconfigure(0, weight=1, uniform='a')
 
-right_frame.rowconfigure((0, 1, 2, 3), weight=1, uniform='a')
-right_frame.columnconfigure(0, weight=1, uniform='a')
+        # This just a container for contain login frame and place it on verticaly center
+        login_frame_container = CTkFrame(right_frame, fg_color='#494A5F')
+        login_frame_container.grid(row=1, column=0, rowspan=2, sticky='nsew')
 
-# This just a container for contain login frame and place it on verticaly center
-login_frame_container = CTkFrame(right_frame, fg_color='magenta')
-login_frame_container.grid(row=1, column=0, rowspan=2, sticky='nsew')
+        login_frame_container.rowconfigure((0,2), weight=1, uniform='a')
+        login_frame_container.rowconfigure(1, weight=10, uniform='a')
 
-login_frame_container.rowconfigure((0,2), weight=1, uniform='a')
-login_frame_container.rowconfigure(1, weight=10, uniform='a')
+        login_frame_container.columnconfigure((0,2), weight=1, uniform='a')
+        login_frame_container.columnconfigure(1, weight=10, uniform='a')
 
-login_frame_container.columnconfigure((0,2), weight=1, uniform='a')
-login_frame_container.columnconfigure(1, weight=10, uniform='a')
+        # A container for contain login entries
+        login_frame = CTkFrame(login_frame_container, bg_color='transparent', fg_color='transparent')
+        login_frame.grid(row=1, column=1)
 
-# A container for contain login entries
-login_frame = CTkFrame(login_frame_container, fg_color='cyan')
-login_frame.grid(row=1, column=1, sticky='nswe')
-#----------------------------------------------------------------------
+        login_frame.rowconfigure((0, 1, 2), weight=1, pad=30)
+        login_frame.columnconfigure(0, weight=1)
 
+        self.username = StringVar()
+        self.password = StringVar()
+        self.username.set('username')
+        self.password.set('password')
 
+        username_entry = Input(login_frame, 30, 300, 50, 'username')
+        username_entry.configure(font=(None, 18))
+        username_entry.grid(row=0, column=0)
 
+        password_entry = Input(login_frame, 30, 300, 50, 'password')
+        password_entry.configure(font=(None, 18))
+        password_entry.grid(row=1, column=0)
 
-# This part of the code is only for showing the placement of each element on the page
-# **** should be removed during the UI implementation ****
-CTkLabel(left_frame, text='>>> Login image placeholder <<<', fg_color='transparent', font=(None, 40)).pack(expand=True)
-CTkLabel(login_frame, text='> Login widgets placeholder <', fg_color='transparent', font=(None, 30)).pack(expand=True)
-#------------------------------------
+        username_entry.set_textvariable(self.username)
+        password_entry.set_textvariable(self.password)
+            
+        login_button = Btn(login_frame, 'login', 30, 250, 50)
+        login_button.grid(row=2, column=0)
+        login_button.configure(font=(None, 18))
+        login_button.configure(command=self.btn_command)
 
-
-# Main loop of program
-root.mainloop()
-
+    
+    def get_frame(self):
+        return self.main_frame
+    
+    def btn_command(self):
+        self.login_action(self.username.get(), self.password.get())
+        
