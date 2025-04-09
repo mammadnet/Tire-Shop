@@ -1,6 +1,8 @@
 from customtkinter import CTk
 from customtkinter import *
 from .widgets import *
+from utilities import Concur
+from time import sleep
 
 from PIL import Image
 import os
@@ -87,4 +89,8 @@ class Login_page:
         if message:
             self.error_massage_lable.place(relx=.05, rely=.61)
             self.error_massage_lable.configure(text=message)
-        
+            Concur(lambda : self._clear_login_error(5)).start()
+    
+    def _clear_login_error(self, sec):
+        sleep(sec)
+        self.error_massage_lable.place_forget()
