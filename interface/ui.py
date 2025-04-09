@@ -94,3 +94,14 @@ class Login_page:
     def _clear_login_error(self, sec):
         sleep(sec)
         self.error_massage_lable.place_forget()
+        
+
+class Admin_page:
+    def __init__(self, root):
+        self.main_frame = CTkFrame(root)
+        self.main_frame.pack(expand=True, fill='both')
+        self._set_semple_lable('You are logged in...')
+        
+    def _set_semple_lable(self, message):
+        self.loggedin_lable = CTkLabel(self.main_frame, text_color='blue', text=message)
+        self.loggedin_lable.pack(expand=True, fill='both')
