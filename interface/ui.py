@@ -95,6 +95,10 @@ class Login_page:
         sleep(sec)
         self.error_massage_lable.place_forget()
         
+    def destroy(self):
+        self.main_frame.pack_forget()
+        self.main_frame.destroy()
+
 
 class Admin_page:
     def __init__(self, root):
@@ -105,3 +109,8 @@ class Admin_page:
     def _set_semple_lable(self, message):
         self.loggedin_lable = CTkLabel(self.main_frame, text_color='blue', text=message)
         self.loggedin_lable.pack(expand=True, fill='both')
+        
+    
+    def destroy(self):
+        self.main_frame.pack_forget()
+        self.main_frame.destroy()

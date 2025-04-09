@@ -6,9 +6,7 @@ root = Root()
 def login_action(username, password, login_page:Login_page):
     res = login_permission(session, username, password)
     if res:
-        login_page_frame = login_page.get_frame()
-        login_page_frame.pack_forget()
-        login_page_frame.destroy()
+        login_page.destroy()
 
         Admin_page(root)
     else:
