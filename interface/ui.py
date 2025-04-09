@@ -73,11 +73,18 @@ class Login_page:
         login_button.grid(row=2, column=0)
         login_button.configure(font=(None, 18))
         login_button.configure(command=self.btn_command)
+        
+        self.error_massage_lable = CTkLabel(login_frame, text_color='firebrick1')
 
     
     def get_frame(self):
         return self.main_frame
     
     def btn_command(self):
-        self.login_action(self.username.get(), self.password.get())
+        self.login_action(self.username.get(), self.password.get(), self)
+        
+    def login_error_message(self, message:str=None):
+        if message:
+            self.error_massage_lable.place(relx=.05, rely=.61)
+            self.error_massage_lable.configure(text=message)
         
