@@ -60,11 +60,11 @@ class Login_page:
         self.username.set('username')
         self.password.set('password')
 
-        username_entry = Input(login_frame, 30, 300, 50, 'username')
+        username_entry = Input(login_frame, 30, 300, 50, 'username', self.username)
         username_entry.configure(font=(None, 18))
         username_entry.grid(row=0, column=0)
 
-        password_entry = Input(login_frame, 30, 300, 50, 'password')
+        password_entry = Input(login_frame, 30, 300, 50, 'password', self.password)
         password_entry.configure(font=(None, 18))
         password_entry.grid(row=1, column=0)
 
