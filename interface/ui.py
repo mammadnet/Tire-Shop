@@ -55,16 +55,18 @@ class Login_page:
         login_frame.rowconfigure((0, 1, 2), weight=1, pad=30)
         login_frame.columnconfigure(0, weight=1)
 
+        self.error_massage_lable = CTkLabel(login_frame, text_color='firebrick1')
+        
         self.username = StringVar()
         self.password = StringVar()
         self.username.set('username')
         self.password.set('password')
 
-        username_entry = Input(login_frame, 30, 300, 50, 'username', self.username)
+        username_entry = Input(login_frame, 30, 300, 50, 'username', self.username, show_err_callback=self.login_error_message)
         username_entry.configure(font=(None, 18))
         username_entry.grid(row=0, column=0)
 
-        password_entry = Input(login_frame, 30, 300, 50, 'password', self.password)
+        password_entry = Input(login_frame, 30, 300, 50, 'password', self.password, show_err_callback = self.login_error_message)
         password_entry.configure(font=(None, 18))
         password_entry.grid(row=1, column=0)
 
@@ -76,7 +78,6 @@ class Login_page:
         login_button.configure(font=(None, 18))
         login_button.configure(command=self.btn_command)
         
-        self.error_massage_lable = CTkLabel(login_frame, text_color='firebrick1')
 
     
     def get_frame(self):
