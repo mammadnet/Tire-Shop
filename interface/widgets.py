@@ -10,8 +10,8 @@ class Btn(CTkButton):
 
 
 class Input(CTkEntry):
-    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, char_limit:int=20, show_err_callback=None, err_message=None, **kwargs):
-        super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text, **kwargs)
+    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, **kwargs):
+        super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text,show=show, **kwargs)
         
         self.configure(fg_color='#646691', placeholder_text_color='#9495B8', text_color='#c5c6de', border_color='#8688B0')
 

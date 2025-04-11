@@ -66,7 +66,7 @@ class Login_page:
         username_entry.configure(font=(None, 18))
         username_entry.grid(row=0, column=0)
 
-        password_entry = Input(login_frame, 30, 300, 50, 'password', self.password, show_err_callback = self.login_error_message)
+        password_entry = Input(login_frame, 30, 300, 50, 'password', self.password, show='*', show_err_callback = self.login_error_message)
         password_entry.configure(font=(None, 18))
         password_entry.grid(row=1, column=0)
 
