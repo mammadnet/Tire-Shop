@@ -10,13 +10,19 @@ class Btn(CTkButton):
 
 
 class Input(CTkEntry):
-    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable, char_limit:int=50, **kwargs):
+    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, char_limit:int=20, show_err_callback=None, err_message=None, **kwargs):
         super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text, **kwargs)
         
         self.configure(fg_color='#646691', placeholder_text_color='#9495B8', text_color='#c5c6de', border_color='#8688B0')
 
         self.char_limit = char_limit
         self.textvariable = textvariable
+        self.show_err_callback = show_err_callback
+        self.err_message = err_message
+        
+        
+        self._set_limit()
+        
     def disable(self):
         self.configure(state='disabled')
         
@@ -25,6 +31,21 @@ class Input(CTkEntry):
     
     def set_textvariable(self, textvariable):
         self.configure(textvariable=textvariable)
+        
+    def _entry_update_callback(self, *k):
+        val = self.textvariable.get()
+        if len(val) > self.char_limit:
+            self.textvariable.set(val[0:-1])
+        
+            if self.show_err_callback:
+                if self.err_message:
+                    self.show_err_callback(self.err_message)
+                else:
+                    message = f'Cannot be more than {self.char_limit} characters.'
+                    self.show_err_callback(message)
+    
+    def _set_limit(self):
+        self.textvariable.trace_add('write', self._entry_update_callback)
         
         
 class Root(CTk):
