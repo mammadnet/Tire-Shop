@@ -18,7 +18,7 @@ python main.py
 
 ### login ui:
 
-![login UI]()
+![login UI](./tireshop-login.gif)
 
 
 
