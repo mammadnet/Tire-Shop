@@ -56,3 +56,6 @@ def login_permission(session, username, passwd) -> bool:
     else:
         return False
 
+
+
+create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
