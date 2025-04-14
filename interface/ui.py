@@ -19,7 +19,7 @@ class Login_page:
         # Left frame of login page
         # This frame is for placing the image related to the login page
 
-        left_frame = CTkFrame(self.main_frame, fg_color='blue')
+        left_frame = CTkFrame(self.main_frame, fg_color='#494A5F')
         left_frame.place(relx=0, rely=0, relwidth=0.6, relheight=1)
 
         # Load background image
