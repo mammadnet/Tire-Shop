@@ -16,6 +16,9 @@ class Login_page:
         # Main container for contain whole widgets of page
         self.main_frame.pack(expand=True, fill='both')
 
+        # Bind the "Enter" key to the login button command
+        root.bind('<Return>', lambda event: self.btn_command())
+
         # Left frame of login page
         # This frame is for placing the image related to the login page
 
