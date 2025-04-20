@@ -123,6 +123,37 @@ class Admin_page:
         self.user_profile_frame.configure(fg_color='#393A4E', corner_radius=18)
         self.user_profile_frame.place(relx=.5, rely=.5, relwidth=.75, relheight=.6, anchor='center')
         
+        self.buttons_frame = CTkFrame(self.items_frame)
+        self.buttons_frame.configure(fg_color='transparent')
+        self.buttons_frame.place(relx=0, rely=.15, relwidth=1, relheight=.85)
+        
+        
+        self.buttons_frame.rowconfigure((0,1,2,3,4,5,6,7,8), weight=1)
+        self.buttons_frame.columnconfigure(0, weight=1)
+        
+        self.button_font_size = 14
+        self.button_color = "#393A4E"
+        self.button_hover_color = "#434357"
+        
+        dashboard_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        dashboard_btn.grid(row=0, column=0, sticky='w')
+        dashboard_btn.set_text('Dashboard', fill='#FFFFFF', font_size=self.button_font_size)
+        
+        products_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        products_btn.grid(row=1, column=0, sticky='w')
+        products_btn.set_text('Products', fill='#FFFFFF', font_size=self.button_font_size)
+        
+        employee_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        employee_btn.grid(row=2, column=0, sticky='w')
+        employee_btn.set_text('Employee', fill='#FFFFFF', font_size=self.button_font_size)
+        
+        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        reports_btn.grid(row=3, column=0, sticky='w')
+        reports_btn.set_text('Reports', fill='#FFFFFF', font_size=self.button_font_size)
+        
+        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        backup_btn.grid(row=4, column=0, sticky='w')
+        backup_btn.set_text('Backup', fill='#FFFFFF', font_size=self.button_font_size)
         
         
         
