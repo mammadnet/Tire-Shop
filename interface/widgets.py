@@ -1,5 +1,6 @@
 from customtkinter import *
-
+from math import cos, pi, sin
+from typing import Iterator
 
 class Btn(CTkButton):
     def __init__(self, master,text, corner_radius, width, height, **kwargs):
@@ -59,4 +60,55 @@ class Root(CTk):
         max_width = self.winfo_screenwidth()
         max_height = self.winfo_screenheight()
         self.geometry('{}x{}+0+0'.format(max_width, max_height))
+    
+class Item_button(CTkCanvas):
+    def __init__(self, root, width:int=0, height:int=0, color='#AFB3ED',hover_color="#4e4e61",background="#5B5D76", raduis:int=None, rtopleft:int=0, rtopright:int=0, rbottomleft:int=0, rbottomtright:int=0, **kwargs):
+        super().__init__(root,width=width, height=height, background=background, highlightthickness=0)
+        self.color=color
+        if raduis:
+            rtopleft, rtopright, rbottomleft, rbottomtright = (raduis, raduis, raduis, raduis)
+        
+        self.rtopleft = rtopleft
+        self.rtopright = rtopright
+        self.rbottomleft = rbottomleft
+        self.rbottomtright = rbottomtright
+        
+        self.width = width
+        self.height = height
+        self.hover_color = hover_color
+        self.create_rounded_box(0, 0, width, height)
+        
+    
+    @staticmethod
+    def get_cos_sin(radius: int) -> Iterator[tuple[float, float]]:
+        steps = max(radius, 10)
+        for i in range(steps + 1):
+            angle = pi * (i / steps) * 0.5
+            yield (cos(angle) - 1) * radius, (sin(angle) - 1) * radius
+
+        
+    def create_rounded_box(self, x1: int, y1: int, x2: int, y2: int) -> int:
+        points = []
+        TR_angle_point = tuple(Item_button.get_cos_sin(self.rtopright))
+        BR_angle_point = tuple(Item_button.get_cos_sin(self.rbottomtright))
+        BL_angle_point = tuple(Item_button.get_cos_sin(self.rbottomleft))
+        TL_angle_point = tuple(Item_button.get_cos_sin(self.rtopleft))
+        
+        
+        for cos_r, sin_r in TR_angle_point:
+            points.append((x2 + sin_r, y1 - cos_r))         # Top right
+        for cos_r, sin_r in BR_angle_point:
+            points.append((x2 + cos_r, y2 + sin_r))         # Botton right
+        for cos_r, sin_r in BL_angle_point:
+            points.append((x1 - sin_r, y2 + cos_r))         # Botton left
+        for cos_r, sin_r in TL_angle_point:
+            points.append((x1 - cos_r, y1 - sin_r))         # Top left
+        
+        
+        return self.create_polygon(points, fill=self.color, activefill=self.hover_color, smooth=True, joinstyle='round')
+
+    def set_text(self, text:str, fill, font_size):
+        x = self.width / 2
+        y = self.height / 2
+        self.create_text(x, y, text = text, fill=fill, font=(None, font_size))
         
