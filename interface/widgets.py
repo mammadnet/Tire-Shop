@@ -76,8 +76,8 @@ class Item_button(CTkCanvas):
         self.width = width
         self.height = height
         self.hover_color = hover_color
-        self.create_rounded_box(0, 0, width, height)
-        
+        self.polygon_id = self.create_rounded_box(0, 0, width, height)
+        self._set_hover()
     
     @staticmethod
     def get_cos_sin(radius: int) -> Iterator[tuple[float, float]]:
@@ -105,10 +105,16 @@ class Item_button(CTkCanvas):
             points.append((x1 - cos_r, y1 - sin_r))         # Top left
         
         
-        return self.create_polygon(points, fill=self.color, activefill=self.hover_color, smooth=True, joinstyle='round')
+        return self.create_polygon(points, fill=self.color, smooth=True, joinstyle='round')
 
     def set_text(self, text:str, fill, font_size):
         x = self.width / 2
         y = self.height / 2
         self.create_text(x, y, text = text, fill=fill, font=(None, font_size))
+    
+    def _set_hover(self):
+        self.bind("<Enter>", lambda _: self.itemconfig(self.polygon_id, fill=self.hover_color))
+        self.bind("<Leave>", lambda _: self.itemconfig(self.polygon_id, fill=self.color))
+        
+    
         
