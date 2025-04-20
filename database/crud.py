@@ -8,6 +8,7 @@ from .connection import session
 
 from utilities import hashing
 
+# Check if a user is exist
 def exist_check_user(by:InstrumentedAttribute, pat):
     subq = exists(User.national_number).where(User.national_number == pat).select()
     exist_check = session.execute(subq).scalar()
