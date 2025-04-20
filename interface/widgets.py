@@ -117,4 +117,6 @@ class Item_button(CTkCanvas):
         self.bind("<Leave>", lambda _: self.itemconfig(self.polygon_id, fill=self.color))
         
     
+    def set_action(self, action):
+        self.bind("<Button-1>", action)
         
