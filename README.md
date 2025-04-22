@@ -1,4 +1,4 @@
-# Trie Shop Manager(phase 1)
+# Tire Shop Manager(phase 1)
 
 
 
