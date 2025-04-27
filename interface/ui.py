@@ -109,11 +109,11 @@ class Admin_page:
         
         self.items_frame = CTkFrame(self.main_frame)
         self.items_frame.configure(fg_color='#5B5D76')
-        self.items_frame.place(relwidth = .3, relheight=1, x=0, y=0, anchor='nw')
+        self.items_frame.place(relwidth = .3, relheight=1, relx=.7, rely=0, anchor='nw')
         
         self.control_frame = CTkFrame(self.main_frame)
         self.control_frame.configure(fg_color='#494A5F')
-        self.control_frame.place(relwidth=.7,relheight=1, relx=.3, rely=0)
+        self.control_frame.place(relwidth=.7,relheight=1, relx=0, rely=0)
         
         self.user_profile_container = CTkFrame(self.items_frame)
         self.user_profile_container.configure(fg_color='transparent')
@@ -135,24 +135,24 @@ class Admin_page:
         self.button_color = "#393A4E"
         self.button_hover_color = "#434357"
         
-        dashboard_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        dashboard_btn.grid(row=0, column=0, sticky='w')
+        dashboard_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        dashboard_btn.grid(row=0, column=0, sticky='e')
         dashboard_btn.set_text('Dashboard', fill='#FFFFFF', font_size=self.button_font_size)
         
-        products_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        products_btn.grid(row=1, column=0, sticky='w')
+        products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        products_btn.grid(row=1, column=0, sticky='e')
         products_btn.set_text('Products', fill='#FFFFFF', font_size=self.button_font_size)
         
-        employee_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        employee_btn.grid(row=2, column=0, sticky='w')
+        employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        employee_btn.grid(row=2, column=0, sticky='e')
         employee_btn.set_text('Employee', fill='#FFFFFF', font_size=self.button_font_size)
         
-        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        reports_btn.grid(row=3, column=0, sticky='w')
+        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        reports_btn.grid(row=3, column=0, sticky='e')
         reports_btn.set_text('Reports', fill='#FFFFFF', font_size=self.button_font_size)
         
-        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopright=15, rbottomtright=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        backup_btn.grid(row=4, column=0, sticky='w')
+        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        backup_btn.grid(row=4, column=0, sticky='e')
         backup_btn.set_text('Backup', fill='#FFFFFF', font_size=self.button_font_size)
         
         
