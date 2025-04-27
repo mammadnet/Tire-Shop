@@ -1,12 +1,13 @@
 from customtkinter import *
 from math import cos, pi, sin
 from typing import Iterator
-from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text
+from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text, render_text
 
 class Btn(CTkButton):
     def __init__(self, master,text, corner_radius, width, height, **kwargs):
         super().__init__(master, **kwargs)
-        
+        if isarabic(text):
+            text = render_text(text)
         self.configure(text=text, corner_radius = corner_radius, fg_color='#AFB3ED', hover_color='#888bba', text_color='#494A5F', border_color='#8688B0')
         self.configure(width=width, height=height)
 
@@ -124,6 +125,8 @@ class Item_button(CTkCanvas):
         return self.create_polygon(points, fill=self.color, smooth=True, joinstyle='round')
 
     def set_text(self, text:str, fill, font_size):
+        if isarabic(text):
+            text = render_text(text)
         x = self.width / 2
         y = self.height / 2
         self.create_text(x, y, text = text, fill=fill, font=(None, font_size))
