@@ -23,6 +23,7 @@ class Input(CTkEntry):
         self.textvariable = textvariable
         self.show_err_callback = show_err_callback
         self.err_message = err_message
+        self.placeholder_text = placeholder_text
         
         
         self._set_limit()
@@ -62,6 +63,12 @@ class Input(CTkEntry):
                 
     def _set_justify(self):
         self.textvariable.trace_add('write', self._add_justify_for_arabic)
+    
+    def set_placeholder_text(self, text:str):
+        if isarabic(text):
+            text = render_text(text)
+            self.textvariable.set(text)
+            
         
                 
         

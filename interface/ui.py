@@ -59,21 +59,22 @@ class Login_page:
         
         self.username = StringVar()
         self.password = StringVar()
-        self.username.set('username')
-        self.password.set('password')
+        
 
-        username_entry = Input(login_frame, 30, 300, 50, 'username', self.username, show_err_callback=self.login_error_message)
+        username_entry = Input(login_frame, 30, 300, 50, 'نام کاربری', self.username, show_err_callback=self.login_error_message)
         username_entry.configure(font=(None, 18))
+        username_entry.set_placeholder_text("نام کاربری")
         username_entry.grid(row=0, column=0)
 
-        password_entry = Input(login_frame, 30, 300, 50, 'password', self.password, show='*', show_err_callback = self.login_error_message)
+        password_entry = Input(login_frame, 30, 300, 50, 'رمز', self.password, show='*', show_err_callback = self.login_error_message)
         password_entry.configure(font=(None, 18))
+        password_entry.set_placeholder_text("رمز")
         password_entry.grid(row=1, column=0)
 
         username_entry.set_textvariable(self.username)
         password_entry.set_textvariable(self.password)
             
-        login_button = Btn(login_frame, 'login', 30, 250, 50)
+        login_button = Btn(login_frame, 'ورود', 30, 250, 50)
         login_button.grid(row=2, column=0)
         login_button.configure(font=(None, 18))
         login_button.configure(command=self.btn_command)
@@ -137,23 +138,23 @@ class Admin_page:
         
         dashboard_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         dashboard_btn.grid(row=0, column=0, sticky='e')
-        dashboard_btn.set_text('Dashboard', fill='#FFFFFF', font_size=self.button_font_size)
+        dashboard_btn.set_text('داشبورد', fill='#FFFFFF', font_size=self.button_font_size)
         
         products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         products_btn.grid(row=1, column=0, sticky='e')
-        products_btn.set_text('Products', fill='#FFFFFF', font_size=self.button_font_size)
+        products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
         
         employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         employee_btn.grid(row=2, column=0, sticky='e')
-        employee_btn.set_text('Employee', fill='#FFFFFF', font_size=self.button_font_size)
+        employee_btn.set_text('کارمند', fill='#FFFFFF', font_size=self.button_font_size)
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
-        reports_btn.set_text('Reports', fill='#FFFFFF', font_size=self.button_font_size)
+        reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         
         backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         backup_btn.grid(row=4, column=0, sticky='e')
-        backup_btn.set_text('Backup', fill='#FFFFFF', font_size=self.button_font_size)
+        backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
         
         
         
