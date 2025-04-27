@@ -1,6 +1,7 @@
 from customtkinter import *
 from math import cos, pi, sin
 from typing import Iterator
+from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text
 
 class Btn(CTkButton):
     def __init__(self, master,text, corner_radius, width, height, **kwargs):
@@ -13,6 +14,7 @@ class Btn(CTkButton):
 class Input(CTkEntry):
     def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, **kwargs):
         super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text,show=show, **kwargs)
+        add_bidi_support_for_entry(self._entry)
         
         self.configure(fg_color='#646691', placeholder_text_color='#9495B8', text_color='#c5c6de', border_color='#8688B0')
 
@@ -23,6 +25,7 @@ class Input(CTkEntry):
         
         
         self._set_limit()
+        self._set_justify()
         
     def disable(self):
         self.configure(state='disabled')
@@ -47,6 +50,19 @@ class Input(CTkEntry):
     
     def _set_limit(self):
         self.textvariable.trace_add('write', self._entry_update_callback)
+    
+    def _add_justify_for_arabic(self, *k):
+        val = self.textvariable.get()
+        if len(val) == 1:
+            if isarabic(val):
+                self.configure(justify=RIGHT)
+            else:
+                self.configure(justify=LEFT)
+                
+    def _set_justify(self):
+        self.textvariable.trace_add('write', self._add_justify_for_arabic)
+        
+                
         
         
 class Root(CTk):
