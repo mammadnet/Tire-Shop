@@ -174,3 +174,29 @@ class Admin_page:
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
+
+
+
+class Manager_page:
+    def __init__(self, root):
+        self.main_frame = CTkFrame(root)
+        self.main_frame.pack(expand=True, fill='both')
+        
+        
+        self.items_frame = CTkFrame(self.main_frame)
+        self.items_frame.configure(fg_color='#5B5D76')
+        self.items_frame.place(relwidth = .3, relheight=1, relx=.7, rely=0, anchor='nw')
+        
+        self.control_frame = CTkFrame(self.main_frame)
+        self.control_frame.configure(fg_color='#494A5F')
+        self.control_frame.place(relwidth=.7,relheight=1, relx=0, rely=0)
+        
+        self.user_profile_container = CTkFrame(self.items_frame)
+        self.user_profile_container.configure(fg_color='transparent')
+        self.user_profile_container.place(x=0, y=0, relwidth = 1, relheight=.15)
+        
+        self.user_profile_frame = CTkFrame(self.user_profile_container)
+        self.user_profile_frame.configure(fg_color='#393A4E', corner_radius=18)
+        self.user_profile_frame.place(relx=.5, rely=.5, relwidth=.75, relheight=.6, anchor='center')
+        
+        
