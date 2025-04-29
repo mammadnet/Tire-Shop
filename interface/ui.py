@@ -149,17 +149,21 @@ class Admin_page:
         products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         products_btn.grid(row=1, column=0, sticky='e')
         products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
+
+        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        backup_btn.grid(row=2, column=0, sticky='e')
+        backup_btn.set_text('مدیر', fill='#FFFFFF', font_size=self.button_font_size)
         
         employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        employee_btn.grid(row=2, column=0, sticky='e')
+        employee_btn.grid(row=3, column=0, sticky='e')
         employee_btn.set_text('کارمند', fill='#FFFFFF', font_size=self.button_font_size)
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        reports_btn.grid(row=3, column=0, sticky='e')
+        reports_btn.grid(row=4, column=0, sticky='e')
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         
         backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        backup_btn.grid(row=4, column=0, sticky='e')
+        backup_btn.grid(row=5, column=0, sticky='e')
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
         
         
