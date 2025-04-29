@@ -231,15 +231,6 @@ class Manager_page:
         backup_btn.grid(row=4, column=0, sticky='e')
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
         
-        
-        
-        
-        
-    def _set_semple_lable(self, message):
-        self.loggedin_lable = CTkLabel(self.main_frame, text_color='blue', text=message)
-        self.loggedin_lable.pack(expand=True, fill='both')
-        
-    
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
