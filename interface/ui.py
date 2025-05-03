@@ -235,10 +235,7 @@ class Admin_page:
             table.heading("startDate", text="startDate", anchor='center')
             
             table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
-            
-            for i in range(30):
-                table.insert(parent="", index=0, values=(f'{i}'*6, '*'*6,'*'*6,'*'*6,'*'*6,'*'*6))
-            
+            return table
             
             
             
