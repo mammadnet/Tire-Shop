@@ -5,6 +5,8 @@ from .widgets import *
 from utilities import Concur
 from time import sleep
 
+from database import get_all_employees,get_all_employees_json, session
+
 from PIL import Image
 import os
 
@@ -193,6 +195,7 @@ class Admin_page:
             
             
             self.content_table = self.initialize_table(self)
+            self.insert_content_to_table(self.content_table, get_all_employees_json(session))
             
         def initialize_table(self, window):
             style = ttk.Style()
@@ -238,6 +241,16 @@ class Admin_page:
             
             table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
             return table
+            
+        
+        def insert_content_to_table(self, table:ttk.Treeview, content:list[dict]):
+            
+            for row in content:
+                vals = (row["id"], row["name"], row["lastname"], row["username"], row["phone"], row["national_number"])
+                
+                table.insert(parent="", index=0, values=vals)
+            
+            
             
             
             
