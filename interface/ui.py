@@ -1,5 +1,6 @@
 from customtkinter import CTk
 from customtkinter import *
+from tkinter import ttk
 from .widgets import *
 from utilities import Concur
 from time import sleep
@@ -153,6 +154,7 @@ class Admin_page:
         employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         employee_btn.grid(row=2, column=0, sticky='e')
         employee_btn.set_text('کارمند', fill='#FFFFFF', font_size=self.button_font_size)
+        employee_btn.set_action(self._employee_panel_callback)
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
@@ -161,6 +163,39 @@ class Admin_page:
         backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         backup_btn.grid(row=4, column=0, sticky='e')
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
+        
+        
+        #----------------DELETE THIS LINES AFTER FINISH THE ADMIN PANEL DEVELOPMENT-----------
+        self.employee_panel(self.control_frame)
+        
+    class employee_panel(CTkFrame):
+        def __init__(self, root):
+            super().__init__(root)
+            self.pack(expand=True, fill="both")
+            self.configure(bg_color='transparent', fg_color='transparent')
+            
+            self.btn_frame = CTkFrame(self, fg_color='transparent')
+            self.btn_frame.place(relwidth =.2, relheight=.3, relx=1, rely=.1, anchor="ne")
+            self.btn_frame.columnconfigure(0, weight=1)
+            self.btn_frame.rowconfigure((0,1,2), weight=1)
+            
+            employee_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+            employee_list_btn.set_text("لیست کارمندان", "white", 13)
+            employee_list_btn.grid(row=0,column=0 ,sticky="e")
+            
+            employee_new_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+            employee_new_btn.set_text("کارمند جدید", "white", 13)
+            employee_new_btn.grid(row=1,column=0 , sticky="e")
+    
+            employee_delete_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+            employee_delete_btn.set_text("کارمند جدید", "white", 13)
+            employee_delete_btn.grid(row=2,column=0 , sticky="e")
+            
+    
+    
+
+        
+        
         
         
         
