@@ -191,9 +191,63 @@ class Admin_page:
             employee_delete_btn.set_text("کارمند جدید", "white", 13)
             employee_delete_btn.grid(row=2,column=0 , sticky="e")
             
+            
+            self.content_table = self.initialize_table(self)
+            
+        def initialize_table(self, window):
+            style = ttk.Style()
+            # Configure Treeview style
+            style.configure("Custom1.Treeview",
+            background="#494A5F",
+            foreground="black",
+            fieldbackground="#393A4E",
+            rowheight=50,
+            borderwidth=0
+            )
+            
+            style.configure("Custom1.Treeview.Heading",
+            background="#5B5D76",     # Header background color
+            foreground="white",       # Header text color
+            font=("Helvetica", 10, "bold"),
+            relief='flat')
+            
+            style.map("Custom1.Treeview.Heading",
+            background=[("active", "#6b6d87")],
+            foreground=[("active", "white")])
+            
+            table = ttk.Treeview(window, style="Custom1.Treeview")
+            table.configure(columns=("name", "lastname", "username", "phone", "national", "startDate"))
+            table.configure(show="headings", selectmode="none")
+            
+            
+            table.column("name", width=100, anchor="center")
+            table.column("lastname", width=150, anchor="center")
+            table.column("username", width=120, anchor="center")
+            table.column("phone", width=140, anchor="center")
+            table.column("national", width=150, anchor="center")
+            table.column("startDate", width=200, anchor="center")
+            
+            table.heading("name", text="name", anchor='center')
+            table.heading("lastname", text="lastname", anchor='center')
+            table.heading("username", text="username", anchor='center')
+            table.heading("phone", text="phone", anchor='center')
+            table.heading("national", text="national", anchor='center')
+            table.heading("startDate", text="startDate", anchor='center')
+            
+            table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            
+            for i in range(30):
+                table.insert(parent="", index=0, values=(f'{i}'*6, '*'*6,'*'*6,'*'*6,'*'*6,'*'*6))
+            
+            
+            
+            
+                
     
     
-
+    def _employee_panel_callback(self, *k):
+        # self.employee_panel(self.control_frame)
+        print("hellloooooooo")
         
         
         
