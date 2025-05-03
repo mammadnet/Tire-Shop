@@ -216,10 +216,11 @@ class Admin_page:
             foreground=[("active", "white")])
             
             table = ttk.Treeview(window, style="Custom1.Treeview")
-            table.configure(columns=("name", "lastname", "username", "phone", "national", "startDate"))
+            table.configure(columns=("id", "name", "lastname", "username", "phone", "national", "startDate"))
             table.configure(show="headings", selectmode="none")
             
             
+            table.column("id", width=40, anchor="center")
             table.column("name", width=100, anchor="center")
             table.column("lastname", width=150, anchor="center")
             table.column("username", width=120, anchor="center")
@@ -227,6 +228,7 @@ class Admin_page:
             table.column("national", width=150, anchor="center")
             table.column("startDate", width=200, anchor="center")
             
+            table.heading("id", text="id", anchor='center')
             table.heading("name", text="name", anchor='center')
             table.heading("lastname", text="lastname", anchor='center')
             table.heading("username", text="username", anchor='center')
