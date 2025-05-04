@@ -133,6 +133,25 @@ class Page:
         self.user_profile_frame.configure(fg_color='#393A4E', corner_radius=18)
         self.user_profile_frame.place(relx=.5, rely=.5, relwidth=.75, relheight=.6, anchor='center')
         
+        
+    
+    def set_profile(self, name:str, lastname:str, rule:str)   :
+        name = name.capitalize()
+        lastname= lastname.capitalize()
+        rule = rule.capitalize()
+         
+        self.user_name_lastname = CTkLabel(self.user_profile_frame, text=f'{name} {lastname}')
+        self.user_name_lastname.configure(text_color="white", height=5)
+        self.user_name_lastname.place(relx=.25, rely=.23)
+        
+        self.rule = CTkLabel(self.user_profile_frame, text=rule)
+        self.rule.configure(text_color="white", height=20)
+        self.rule.place(relx=.25, rely=.47)
+        
+        
+         
+    
+    
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
