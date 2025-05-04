@@ -4,12 +4,15 @@ from typing import Iterator
 from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text, render_text
 
 class Btn(CTkButton):
-    def __init__(self, master,text, corner_radius, width, height, **kwargs):
+    def __init__(self, master, width, height, text='', corner_radius=20, **kwargs):
         super().__init__(master, **kwargs)
         if isarabic(text):
             text = render_text(text)
         self.configure(text=text, corner_radius = corner_radius, fg_color='#AFB3ED', hover_color='#888bba', text_color='#494A5F', border_color='#8688B0')
         self.configure(width=width, height=height)
+        
+    def disable_hover(self):
+        self.configure(hover=False)
 
 
 class Input(CTkEntry):
