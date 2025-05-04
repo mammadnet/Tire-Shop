@@ -111,7 +111,7 @@ class Login_page:
         self.main_frame.destroy()
 
 
-class Admin_page:
+class Page:
     def __init__(self, root):
         self.main_frame = CTkFrame(root)
         self.main_frame.pack(expand=True, fill='both')
@@ -132,6 +132,19 @@ class Admin_page:
         self.user_profile_frame = CTkFrame(self.user_profile_container)
         self.user_profile_frame.configure(fg_color='#393A4E', corner_radius=18)
         self.user_profile_frame.place(relx=.5, rely=.5, relwidth=.75, relheight=.6, anchor='center')
+        
+    def destroy(self):
+        self.main_frame.pack_forget()
+        self.main_frame.destroy()
+        
+    def hide(self):
+        self.main_frame.pack_forget()
+        
+        
+
+class Admin_page(Page):
+    def __init__(self, root):
+        super().__init__(root)
         
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
