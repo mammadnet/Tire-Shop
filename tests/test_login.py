@@ -34,7 +34,12 @@ class TestLogin(unittest.TestCase):
         result = login_permission(self.session, 'testadmin', 'testpass123')
         self.assertTrue(result, "Login should succeed with correct credentials")
 
-    
+    def test_wrong_password(self):
+        """Test login with incorrect password"""
+        result = login_permission(self.session, 'testadmin', 'wrongpassword')
+        self.assertFalse(result, "Login should fail with incorrect password")
+
+
     @classmethod
     def tearDownClass(cls):
         # Clean up the test database
