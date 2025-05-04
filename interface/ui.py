@@ -330,8 +330,8 @@ class Admin_page(Page):
 
 
 class Manager_page(Page):
-    def __init__(self, root):
-        super().__init__(root)
+    def __init__(self, root, name, lastname, rule):
+        super().__init__(root, name, lastname, rule)
         
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
