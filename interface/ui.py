@@ -199,6 +199,8 @@ class Admin_page:
             
         def initialize_table(self, window):
             style = ttk.Style()
+            style.theme_use('clam')
+            
             # Configure Treeview style
             style.configure("Custom1.Treeview",
             background="#494A5F",
