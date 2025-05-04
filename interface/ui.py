@@ -83,7 +83,7 @@ class Login_page:
         username_entry.set_textvariable(self.username)
         password_entry.set_textvariable(self.password)
             
-        login_button = Btn(login_frame, 'ورود', 30, 250, 50)
+        login_button = Btn(login_frame, 250, 50, 30, "ورود")
         login_button.grid(row=2, column=0)
         login_button.configure(font=(None, 18))
         login_button.configure(command=self.btn_command)

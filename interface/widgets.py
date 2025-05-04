@@ -4,7 +4,7 @@ from typing import Iterator
 from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text, render_text
 
 class Btn(CTkButton):
-    def __init__(self, master, width, height, text='', corner_radius=20, **kwargs):
+    def __init__(self, master, width, height, corner_radius=20, text='', **kwargs):
         super().__init__(master, **kwargs)
         if isarabic(text):
             text = render_text(text)
