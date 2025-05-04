@@ -9,7 +9,7 @@ def hashing(val:str) -> str:
 class Concur:
     def __init__(self, func):
         self.func = func
-        self.thread = threading.Thread(target=func)
+        self.thread = threading.Thread(target=func, daemon=True)
         
     def start(self):
         self.thread.start()
