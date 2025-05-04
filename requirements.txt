@@ -5,3 +5,4 @@ packaging==24.2
 pillow==11.1.0
 SQLAlchemy==2.0.38
 typing_extensions==4.12.2
+pytest==8.0.0
