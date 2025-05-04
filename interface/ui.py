@@ -112,7 +112,7 @@ class Login_page:
 
 
 class Page:
-    def __init__(self, root, logout_callback=None):
+    def __init__(self, root, name:str, lastname:str, rule:str, logout_callback=None):
         self.main_frame = CTkFrame(root)
         self.main_frame.pack(expand=True, fill='both')
         
@@ -134,6 +134,8 @@ class Page:
         self.user_profile_frame.configure(fg_color='#393A4E', corner_radius=18)
         self.user_profile_frame.place(relx=.5, rely=.5, relwidth=.75, relheight=.6, anchor='center')
         
+        self.set_profile(name, lastname, rule)
+        self._set_logout_btn()
         
     
     def set_profile(self, name:str, lastname:str, rule:str)   :
@@ -176,8 +178,8 @@ class Page:
         
 
 class Admin_page(Page):
-    def __init__(self, root):
-        super().__init__(root)
+    def __init__(self, root, name:str, lastname:str, rule:str):
+        super().__init__(root, name, lastname, rule)
         
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
