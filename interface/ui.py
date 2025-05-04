@@ -2,7 +2,7 @@ from customtkinter import CTk
 from customtkinter import *
 from tkinter import ttk
 from .widgets import *
-from utilities import Concur
+from utilities import Concur, is_windows
 from time import sleep
 
 from database import get_all_employees,get_all_employees_json, session
@@ -199,7 +199,8 @@ class Admin_page:
             
         def initialize_table(self, window):
             style = ttk.Style()
-            style.theme_use('clam')
+            if is_windows():
+                style.theme_use('clam')
             
             # Configure Treeview style
             style.configure("Custom1.Treeview",
