@@ -112,10 +112,11 @@ class Login_page:
 
 
 class Page:
-    def __init__(self, root):
+    def __init__(self, root, logout_callback=None):
         self.main_frame = CTkFrame(root)
         self.main_frame.pack(expand=True, fill='both')
         
+        self.logout_callback = logout_callback
         
         self.items_frame = CTkFrame(self.main_frame)
         self.items_frame.configure(fg_color='#5B5D76')
@@ -147,6 +148,19 @@ class Page:
         self.rule = CTkLabel(self.user_profile_frame, text=rule)
         self.rule.configure(text_color="white", height=20)
         self.rule.place(relx=.25, rely=.47)
+        
+    def _set_logout_btn(self):
+        p = os.path.dirname(os.path.realpath(__file__))
+        img = Image.open(p + "/assets/logout.png")
+        logoutImage = CTkImage(img)
+        self.btn_logout = Btn(self.user_profile_frame, image=logoutImage, height=0, width=0,border_spacing=0,corner_radius=5, anchor='center')
+        self.btn_logout.configure(fg_color='transparent')
+        
+        # self.btn_logout.disable_hover()
+        self.btn_logout.place(relx=.9, rely=.5, anchor='center')
+        
+        if self.logout_callback:
+            self.btn_logout.configure(command=self.logout_callback)
         
         
          
