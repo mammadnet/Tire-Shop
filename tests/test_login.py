@@ -32,7 +32,6 @@ class TestLogin(unittest.TestCase):
     def test_successful_login(self):
         """Test login with correct credentials"""
         result = login_permission(self.session, 'testadmin', 'testpass123')
-        print(result, "<============")
         self.assertTrue(result, "Login should succeed with correct credentials")
 
     def test_wrong_password(self):
