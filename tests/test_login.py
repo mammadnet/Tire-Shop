@@ -32,12 +32,18 @@ class TestLogin(unittest.TestCase):
     def test_successful_login(self):
         """Test login with correct credentials"""
         result = login_permission(self.session, 'testadmin', 'testpass123')
+        print(result, "<============")
         self.assertTrue(result, "Login should succeed with correct credentials")
 
     def test_wrong_password(self):
         """Test login with incorrect password"""
         result = login_permission(self.session, 'testadmin', 'wrongpassword')
         self.assertFalse(result, "Login should fail with incorrect password")
+
+    def test_nonexistent_user(self):
+        """Test login with non-existent username"""
+        result = login_permission(self.session, 'nonexistent', 'anypassword')
+        self.assertFalse(result, "Login should fail with non-existent username")
 
 
     @classmethod
