@@ -14,6 +14,11 @@ def exist_check_user(by:InstrumentedAttribute, pat):
     exist_check = session.execute(subq).scalar()
     return exist_check
 
+def user_by_username(db:Session, username:str):
+    query = select(User).where(User.user_name == username)
+    user = db.execute(query).first()
+    return user
+
 def user_by_username_pass(session:Session, username:str, passwd:str):
     with session as db:
         
