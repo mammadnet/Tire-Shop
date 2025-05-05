@@ -162,7 +162,7 @@ class Page:
         self.btn_logout.place(relx=.9, rely=.5, anchor='center')
         
         if self.logout_callback:
-            self.btn_logout.configure(command=self.logout_callback)
+            self.btn_logout.configure(command=lambda : self.logout_callback(self))
         
         
          
@@ -178,8 +178,8 @@ class Page:
         
 
 class Admin_page(Page):
-    def __init__(self, root, name:str, lastname:str, rule:str):
-        super().__init__(root, name, lastname, rule)
+    def __init__(self, root, name:str, lastname:str, rule:str, logout_callback=None):
+        super().__init__(root, name, lastname, rule, logout_callback)
         
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
@@ -330,8 +330,8 @@ class Admin_page(Page):
 
 
 class Manager_page(Page):
-    def __init__(self, root, name, lastname, rule):
-        super().__init__(root, name, lastname, rule)
+    def __init__(self, root, name, lastname, rule, logout_callback=None):
+        super().__init__(root, name, lastname, rule, logout_callback)
         
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
