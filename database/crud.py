@@ -78,4 +78,12 @@ def get_all_employees_json(session:Session):
     
     return json
 
+def remove_user_by_username(db:Session, username:str):
+    user = user_by_username(db, username)
+    if user:
+        db.delete(user)
+        db.commit()
+        return True
+    return False
+
 # create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
