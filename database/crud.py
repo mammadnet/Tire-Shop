@@ -56,7 +56,21 @@ def login_permission(session, username, passwd) -> bool:
         return True
     else:
         return False
+    
+    
+def get_all_employees(session:Session):
+    stmt = select(Employee)
+    
+    content = session.execute(stmt).fetchall()
+    return content
 
+def get_all_employees_json(session:Session):
+    rows = get_all_employees(session)
+    json = []
+    
+    for row in rows:
+        json.append(row[0].to_dict())
+    
+    return json
 
-
-create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
+# create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')

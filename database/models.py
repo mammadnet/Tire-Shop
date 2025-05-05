@@ -69,6 +69,16 @@ class User(Base):
         "polymorphic_identity": "user",
     }
     
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "lastname": self.lastname,
+            "phone": self.phone,
+            "national_number": self.national_number,
+            "username":self.user_name
+        }
+    
 class Admin(User):
     
     start_date = mapped_column(Date ,default=datetime.datetime.now().date(), use_existing_column=True)
