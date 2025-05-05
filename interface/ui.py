@@ -43,9 +43,12 @@ class Login_page:
 
         right_frame.rowconfigure((0, 1, 2, 3), weight=1, uniform='a')
         right_frame.columnconfigure(0, weight=1, uniform='a')
-
-        self.title = CTkLabel(right_frame, text="Tire Shop", font=(None, 50))
-        self.title.grid(row=0, column=0, sticky='s')
+        
+        p = os.path.dirname(os.path.realpath(__file__))
+        img = Image.open(p + "/assets/login-logo.png")
+        
+        self.logoimage = CTkLabel(right_frame, image=CTkImage(img, size=(230, 230)), text='', bg_color='transparent')
+        self.logoimage.grid(row=0, sticky='nswe')
 
         # This just a container for contain login frame and place it on verticaly center
         login_frame_container = CTkFrame(right_frame, fg_color='#494A5F')
