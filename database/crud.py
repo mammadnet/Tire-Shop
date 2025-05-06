@@ -17,7 +17,7 @@ def exist_check_user(by:InstrumentedAttribute, pat):
 def user_by_username(db:Session, username:str):
     query = select(User).where(User.user_name == username)
     user = db.execute(query).first()
-    return user
+    return user[0]
 
 def user_by_username_pass(session:Session, username:str, passwd:str):
     with session as db:
