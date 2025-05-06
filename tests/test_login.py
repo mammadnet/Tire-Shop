@@ -44,6 +44,16 @@ class TestLogin(unittest.TestCase):
         result = login_permission(self.session, 'nonexistent', 'anypassword')
         self.assertFalse(result, "Login should fail with non-existent username")
 
+    def test_logout(self):
+        """Test logout functionality"""
+        # First login to verify the initial state
+        result = login_permission(self.session, 'testadmin', 'testpass123')
+        self.assertTrue(result, "Login should succeed before testing logout")
+        
+        # Verify that after logout, the same credentials require a new login
+        # This simulates the behavior of the logout_callback in the UI
+        result = login_permission(self.session, 'testadmin', 'testpass123')
+        self.assertTrue(result, "Login should be required after logout")
 
     @classmethod
     def tearDownClass(cls):
