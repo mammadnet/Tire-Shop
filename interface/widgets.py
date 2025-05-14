@@ -149,3 +149,12 @@ class Item_button(CTkCanvas):
     def set_action(self, action):
         self.bind("<Button-1>", action)
         
+class DropDown(CTkComboBox):
+    def __init__(self, window, width=140, height=28, dropdown_fg_color='#393A4E', dropdown_text_color="white",button_color="#8889a6", fg_color="#393A4E",text_color="white", border_color="#8889a6", **kwargs):
+        
+        super().__init__(window, width=width, height=height, dropdown_fg_color=dropdown_fg_color,\
+                        dropdown_text_color=dropdown_text_color, text_color=text_color, fg_color=fg_color,\
+                        button_color=button_color, corner_radius=15, border_color=border_color, **kwargs)
+        
+        
+        
