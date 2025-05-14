@@ -227,7 +227,7 @@ class Admin_page(Page):
             self.btn_frame = CTkFrame(self, fg_color='transparent')
             self.btn_frame.place(relwidth =.2, relheight=.3, relx=1, rely=.1, anchor="ne")
             self.btn_frame.columnconfigure(0, weight=1)
-            self.btn_frame.rowconfigure((0,1,2), weight=1)
+            self.btn_frame.rowconfigure((0,1,2,3), weight=1)
             
             employee_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_list_btn.set_text("لیست کارمندان", "white", 13)
@@ -238,8 +238,12 @@ class Admin_page(Page):
             employee_new_btn.grid(row=1,column=0 , sticky="e")
     
             employee_delete_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
-            employee_delete_btn.set_text("کارمند جدید", "white", 13)
+            employee_delete_btn.set_text("حذف کارمند", "white", 13)
             employee_delete_btn.grid(row=2,column=0 , sticky="e")
+            
+            employee_update_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+            employee_update_btn.set_text("تغیرات کارمند", "white", 13)
+            employee_update_btn.grid(row=3,column=0 , sticky="e")
             
             
             self.content_table = self.initialize_table(self)
