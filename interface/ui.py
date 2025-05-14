@@ -246,9 +246,12 @@ class Admin_page(Page):
             employee_update_btn.grid(row=3,column=0 , sticky="e")
             
             
-            self.content_table = self.initialize_table(self)
-            self.insert_content_to_table(self.content_table, get_all_employees_json(session))
+            # self.content_table = self.initialize_table(self)
+            # self.insert_content_to_table(self.content_table, get_all_employees_json(session))
             
+            self.employee_new(self)
+            
+        #---------------------- Setup Employee table content----------------
         def initialize_table(self, window):
             style = ttk.Style()
             if is_windows():
@@ -304,6 +307,47 @@ class Admin_page(Page):
                 vals = (row["id"], row["name"], row["lastname"], row["username"], row["phone"], row["national_number"])
                 
                 table.insert(parent="", index=0, values=vals)
+                
+        #--------------------------------------------------------------------
+        
+        def employee_new(self, window):
+            
+            content_frame = CTkFrame(window, fg_color="#5B5D76")
+            content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            content_frame.rowconfigure((0,1,2,3,4,5,6), weight=1)
+            content_frame.columnconfigure((0,1,2), weight=1, pad=20)
+            
+            
+            rule_lable = CTkLabel(content_frame, text="Rule:", text_color="white", font=(None, 15))
+            rule_lable.grid(row=0, column=0)
+            
+            combo_rule_items = ['Admin', 'Manager']
+            rule_comboBox = DropDown(content_frame, values=combo_rule_items)
+            rule_comboBox.grid(row=0, column=1)
+            
+            name = StringVar()
+            name_input = Input(content_frame, 15, 150, 35, "Name", name)
+            name_input.grid(row=1, column=0)
+            
+            lastname = StringVar()
+            lastname_input = Input(content_frame, 15, 150, 35, "Lastname", lastname)
+            lastname_input.grid(row=1, column=1)
+            
+            national = StringVar()
+            national_input = Input(content_frame, 15, 150, 35, "National Number", national)
+            national_input.grid(row=2, column=0)
+            
+            phone = StringVar()
+            phone_input = Input(content_frame, 15, 150, 35, "Phone Number", phone)
+            phone_input.grid(row=2, column=1)
+            
+            username = StringVar()
+            username_input = Input(content_frame, 15, 150, 35, "Username", username)
+            username_input.grid(row=3, column=0)
+            
+            password = StringVar()
+            password_input = Input(content_frame, 15, 150, 35, "password", password)
+            password_input.grid(row=3, column=1)
             
             
             
