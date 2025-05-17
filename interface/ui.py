@@ -245,11 +245,13 @@ class Admin_page(Page):
             employee_update_btn.set_text("تغیرات کارمند", "white", 13)
             employee_update_btn.grid(row=3,column=0 , sticky="e")
             
+            self.error_message_label = CTkLabel(self, text_color="firebrick1")
             
             # self.content_table = self.initialize_table(self)
             # self.insert_content_to_table(self.content_table, get_all_employees_json(session))
             
             self.employee_new(self)
+            self.show_error_message('helloskdfjk')
             
         #---------------------- Setup Employee table content----------------
         def initialize_table(self, window):
@@ -347,10 +349,26 @@ class Admin_page(Page):
             
             password = StringVar()
             password_input = Input(content_frame, 15, 150, 35, "password", password)
+            password_input.set_textvariable(password)
             password_input.grid(row=3, column=1)
             
             
+            password_repeate = StringVar()
+            password_repeate_input = Input(content_frame, 15, 150, 35, "repeate password", password)
+            password_repeate_input.set_textvariable(password_repeate)
+            password_repeate_input.grid(row=4, column=1, sticky='n')
             
+            
+    
+        def show_error_message(self, message:str=None):
+            if message:
+                self.error_message_label.place(relx=.03, rely=.01)
+                self.error_message_label.configure(text=message)
+                Concur(lambda : self._clear_login_error(5)).start()
+        
+        def _clear_login_error(self, sec):
+            sleep(sec)
+            self.error_message_label.place_forget()
             
             
                 
