@@ -39,7 +39,12 @@ class Input(CTkEntry):
         self.configure(state='normal')
     
     def set_textvariable(self, textvariable):
+        self.textvariable = textvariable
         self.configure(textvariable=textvariable)
+        
+        if self.placeholder_text:
+            self.textvariable.set(self.placeholder_text)
+            
         
     def _entry_update_callback(self, *k):
         val = self.textvariable.get()
