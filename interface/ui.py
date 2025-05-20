@@ -10,82 +10,90 @@ from database import get_all_employees,get_all_employees_json, session
 from PIL import Image
 import os
 
+# Initialize the Login_page class
 class Login_page:
     def __init__(self, root, login_action):
+        # Store the login action callback function
         self.login_action = login_action
         
+        # Create the main frame for the login page
         self.main_frame = CTkFrame(root, fg_color='#494A5F')
 
-        # Main container for contain whole widgets of page
+        # Main container to hold all widgets of the page
         self.main_frame.pack(expand=True, fill='both')
 
-        # Bind the "Enter" key to the login button command
+        # Bind the "Enter" key to trigger the login button command
         root.bind('<Return>', lambda event: self.btn_command())
 
-        # Left frame of login page
-        # This frame is for placing the image related to the login page
-
+        # Left frame of the login page for displaying an image
         left_frame = CTkFrame(self.main_frame, fg_color='#494A5F')
         left_frame.place(relx=0, rely=0, relwidth=0.6, relheight=1)
 
-        # Load background image
+        # Load and display the background image
         currentpath = os.path.dirname(os.path.realpath(__file__))
         back = Image.open(currentpath + '/assets/login-background.png')
         image = CTkImage(back, size=(back.width*.715, back.height*.715))
-        image_lable = CTkLabel(left_frame, image=image, text='', fg_color='transparent', )
+        image_lable = CTkLabel(left_frame, image=image, text='', fg_color='transparent')
         image_lable.place(relx=0, rely=0, anchor='nw')
         #-----------------------------------------------
 
-        # Right frame of login page
-        # This page is for placing the login entry like username and password
+        # Right frame of the login page for login entries (username and password)
         right_frame = CTkFrame(self.main_frame, fg_color='transparent')
         right_frame.place(relx=.6, rely=0, relwidth=0.4, relheight=1)
 
+        # Configure grid layout for the right frame
         right_frame.rowconfigure((0, 1, 2, 3), weight=1, uniform='a')
         right_frame.columnconfigure(0, weight=1, uniform='a')
         
+        # Load and display the login logo
         p = os.path.dirname(os.path.realpath(__file__))
         img = Image.open(p + "/assets/login-logo.png")
-        
         self.logoimage = CTkLabel(right_frame, image=CTkImage(img, size=(230, 230)), text='', bg_color='transparent')
         self.logoimage.grid(row=0, sticky='nswe')
 
-        # This just a container for contain login frame and place it on verticaly center
+        # Container to vertically center the login frame
         login_frame_container = CTkFrame(right_frame, fg_color='#494A5F')
         login_frame_container.grid(row=1, column=0, rowspan=2, sticky='nsew')
 
+        # Configure grid layout for the login frame container
         login_frame_container.rowconfigure((0,2), weight=1, uniform='a')
         login_frame_container.rowconfigure(1, weight=10, uniform='a')
-
         login_frame_container.columnconfigure((0,2), weight=1, uniform='a')
         login_frame_container.columnconfigure(1, weight=10, uniform='a')
 
-        # A container for contain login entries
+        # Create a container for login entries
         login_frame = CTkFrame(login_frame_container, bg_color='transparent', fg_color='transparent')
         login_frame.grid(row=1, column=1)
 
+        # Configure grid layout for the login frame
         login_frame.rowconfigure((0, 1, 2), weight=1, pad=30)
         login_frame.columnconfigure(0, weight=1)
 
+        # Label to display error messages
         self.error_massage_lable = CTkLabel(login_frame, text_color='firebrick1')
         
+        # Variables to store username and password
         self.username = StringVar()
         self.password = StringVar()
         
 
+        # Create and configure the username entry field
         username_entry = Input(login_frame, 30, 300, 50, 'نام کاربری', self.username, show_err_callback=self.login_error_message)
         username_entry.configure(font=(None, 18))
         username_entry.set_placeholder_text("نام کاربری")
         username_entry.grid(row=0, column=0)
 
+        # Create and configure the password entry field
         password_entry = Input(login_frame, 30, 300, 50, 'رمز', self.password, show='*', show_err_callback = self.login_error_message)
         password_entry.configure(font=(None, 18))
         password_entry.set_placeholder_text("رمز")
         password_entry.grid(row=1, column=0)
 
+        # Link the entry fields to their respective variables
         username_entry.set_textvariable(self.username)
         password_entry.set_textvariable(self.password)
             
+        # Create and configure the login button
         login_button = Btn(login_frame, 250, 50, 30, "ورود")
         login_button.grid(row=2, column=0)
         login_button.configure(font=(None, 18))
