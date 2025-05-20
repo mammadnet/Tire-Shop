@@ -101,25 +101,33 @@ class Login_page:
         
 
     
+    # Method to get the main frame of the login page
     def get_frame(self):
         return self.main_frame
     
+    # Method to handle the login button command
     def btn_command(self):
+        # Trigger the login action with the provided username and password
         self.login_action(self.username.get(), self.password.get(), self)
         
-    def login_error_message(self, message:str=None):
+    # Method to display an error message on the login page
+    def login_error_message(self, message: str = None):
         if message:
+            # Place the error message label on the page
             self.error_massage_lable.place(relx=.05, rely=.61)
             self.error_massage_lable.configure(text=message)
-            Concur(lambda : self._clear_login_error(5)).start()
+            # Start a concurrent task to clear the error message after 5 seconds
+            Concur(lambda: self._clear_login_error(5)).start()
     
+    # Private method to clear the error message after a delay
     def _clear_login_error(self, sec):
-        sleep(sec)
-        self.error_massage_lable.place_forget()
-        
+        sleep(sec)  # Wait for the specified number of seconds
+        self.error_massage_lable.place_forget()  # Remove the error message label
+
+    # Method to destroy the login page and its components
     def destroy(self):
-        self.main_frame.pack_forget()
-        self.main_frame.destroy()
+        self.main_frame.pack_forget()  # Remove the main frame from the layout
+        self.main_frame.destroy()  # Destroy the main frame and its children
 
 
 class Page:
