@@ -210,74 +210,89 @@ class Page:
         self.main_frame.pack_forget()  # Remove the main frame from the layout
         
 
+# Initialize the Admin_page class, inheriting from Page
 class Admin_page(Page):
-    def __init__(self, root, name:str, lastname:str, rule:str, logout_callback=None):
+    def __init__(self, root, name: str, lastname: str, rule: str, logout_callback=None):
+        # Call the parent class constructor
         super().__init__(root, name, lastname, rule, logout_callback)
         
+        # Create a frame for admin-specific buttons
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
         self.buttons_frame.place(relx=0, rely=.15, relwidth=1, relheight=.85)
         
-        
-        self.buttons_frame.rowconfigure((0,1,2,3,4,5,6,7,8), weight=1)
+        # Configure the grid layout for the buttons frame
+        self.buttons_frame.rowconfigure((0, 1, 2, 3, 4, 5, 6, 7, 8), weight=1)
         self.buttons_frame.columnconfigure(0, weight=1)
         
+        # Define button styles
         self.button_font_size = 14
         self.button_color = "#393A4E"
         self.button_hover_color = "#434357"
         
-        products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Products" button
+        products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         products_btn.grid(row=0, column=0, sticky='e')
         products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
 
-        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Manager" button
+        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         backup_btn.grid(row=1, column=0, sticky='e')
         backup_btn.set_text('مدیر', fill='#FFFFFF', font_size=self.button_font_size)
         
-        employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Employee" button
+        employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         employee_btn.grid(row=2, column=0, sticky='e')
         employee_btn.set_text('کارمند', fill='#FFFFFF', font_size=self.button_font_size)
         employee_btn.set_action(self._employee_panel_callback)
         
-        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Reports" button
+        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         
-        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Backup" button
+        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         backup_btn.grid(row=4, column=0, sticky='e')
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
         
-        
-        #----------------DELETE THIS LINES AFTER FINISH THE ADMIN PANEL DEVELOPMENT-----------
+        # Initialize the employee panel for development purposes
         self.employee_panel(self.control_frame)
-        
+
+    # Nested class for the employee panel
     class employee_panel(CTkFrame):
         def __init__(self, root):
+            # Call the parent class constructor
             super().__init__(root)
             self.pack(expand=True, fill="both")
             self.configure(bg_color='transparent', fg_color='transparent')
             
+            # Create a frame for employee-related buttons
             self.btn_frame = CTkFrame(self, fg_color='transparent')
-            self.btn_frame.place(relwidth =.2, relheight=.3, relx=1, rely=.1, anchor="ne")
+            self.btn_frame.place(relwidth=.2, relheight=.3, relx=1, rely=.1, anchor="ne")
             self.btn_frame.columnconfigure(0, weight=1)
-            self.btn_frame.rowconfigure((0,1,2), weight=1)
+            self.btn_frame.rowconfigure((0, 1, 2), weight=1)
             
+            # Create and configure the "Employee List" button
             employee_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_list_btn.set_text("لیست کارمندان", "white", 13)
-            employee_list_btn.grid(row=0,column=0 ,sticky="e")
+            employee_list_btn.grid(row=0, column=0, sticky="e")
             
+            # Create and configure the "New Employee" button
             employee_new_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_new_btn.set_text("کارمند جدید", "white", 13)
-            employee_new_btn.grid(row=1,column=0 , sticky="e")
-    
+            employee_new_btn.grid(row=1, column=0, sticky="e")
+
+            # Create and configure the "Delete Employee" button
             employee_delete_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_delete_btn.set_text("کارمند جدید", "white", 13)
-            employee_delete_btn.grid(row=2,column=0 , sticky="e")
+            employee_delete_btn.grid(row=2, column=0, sticky="e")
             
-            
+            # Initialize the content table
             self.content_table = self.initialize_table(self)
             self.insert_content_to_table(self.content_table, get_all_employees_json(session))
             
+        # Method to initialize the content table
         def initialize_table(self, window):
             style = ttk.Style()
             if is_windows():
@@ -306,7 +321,7 @@ class Admin_page(Page):
             table.configure(columns=("id", "name", "lastname", "username", "phone", "national", "startDate"))
             table.configure(show="headings", selectmode="none")
             
-            
+            # Configure table columns
             table.column("id", width=40, anchor="center")
             table.column("name", width=100, anchor="center")
             table.column("lastname", width=150, anchor="center")
@@ -315,6 +330,7 @@ class Admin_page(Page):
             table.column("national", width=150, anchor="center")
             table.column("startDate", width=200, anchor="center")
             
+            # Configure table headings
             table.heading("id", text="id", anchor='center')
             table.heading("name", text="name", anchor='center')
             table.heading("lastname", text="lastname", anchor='center')
@@ -326,30 +342,15 @@ class Admin_page(Page):
             table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
             return table
             
-        
-        def insert_content_to_table(self, table:ttk.Treeview, content:list[dict]):
-            
+        # Method to insert content into the table
+        def insert_content_to_table(self, table: ttk.Treeview, content: list[dict]):
             for row in content:
                 vals = (row["id"], row["name"], row["lastname"], row["username"], row["phone"], row["national_number"])
-                
                 table.insert(parent="", index=0, values=vals)
-            
-            
-            
-            
-            
-                
-    
-    
+
+    # Callback method for the employee panel
     def _employee_panel_callback(self, *k):
-        # self.employee_panel(self.control_frame)
-        print("hellloooooooo")
-        
-        
-        
-        
-        
-        
+        print("Employee panel callback triggered")
         
     def _set_semple_lable(self, message):
         self.loggedin_lable = CTkLabel(self.main_frame, text_color='blue', text=message)
