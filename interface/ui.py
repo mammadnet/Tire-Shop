@@ -129,71 +129,85 @@ class Login_page:
         self.main_frame.pack_forget()  # Remove the main frame from the layout
         self.main_frame.destroy()  # Destroy the main frame and its children
 
-
+# Initialize the Page class
 class Page:
-    def __init__(self, root, name:str, lastname:str, rule:str, logout_callback=None):
+    def __init__(self, root, name: str, lastname: str, rule: str, logout_callback=None):
+        # Create the main frame for the page
         self.main_frame = CTkFrame(root)
         self.main_frame.pack(expand=True, fill='both')
         
+        # Store the logout callback function
         self.logout_callback = logout_callback
         
+        # Create a frame for user profile and control buttons
         self.items_frame = CTkFrame(self.main_frame)
         self.items_frame.configure(fg_color='#5B5D76')
-        self.items_frame.place(relwidth = .3, relheight=1, relx=.7, rely=0, anchor='nw')
+        self.items_frame.place(relwidth=0.3, relheight=1, relx=0.7, rely=0, anchor='nw')
         
+        # Create a frame for the main content of the page
         self.control_frame = CTkFrame(self.main_frame)
         self.control_frame.configure(fg_color='#494A5F')
-        self.control_frame.place(relwidth=.7,relheight=1, relx=0, rely=0)
+        self.control_frame.place(relwidth=0.7, relheight=1, relx=0, rely=0)
         
+        # Create a container for user profile information
         self.user_profile_container = CTkFrame(self.items_frame)
         self.user_profile_container.configure(fg_color='transparent')
-        self.user_profile_container.place(x=0, y=0, relwidth = 1, relheight=.15)
+        self.user_profile_container.place(x=0, y=0, relwidth=1, relheight=0.15)
         
+        # Create a frame for user profile details
         self.user_profile_frame = CTkFrame(self.user_profile_container)
         self.user_profile_frame.configure(fg_color='#393A4E', corner_radius=18)
-        self.user_profile_frame.place(relx=.5, rely=.5, relwidth=.75, relheight=.6, anchor='center')
+        self.user_profile_frame.place(relx=0.5, rely=0.5, relwidth=0.75, relheight=0.6, anchor='center')
         
+        # Set the user profile details
         self.set_profile(name, lastname, rule)
-        self._set_logout_btn()
         
-    
-    def set_profile(self, name:str, lastname:str, rule:str)   :
+        # Add a logout button to the user profile
+        self._set_logout_btn()
+
+    # Method to set user profile details
+    def set_profile(self, name: str, lastname: str, rule: str):
+        # Capitalize the name, lastname, and rule for display
         name = name.capitalize()
-        lastname= lastname.capitalize()
+        lastname = lastname.capitalize()
         rule = rule.capitalize()
          
+        # Display the user's name and lastname
         self.user_name_lastname = CTkLabel(self.user_profile_frame, text=f'{name} {lastname}')
         self.user_name_lastname.configure(text_color="white", height=5)
-        self.user_name_lastname.place(relx=.25, rely=.23)
+        self.user_name_lastname.place(relx=0.25, rely=0.23)
         
+        # Display the user's rule
         self.rule = CTkLabel(self.user_profile_frame, text=rule)
         self.rule.configure(text_color="white", height=20)
-        self.rule.place(relx=.25, rely=.47)
+        self.rule.place(relx=0.25, rely=0.47)
         
+    # Private method to set the logout button
     def _set_logout_btn(self):
+        # Load the logout icon image
         p = os.path.dirname(os.path.realpath(__file__))
         img = Image.open(p + "/assets/logout.png")
         logoutImage = CTkImage(img)
-        self.btn_logout = Btn(self.user_profile_frame, image=logoutImage, height=0, width=0,border_spacing=0,corner_radius=5, anchor='center')
+        
+        # Create the logout button
+        self.btn_logout = Btn(self.user_profile_frame, image=logoutImage, height=0, width=0, border_spacing=0, corner_radius=5, anchor='center')
         self.btn_logout.configure(fg_color='transparent')
         
-        # self.btn_logout.disable_hover()
-        self.btn_logout.place(relx=.9, rely=.5, anchor='center')
+        # Place the logout button in the user profile frame
+        self.btn_logout.place(relx=0.9, rely=0.5, anchor='center')
         
+        # Set the logout action if a callback is provided
         if self.logout_callback:
-            self.btn_logout.configure(command=lambda : self.logout_callback(self))
-        
-        
-         
-    
-    
+            self.btn_logout.configure(command=lambda: self.logout_callback(self))
+
+    # Method to destroy the page and its components
     def destroy(self):
-        self.main_frame.pack_forget()
-        self.main_frame.destroy()
-        
+        self.main_frame.pack_forget()  # Remove the main frame from the layout
+        self.main_frame.destroy()  # Destroy the main frame and its children
+    
+    # Method to hide the page without destroying it
     def hide(self):
-        self.main_frame.pack_forget()
-        
+        self.main_frame.pack_forget()  # Remove the main frame from the layout
         
 
 class Admin_page(Page):
