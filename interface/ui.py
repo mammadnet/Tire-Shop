@@ -363,42 +363,52 @@ class Admin_page(Page):
 
 
 
+# Initialize the Manager_page class, inheriting from Page
 class Manager_page(Page):
     def __init__(self, root, name, lastname, rule, logout_callback=None):
+        # Call the parent class constructor
         super().__init__(root, name, lastname, rule, logout_callback)
         
+        # Create a frame for manager-specific buttons
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
         self.buttons_frame.place(relx=0, rely=.15, relwidth=1, relheight=.85)
         
-        
-        self.buttons_frame.rowconfigure((0,1,2,3,4,5,6,7,8), weight=1)
+        # Configure the grid layout for the buttons frame
+        self.buttons_frame.rowconfigure((0, 1, 2, 3, 4, 5, 6, 7, 8), weight=1)
         self.buttons_frame.columnconfigure(0, weight=1)
         
+        # Define button styles
         self.button_font_size = 14
         self.button_color = "#393A4E"
         self.button_hover_color = "#434357"
         
-        dashboard_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Dashboard" button
+        dashboard_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         dashboard_btn.grid(row=0, column=0, sticky='e')
         dashboard_btn.set_text('داشبورد', fill='#FFFFFF', font_size=self.button_font_size)
         
-        products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Products" button
+        products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         products_btn.grid(row=1, column=0, sticky='e')
         products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
         
-        employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Employee" button
+        employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         employee_btn.grid(row=2, column=0, sticky='e')
         employee_btn.set_text('کارمند', fill='#FFFFFF', font_size=self.button_font_size)
         
-        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Reports" button
+        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         
-        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        # Create and configure the "Backup" button
+        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color, hover_color=self.button_hover_color, background="#5B5D76")
         backup_btn.grid(row=4, column=0, sticky='e')
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
-        
+
+    # Method to destroy the manager page and its components
     def destroy(self):
-        self.main_frame.pack_forget()
-        self.main_frame.destroy()
+        self.main_frame.pack_forget()  # Remove the main frame from the layout
+        self.main_frame.destroy()  # Destroy the main frame and its children
