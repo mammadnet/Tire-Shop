@@ -13,7 +13,11 @@ class Btn(CTkButton):
         
     def disable_hover(self):
         self.configure(hover=False)
-
+        
+    def set_text(self, text):
+        if isarabic(text):
+            text = render_text(text)
+            self.configure(text=text)
 
 class Input(CTkEntry):
     def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, **kwargs):
