@@ -81,6 +81,14 @@ class Input(CTkEntry):
             text = render_text(text)
             self.textvariable.set(text)
             
+    
+    def get(self):
+        val = self.textvariable.get()
+        if val == self.placeholder_text:
+            return ""
+        else:
+            return val
+            
         
                 
         
