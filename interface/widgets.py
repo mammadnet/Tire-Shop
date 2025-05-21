@@ -89,6 +89,9 @@ class Input(CTkEntry):
             return ""
         else:
             return val
+    
+    def clear(self):
+        self.textvariable.set('')
             
         
                 
