@@ -251,7 +251,6 @@ class Admin_page(Page):
             # self.insert_content_to_table(self.content_table, get_all_employees_json(session))
             
             self.employee_new(self)
-            self.show_error_message('helloskdfjk')
             
         #---------------------- Setup Employee table content----------------
         def initialize_table(self, window):
@@ -329,22 +328,27 @@ class Admin_page(Page):
             
             name = StringVar()
             name_input = Input(content_frame, 15, 150, 35, "Name", name)
+            name_input.set_textvariable(name)
             name_input.grid(row=1, column=0)
             
             lastname = StringVar()
             lastname_input = Input(content_frame, 15, 150, 35, "Lastname", lastname)
+            lastname_input.set_textvariable(lastname)
             lastname_input.grid(row=1, column=1)
             
             national = StringVar()
             national_input = Input(content_frame, 15, 150, 35, "National Number", national)
+            national_input.set_textvariable(national)
             national_input.grid(row=2, column=0)
             
             phone = StringVar()
             phone_input = Input(content_frame, 15, 150, 35, "Phone Number", phone)
+            phone_input.set_textvariable(phone)
             phone_input.grid(row=2, column=1)
             
             username = StringVar()
             username_input = Input(content_frame, 15, 150, 35, "Username", username)
+            username_input.set_textvariable(username)
             username_input.grid(row=3, column=0)
             
             password = StringVar()
@@ -357,6 +361,42 @@ class Admin_page(Page):
             password_repeate_input = Input(content_frame, 15, 150, 35, "repeate password", password)
             password_repeate_input.set_textvariable(password_repeate)
             password_repeate_input.grid(row=4, column=1, sticky='n')
+            
+            btn = Btn(content_frame, 160, 45)
+            btn.configure(command=lambda : self.new_employee_action(self.show_error_message, name_input.get(), lastname_input.get(), national_input.get(), phone_input.get(), username_input.get(), password_input.get(), password_repeate_input.get()))
+            btn.configure(font=(None, 16))
+            btn.set_text(text='ایجاد کاربر')
+            btn.grid(row=5, columnspan=2, sticky='n')
+            # if self.check_value_inputs(self.show_error_message, name.get(), lastname.get(), national.get(), phone.get(), username.get(), password.get(), password_repeate.get())
+            
+        
+        def new_employee_action(self, show_err_callback, name:str=None,\
+                                lastname:str=None, national:str=None, phone:str=None,\
+                                username:str=None, password:str=None, repeat_password:str=None):
+            
+            if self.check_value_inputs_in_new_imployee(show_err_callback, name, lastname, national, phone, username, password, repeat_password):
+                pass
+            
+        
+        def check_value_inputs_in_new_imployee(self, show_err_callback, name:str=None, lastname:str=None, national:str=None, phone:str=None,\
+                            username:str=None, password:str=None, repeat_password:str=None):
+                        
+            if not (name and lastname and national and phone and username and password and repeat_password):
+                show_err_callback("Inputs cannot be empty.")
+                return False
+            
+            if not (password == repeat_password):
+                show_err_callback("password and repeated password should be the same")
+                return False
+            
+            if len(password) < 8:
+                show_err_callback("The minimum number of characters in the password must be 8")
+                return False
+            
+            return True
+                
+                
+                
             
             
     
