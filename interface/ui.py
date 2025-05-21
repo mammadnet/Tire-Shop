@@ -251,6 +251,8 @@ class Admin_page(Page):
             
             self.error_message_label = CTkLabel(self, text_color="firebrick1")
             
+            self.success_message_label = CTkLabel(self, text_color="green")
+            
             # self.content_table = self.initialize_table(self)
             # self.insert_content_to_table(self.content_table, get_all_employees_json(session))
             
@@ -381,7 +383,7 @@ class Admin_page(Page):
             if self.check_value_inputs_in_new_imployee(show_err_callback, name, lastname, national, phone, username, password, repeat_password):
                 try:
                     create_new_user(session, name, lastname, phone, national, rule, username, password)
-                
+                    self.show_success_message("New user was created")
                 except Exception as e:
                     show_err_callback(e)
                     
@@ -412,6 +414,7 @@ class Admin_page(Page):
     
         def show_error_message(self, message:str | Exception=None):
             if message:
+                self.clear_success_message()
                 message = str(message)
                 print(message)
                 self.error_message_label.place(relx=.03, rely=.01)
@@ -422,6 +425,20 @@ class Admin_page(Page):
             sleep(sec)
             self.error_message_label.place_forget()
             
+        
+        def show_success_message(self, message:str=None):
+            if message:
+                message = str(message)
+                self.success_message_label.place(relx=.03, rely=.01)
+                self.success_message_label.configure(text=message)
+                Concur(lambda : self._clear_login_error(5)).start()
+            
+        def _clear_success_message(self, sec):
+            sleep(sec)
+            self.clear_success_message()
+        
+        def clear_success_message(self):
+            self.success_message_label.place_forget()
             
                 
     
