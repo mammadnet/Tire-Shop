@@ -5,7 +5,8 @@ from .widgets import *
 from utilities import Concur, is_windows
 from time import sleep
 
-from database import get_all_employees,get_all_employees_json, session
+from database import get_all_employees,get_all_employees_json, session, create_new_user
+from database import UsernameAlreadyExistsException, NationalNumberAlreadyExistsException
 
 from PIL import Image
 import os
@@ -366,7 +367,7 @@ class Admin_page(Page):
             password_repeate_input.grid(row=4, column=1, sticky='n')
             
             btn = Btn(content_frame, 160, 45)
-            btn.configure(command=lambda : self.new_employee_action(self.show_error_message, name_input.get(), lastname_input.get(), national_input.get(), phone_input.get(), username_input.get(), password_input.get(), password_repeate_input.get()))
+            btn.configure(command=lambda : self.new_employee_action(self.show_error_message, name_input.get(), lastname_input.get(), national_input.get(), phone_input.get(), username_input.get(), password_input.get(), password_repeate_input.get(), rule_comboBox.get()))
             btn.configure(font=(None, 16))
             btn.set_text(text='ایجاد کاربر')
             btn.grid(row=5, columnspan=2, sticky='n')
@@ -375,10 +376,16 @@ class Admin_page(Page):
         
         def new_employee_action(self, show_err_callback, name:str=None,\
                                 lastname:str=None, national:str=None, phone:str=None,\
-                                username:str=None, password:str=None, repeat_password:str=None):
+                                username:str=None, password:str=None, repeat_password:str=None, rule:str=None):
             
             if self.check_value_inputs_in_new_imployee(show_err_callback, name, lastname, national, phone, username, password, repeat_password):
-                pass
+                try:
+                    create_new_user(session, name, lastname, phone, national, rule, username, password)
+                
+                except Exception as e:
+                    show_err_callback(e)
+                    
+                
             
         
         def check_value_inputs_in_new_imployee(self, show_err_callback, name:str=None, lastname:str=None, national:str=None, phone:str=None,\
@@ -403,8 +410,10 @@ class Admin_page(Page):
             
             
     
-        def show_error_message(self, message:str=None):
+        def show_error_message(self, message:str | Exception=None):
             if message:
+                message = str(message)
+                print(message)
                 self.error_message_label.place(relx=.03, rely=.01)
                 self.error_message_label.configure(text=message)
                 Concur(lambda : self._clear_login_error(5)).start()
