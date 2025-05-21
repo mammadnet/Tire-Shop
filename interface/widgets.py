@@ -79,6 +79,7 @@ class Input(CTkEntry):
     def set_placeholder_text(self, text:str):
         if isarabic(text):
             text = render_text(text)
+            self.placeholder_text = text
             self.textvariable.set(text)
             
     
