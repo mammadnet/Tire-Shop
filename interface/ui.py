@@ -423,11 +423,16 @@ class Admin_page(Page):
         
         def _clear_login_error(self, sec):
             sleep(sec)
+            self.clear_error_message()
+            
+        def clear_error_message(self):
             self.error_message_label.place_forget()
+            
             
         
         def show_success_message(self, message:str=None):
             if message:
+                self.clear_error_message()
                 message = str(message)
                 self.success_message_label.place(relx=.03, rely=.01)
                 self.success_message_label.configure(text=message)
