@@ -8,6 +8,8 @@ from .connection import session
 
 from utilities import hashing
 
+from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException
+
 # Check if a user is exist
 def exist_check_user(session:Session, by:InstrumentedAttribute, pat):
     subq = exists(by).where(by == pat).select()
@@ -31,6 +33,7 @@ def user_by_username_pass(session:Session, username:str, passwd:str):
 
 
 def create_new_user(session: Session, name:str, lastname:str, phone:str, national_number:str, level_type:str, username:str, passwd:str) -> User:
+    level_type = level_type.lower()
     if level_type == 'admin':
         new_user = Admin(name=name, lastname=lastname, phone=phone, national_number=national_number, user_name=username)
     elif level_type == 'manager':
@@ -43,13 +46,18 @@ def create_new_user(session: Session, name:str, lastname:str, phone:str, nationa
     
     
     with session as db:
-        exist_national_id_check = exist_check_user(User.national_number, national_number)
-        exist_username_check = exist_check_user(User.user_name, username)
+        exist_national_id_check = exist_check_user(session, User.national_number, national_number)
+        exist_username_check = exist_check_user(session, User.user_name, username)
+                
+        if exist_national_id_check:
+            raise NationalNumberAlreadyExistsException(national_number)
         
-        if not exist_national_id_check and not exist_username_check:
-            new_user.hashed_passwd = hashing(passwd)
-            db.add(new_user)
-            db.commit()
+        if exist_username_check:
+            raise UsernameAlreadyExistsException(username)
+
+        new_user.hashed_passwd = hashing(passwd)
+        db.add(new_user)
+        db.commit()
             
     # TODO rais an error that the national code already exist
     return None
