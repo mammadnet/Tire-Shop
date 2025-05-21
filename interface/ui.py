@@ -230,7 +230,7 @@ class Admin_page(Page):
             self.btn_frame = CTkFrame(self, fg_color='transparent')
             self.btn_frame.place(relwidth =.2, relheight=.3, relx=1, rely=.1, anchor="ne")
             self.btn_frame.columnconfigure(0, weight=1)
-            self.btn_frame.rowconfigure((0,1,2), weight=1)
+            self.btn_frame.rowconfigure((0,1,2,3), weight=1)
             
             employee_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_list_btn.set_text("لیست کارمندان", "white", 13)
@@ -241,13 +241,21 @@ class Admin_page(Page):
             employee_new_btn.grid(row=1,column=0 , sticky="e")
     
             employee_delete_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
-            employee_delete_btn.set_text("کارمند جدید", "white", 13)
+            employee_delete_btn.set_text("حذف کارمند", "white", 13)
             employee_delete_btn.grid(row=2,column=0 , sticky="e")
             
+            employee_update_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+            employee_update_btn.set_text("تغیرات کارمند", "white", 13)
+            employee_update_btn.grid(row=3,column=0 , sticky="e")
             
-            self.content_table = self.initialize_table(self)
-            self.insert_content_to_table(self.content_table, get_all_employees_json(session))
+            self.error_message_label = CTkLabel(self, text_color="firebrick1")
             
+            # self.content_table = self.initialize_table(self)
+            # self.insert_content_to_table(self.content_table, get_all_employees_json(session))
+            
+            self.employee_new(self)
+            
+        #---------------------- Setup Employee table content----------------
         def initialize_table(self, window):
             style = ttk.Style()
             if is_windows():
@@ -303,9 +311,107 @@ class Admin_page(Page):
                 vals = (row["id"], row["name"], row["lastname"], row["username"], row["phone"], row["national_number"])
                 
                 table.insert(parent="", index=0, values=vals)
+                
+        #--------------------------------------------------------------------
+        
+        def employee_new(self, window):
+            
+            content_frame = CTkFrame(window, fg_color="#5B5D76")
+            content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            content_frame.rowconfigure((0,1,2,3,4,5,6), weight=1)
+            content_frame.columnconfigure((0,1,2), weight=1, pad=20)
             
             
+            rule_lable = CTkLabel(content_frame, text="Rule:", text_color="white", font=(None, 15))
+            rule_lable.grid(row=0, column=0)
             
+            combo_rule_items = ['Admin', 'Manager']
+            rule_comboBox = DropDown(content_frame, values=combo_rule_items)
+            rule_comboBox.grid(row=0, column=1)
+            
+            name = StringVar()
+            name_input = Input(content_frame, 15, 150, 35, "Name", name)
+            name_input.set_textvariable(name)
+            name_input.grid(row=1, column=0)
+            
+            lastname = StringVar()
+            lastname_input = Input(content_frame, 15, 150, 35, "Lastname", lastname)
+            lastname_input.set_textvariable(lastname)
+            lastname_input.grid(row=1, column=1)
+            
+            national = StringVar()
+            national_input = Input(content_frame, 15, 150, 35, "National Number", national)
+            national_input.set_textvariable(national)
+            national_input.grid(row=2, column=0)
+            
+            phone = StringVar()
+            phone_input = Input(content_frame, 15, 150, 35, "Phone Number", phone)
+            phone_input.set_textvariable(phone)
+            phone_input.grid(row=2, column=1)
+            
+            username = StringVar()
+            username_input = Input(content_frame, 15, 150, 35, "Username", username)
+            username_input.set_textvariable(username)
+            username_input.grid(row=3, column=0)
+            
+            password = StringVar()
+            password_input = Input(content_frame, 15, 150, 35, "password", password)
+            password_input.set_textvariable(password)
+            password_input.grid(row=3, column=1)
+            
+            
+            password_repeate = StringVar()
+            password_repeate_input = Input(content_frame, 15, 150, 35, "repeate password", password)
+            password_repeate_input.set_textvariable(password_repeate)
+            password_repeate_input.grid(row=4, column=1, sticky='n')
+            
+            btn = Btn(content_frame, 160, 45)
+            btn.configure(command=lambda : self.new_employee_action(self.show_error_message, name_input.get(), lastname_input.get(), national_input.get(), phone_input.get(), username_input.get(), password_input.get(), password_repeate_input.get()))
+            btn.configure(font=(None, 16))
+            btn.set_text(text='ایجاد کاربر')
+            btn.grid(row=5, columnspan=2, sticky='n')
+            # if self.check_value_inputs(self.show_error_message, name.get(), lastname.get(), national.get(), phone.get(), username.get(), password.get(), password_repeate.get())
+            
+        
+        def new_employee_action(self, show_err_callback, name:str=None,\
+                                lastname:str=None, national:str=None, phone:str=None,\
+                                username:str=None, password:str=None, repeat_password:str=None):
+            
+            if self.check_value_inputs_in_new_imployee(show_err_callback, name, lastname, national, phone, username, password, repeat_password):
+                pass
+            
+        
+        def check_value_inputs_in_new_imployee(self, show_err_callback, name:str=None, lastname:str=None, national:str=None, phone:str=None,\
+                            username:str=None, password:str=None, repeat_password:str=None):
+                        
+            if not (name and lastname and national and phone and username and password and repeat_password):
+                show_err_callback("Inputs cannot be empty.")
+                return False
+            
+            if not (password == repeat_password):
+                show_err_callback("password and repeated password should be the same")
+                return False
+            
+            if len(password) < 8:
+                show_err_callback("The minimum number of characters in the password must be 8")
+                return False
+            
+            return True
+                
+                
+                
+            
+            
+    
+        def show_error_message(self, message:str=None):
+            if message:
+                self.error_message_label.place(relx=.03, rely=.01)
+                self.error_message_label.configure(text=message)
+                Concur(lambda : self._clear_login_error(5)).start()
+        
+        def _clear_login_error(self, sec):
+            sleep(sec)
+            self.error_message_label.place_forget()
             
             
                 

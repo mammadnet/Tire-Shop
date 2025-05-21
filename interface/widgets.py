@@ -13,7 +13,11 @@ class Btn(CTkButton):
         
     def disable_hover(self):
         self.configure(hover=False)
-
+        
+    def set_text(self, text):
+        if isarabic(text):
+            text = render_text(text)
+            self.configure(text=text)
 
 class Input(CTkEntry):
     def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, **kwargs):
@@ -39,7 +43,12 @@ class Input(CTkEntry):
         self.configure(state='normal')
     
     def set_textvariable(self, textvariable):
+        self.textvariable = textvariable
         self.configure(textvariable=textvariable)
+        
+        if self.placeholder_text:
+            self.textvariable.set(self.placeholder_text)
+            
         
     def _entry_update_callback(self, *k):
         val = self.textvariable.get()
@@ -71,6 +80,14 @@ class Input(CTkEntry):
         if isarabic(text):
             text = render_text(text)
             self.textvariable.set(text)
+            
+    
+    def get(self):
+        val = self.textvariable.get()
+        if val == self.placeholder_text:
+            return ""
+        else:
+            return val
             
         
                 
@@ -148,4 +165,13 @@ class Item_button(CTkCanvas):
     
     def set_action(self, action):
         self.bind("<Button-1>", action)
+        
+class DropDown(CTkComboBox):
+    def __init__(self, window, width=140, height=28, dropdown_fg_color='#393A4E', dropdown_text_color="white",button_color="#8889a6", fg_color="#393A4E",text_color="white", border_color="#8889a6", **kwargs):
+        
+        super().__init__(window, width=width, height=height, dropdown_fg_color=dropdown_fg_color,\
+                        dropdown_text_color=dropdown_text_color, text_color=text_color, fg_color=fg_color,\
+                        button_color=button_color, corner_radius=15, border_color=border_color, **kwargs)
+        
+        
         
