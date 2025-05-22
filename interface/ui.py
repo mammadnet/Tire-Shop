@@ -246,7 +246,8 @@ class Admin_page(Page):
             employee_delete_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_delete_btn.set_text("حذف کارمند", "white", 13)
             employee_delete_btn.grid(row=2,column=0 , sticky="e")
-            
+            employee_delete_btn.set_action(lambda e: self.toggle_view('delete'))
+
             employee_update_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_update_btn.set_text("تغیرات کارمند", "white", 13)
             employee_update_btn.grid(row=3,column=0 , sticky="e")
@@ -279,13 +280,20 @@ class Admin_page(Page):
         def toggle_view(self, view_name):
             if view_name == 'list' and self.current_view != 'list':
                 self.new_employee_frame.place_forget()
+                self.delete_user_frame.place_forget() 
                 self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
                 self.current_view = 'list'
                 self.insert_content_to_table(self.table, get_all_employees_json(session))
             elif view_name == 'new' and self.current_view != 'new':
                 self.table.place_forget()
+                self.delete_user_frame.place_forget()
                 self.new_employee_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
                 self.current_view = 'new'
+            elif view_name == 'delete' and self.current_view != 'delete':
+                self.table.place_forget()
+                self.new_employee_frame.place_forget()
+                self.delete_user(self, get_all_employees_json(session))
+                self.current_view = 'delete'
 
         #---------------------- Setup Employee table content----------------
         def initialize_table(self, window):
