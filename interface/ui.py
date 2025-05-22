@@ -500,7 +500,7 @@ class Admin_page(Page):
             if self.delete_user_comboBox:
                 self.delete_user_comboBox.destroy()
             
-            self.delete_user_comboBox = DropDown(content_frame, values=combo_delete_items, width=200)
+            self.delete_user_comboBox = DropDown(content_frame, values=combo_delete_items, width=250)
             self.delete_user_comboBox.grid(row=0, column=0)
             
 
