@@ -274,8 +274,7 @@ class Admin_page(Page):
             
             # Show table by default
             self.current_view = None
-            # self.toggle_view('list')
-            self.delete_user(self, get_all_employees_json(session))
+            self.toggle_view('list')
 
         def toggle_view(self, view_name):
             if view_name == 'list' and self.current_view != 'list':
