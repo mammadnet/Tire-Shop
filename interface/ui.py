@@ -480,7 +480,6 @@ class Admin_page(Page):
                 content_frame = CTkFrame(window, fg_color="#5B5D76")
                 self.delete_user_frame = content_frame
             
-            content_frame = CTkFrame(window, fg_color="#5B5D76")
             content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
             content_frame.rowconfigure((0, 3), weight=1)
             content_frame.columnconfigure((0, 1), weight=1, pad=20, uniform='a')
