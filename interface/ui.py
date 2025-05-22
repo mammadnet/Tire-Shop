@@ -504,13 +504,16 @@ class Admin_page(Page):
                 self.delete_user_btn.set_text(text='حذف کاربر')
                 self.delete_user_btn.grid(row=1, column=0, columnspan=4)
             
-            self.delete_user_btn.configure(command=lambda : self.delete_user_action(self.delete_user_comboBox.get().split(':')[0], self.show_error_message))
+            self.delete_user_btn.configure(command=lambda : self.delete_user_action(self.delete_user_comboBox.get().split(':')[0], self.show_error_message, self.show_success_message))
 
-        def delete_user_action(self, username, show_msg_callback):
+        def delete_user_action(self, username, show_msg_callback, show_success_msg_callback):
             try:
                 remove_user_by_username(session, username)
             except Exception as e:
                 show_msg_callback(e)
+            
+            show_success_msg_callback("User was deleted")
+            self.delete_user(self, get_all_employees_json(session))
         
         def show_error_message(self, message:str | Exception=None):
             if message:
