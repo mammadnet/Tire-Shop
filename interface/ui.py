@@ -332,6 +332,9 @@ class Admin_page(Page):
         
         def insert_content_to_table(self, table:ttk.Treeview, content:list[dict]):
             
+            
+            table.delete(*table.get_children())
+            
             for row in content:
                 vals = (row["id"], row["name"], row["lastname"], row["username"], row["phone"], row["national_number"])
                 
