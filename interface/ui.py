@@ -227,19 +227,22 @@ class Admin_page(Page):
             self.pack(expand=True, fill="both")
             self.configure(bg_color='transparent', fg_color='transparent')
             
+            # Setup button frame
             self.btn_frame = CTkFrame(self, fg_color='transparent')
-            self.btn_frame.place(relwidth =.2, relheight=.3, relx=1, rely=.1, anchor="ne")
+            self.btn_frame.place(relwidth=.2, relheight=.3, relx=1, rely=.1, anchor="ne")
             self.btn_frame.columnconfigure(0, weight=1)
             self.btn_frame.rowconfigure((0,1,2,3), weight=1)
-            
+
             employee_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_list_btn.set_text("لیست کارمندان", "white", 13)
             employee_list_btn.grid(row=0,column=0 ,sticky="e")
+            employee_list_btn.set_action(lambda e: self.toggle_view('list'))
             
             employee_new_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_new_btn.set_text("کارمند جدید", "white", 13)
             employee_new_btn.grid(row=1,column=0 , sticky="e")
-    
+            employee_new_btn.set_action(lambda e: self.toggle_view('new'))
+
             employee_delete_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_delete_btn.set_text("حذف کارمند", "white", 13)
             employee_delete_btn.grid(row=2,column=0 , sticky="e")
@@ -249,16 +252,34 @@ class Admin_page(Page):
             employee_update_btn.grid(row=3,column=0 , sticky="e")
             
             self.error_message_label = CTkLabel(self, text_color="firebrick1")
-            
             self.success_message_label = CTkLabel(self, text_color="green")
-            
             self.new_employee_inputs: list[Input] = []
+
+            # Create table and new employee form but hide them initially
+            self.table = self.initialize_table(self)
+            self.table.place_forget()
             
-            # self.content_table = self.initialize_table(self)
-            # self.insert_content_to_table(self.content_table, get_all_employees_json(session))
-            
+            # Call employee_new once to create all widgets
             self.employee_new(self)
+            # Remember the content_frame to toggle visibility
+            self.new_employee_frame = self.winfo_children()[-1]
+            self.new_employee_frame.place_forget()
             
+            # Show table by default
+            self.current_view = None
+            self.toggle_view('list')
+
+        def toggle_view(self, view_name):
+            if view_name == 'list' and self.current_view != 'list':
+                self.new_employee_frame.place_forget()
+                self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+                self.current_view = 'list'
+                self.insert_content_to_table(self.table, get_all_employees_json(session))
+            elif view_name == 'new' and self.current_view != 'new':
+                self.table.place_forget()
+                self.new_employee_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+                self.current_view = 'new'
+
         #---------------------- Setup Employee table content----------------
         def initialize_table(self, window):
             style = ttk.Style()
