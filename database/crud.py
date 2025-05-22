@@ -8,7 +8,7 @@ from .connection import session
 
 from utilities import hashing
 
-from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException
+from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException
 
 # Check if a user is exist
 def exist_check_user(session:Session, by:InstrumentedAttribute, pat):
@@ -19,6 +19,9 @@ def exist_check_user(session:Session, by:InstrumentedAttribute, pat):
 def user_by_username(db:Session, username:str):
     query = select(User).where(User.user_name == username)
     user = db.execute(query).first()
+    if not user or not user[0]:
+        raise UsernameNotExistsException(username)
+    
     return user[0]
 
 def user_by_username_pass(session:Session, username:str, passwd:str):
