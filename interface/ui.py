@@ -351,7 +351,7 @@ class Admin_page(Page):
             # First column
             rule_label = CTkLabel(content_frame, text="Rule:", text_color="white", font=(None, 15))
             rule_label.grid(row=0, column=1, sticky='w')
-            combo_rule_items = ['Admin', 'Manager']
+            combo_rule_items = ['Employee', 'Manager']
             rule_comboBox = DropDown(content_frame, values=combo_rule_items)
             rule_comboBox.grid(row=0, column=2)
 
