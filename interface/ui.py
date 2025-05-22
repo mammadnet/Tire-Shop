@@ -5,7 +5,7 @@ from .widgets import *
 from utilities import Concur, is_windows
 from time import sleep
 
-from database import get_all_employees,get_all_employees_json, session, create_new_user
+from database import get_all_employees,get_all_employees_json, session, create_new_user, remove_user_by_username
 from database import UsernameAlreadyExistsException, NationalNumberAlreadyExistsException
 
 from PIL import Image
@@ -209,7 +209,7 @@ class Admin_page(Page):
         employee_btn.set_text('کارمند', fill='#FFFFFF', font_size=self.button_font_size)
         employee_btn.set_action(self._employee_panel_callback)
         
-        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rreturnbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         
@@ -265,9 +265,16 @@ class Admin_page(Page):
             self.new_employee_frame = self.winfo_children()[-1]
             self.new_employee_frame.place_forget()
             
+            self.delete_user_frame = CTkFrame(self, fg_color="#5B5D76")
+            
+            self.delete_user_comboBox = None
+            self.delete_user_btn = None
+            
+            
             # Show table by default
             self.current_view = None
-            self.toggle_view('list')
+            # self.toggle_view('list')
+            self.delete_user(self, get_all_employees_json(session))
 
         def toggle_view(self, view_name):
             if view_name == 'list' and self.current_view != 'list':
@@ -465,9 +472,46 @@ class Admin_page(Page):
                 
                 
                 
+        def delete_user(self, window, users:list):
             
+            if self.delete_user_frame:
+                content_frame = self.delete_user_frame
+            else:
+                content_frame = CTkFrame(window, fg_color="#5B5D76")
+                self.delete_user_frame = content_frame
             
-    
+            content_frame = CTkFrame(window, fg_color="#5B5D76")
+            content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            content_frame.rowconfigure((0, 3), weight=1)
+            content_frame.columnconfigure((0, 1), weight=1, pad=20, uniform='a')
+
+
+            text = render_text("نام کاربری:")
+            username_label = CTkLabel(content_frame, text=text, text_color="white", font=(None, 15))
+            username_label.grid(row=0, column=1)
+            combo_delete_items = [f'{user['username']}:{user['name']} {user['lastname']}' for user in users]
+            if self.delete_user_comboBox:
+                self.delete_user_comboBox.destroy()
+            
+            self.delete_user_comboBox = DropDown(content_frame, values=combo_delete_items, width=200)
+            self.delete_user_comboBox.grid(row=0, column=0)
+            
+
+            if not self.delete_user_btn:
+                self.delete_user_btn = Btn(content_frame, 160, 45)
+            
+                self.delete_user_btn.configure(font=(None, 16))
+                self.delete_user_btn.set_text(text='حذف کاربر')
+                self.delete_user_btn.grid(row=1, column=0, columnspan=4)
+            
+            self.delete_user_btn.configure(command=lambda : self.delete_user_action(self.delete_user_comboBox.get().split(':')[0], self.show_error_message))
+
+        def delete_user_action(self, username, show_msg_callback):
+            try:
+                remove_user_by_username(session, username)
+            except Exception as e:
+                show_msg_callback(e)
+        
         def show_error_message(self, message:str | Exception=None):
             if message:
                 self.clear_success_message()
