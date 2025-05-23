@@ -697,6 +697,21 @@ class Admin_page(Page):
             self.cb_orders = CTkCheckBox(self, text="Orders", border_color="#a5a7c9", hover_color="#81828a")
             self.cb_orders.grid(row=2, column=2)
             
+                    # Add operation button
+            self.operation_btn = Btn(self, text="ذخیره",width=160, height=45, command=self.handle_checkboxes)
+            self.operation_btn.grid(row=3, column=0, columnspan=4)
+        
+        def handle_checkboxes(self):
+            if self.cb_users.get():
+                print("Users checkbox is checked — start users operation.")
+
+            if self.cb_products.get():
+                print("Products checkbox is checked — start products operation.")
+
+            if self.cb_orders.get():
+                print("Orders checkbox is checked — start orders operation.")
+                
+                
         def default_path(self):
             folder_name = "TSBackup"
             if is_windows():
