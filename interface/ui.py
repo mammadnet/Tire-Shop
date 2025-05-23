@@ -199,20 +199,36 @@ class Admin_page(Page):
         user_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         user_btn.grid(row=2, column=0, sticky='e')
         user_btn.set_text('کاربران', fill='#FFFFFF', font_size=self.button_font_size)
-        user_btn.set_action(self._employee_panel_callback)
+        user_btn.set_action(lambda _: self.toggle_panel('users'))
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
+        reports_btn.set_action(lambda _: self.toggle_panel('backup'))
         reports_btn.set_text('بکاپ', fill='#FFFFFF', font_size=self.button_font_size)
         
         backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         backup_btn.grid(row=4, column=0, sticky='e')
+        backup_btn.set_action(lambda _: self.toggle_panel('backup'))
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
         
+        self.current_panel = 'users'
         
         #----------------DELETE THIS LINES AFTER FINISH THE ADMIN PANEL DEVELOPMENT-----------
         # self.employee_panel(self.control_frame)
-        self.backup(self.control_frame)
+        self.employee_frame = self.employee_panel(self.control_frame)
+        self.backup_frame = self.backup(self.control_frame)
+    
+    def toggle_panel(self, panel:str):
+        if panel == 'users' and self.current_panel != 'users':
+            self.backup_frame.pack_forget()
+            self.backup_frame.destroy()
+            self.employee_frame = self.employee_panel(self.control_frame)
+            self.current_panel = panel
+        elif panel == 'backup' and self.current_panel != 'backup':
+            self.employee_frame.pack_forget()
+            self.employee_frame.destroy()
+            self.backup_frame = self.backup(self.control_frame)
+            self.current_panel = panel
         
     class employee_panel(CTkFrame):
         def __init__(self, root):
