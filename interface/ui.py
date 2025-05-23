@@ -679,7 +679,6 @@ class Admin_page(Page):
             
         def default_path(self):
             folder_name = "TSBackup"
-            file_name = self.get_backupfile_name()
             if is_windows():
                 desktop_path = os.path.join(os.environ["USERPROFILE"], "Desktop")
 
@@ -689,10 +688,8 @@ class Admin_page(Page):
                 # Create the folder (if it doesn't already exist)
                 os.makedirs(folder_path, exist_ok=True)
 
-                # Create a file in that folder
-                file_path = os.path.join(folder_path, file_name)
 
-                return file_path
+                return folder_path
             
             else:
                 home_path = os.path.expanduser("~")
@@ -702,11 +699,8 @@ class Admin_page(Page):
 
                 # Step 4: Create the folder (if it doesn’t already exist)
                 os.makedirs(folder_path, exist_ok=True)
-
-                # Step 5: Create a file inside the folder
-                file_path = os.path.join(folder_path, file_name)
                 
-                return file_path
+                return folder_path
                         
                         
         def get_backupfile_name(self):
@@ -774,3 +768,6 @@ class Manager_page(Page):
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
+        
+        
+        
