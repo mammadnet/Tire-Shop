@@ -201,7 +201,7 @@ class Admin_page(Page):
         user_btn.set_text('کاربران', fill='#FFFFFF', font_size=self.button_font_size)
         user_btn.set_action(self._employee_panel_callback)
         
-        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rreturnbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         
