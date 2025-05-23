@@ -251,6 +251,8 @@ class Admin_page(Page):
             employee_update_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
             employee_update_btn.set_text("تغیرات کارمند", "white", 13)
             employee_update_btn.grid(row=3,column=0 , sticky="e")
+            employee_update_btn.set_action(lambda e: self.toggle_view('edit'))
+            
             
             self.error_message_label = CTkLabel(self, text_color="firebrick1")
             self.success_message_label = CTkLabel(self, text_color="green")
@@ -271,7 +273,7 @@ class Admin_page(Page):
             self.delete_user_comboBox = None
             self.delete_user_btn = None
             
-            self.edit_user_frame = None
+            self.edit_user_frame = CTkFrame(self, fg_color="#5B5D76")
             self.edit_user_combobox = None
             self.edit_user_inputs = None
             
@@ -283,19 +285,27 @@ class Admin_page(Page):
             if view_name == 'list' and self.current_view != 'list':
                 self.new_employee_frame.place_forget()
                 self.delete_user_frame.place_forget() 
+                self.edit_user_frame.place_forget()
                 self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
                 self.current_view = 'list'
                 self.insert_content_to_table(self.table, get_all_employees_json(session))
             elif view_name == 'new' and self.current_view != 'new':
                 self.table.place_forget()
                 self.delete_user_frame.place_forget()
+                self.edit_user_frame.place_forget()
                 self.new_employee_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
                 self.current_view = 'new'
             elif view_name == 'delete' and self.current_view != 'delete':
                 self.table.place_forget()
                 self.new_employee_frame.place_forget()
+                self.edit_user_frame.place_forget()
                 self.delete_user(self, get_all_employees_json(session))
                 self.current_view = 'delete'
+            elif view_name == 'edit' and self.current_view != 'edit':
+                self.table.place_forget()
+                self.new_employee_frame.place_forget()
+                self.employee_edit(self)
+                self.current_view = 'edit'
 
         #---------------------- Setup Employee table content----------------
         def initialize_table(self, window):
