@@ -1,6 +1,8 @@
 from hashlib import sha256
 import threading
 from platform import system
+from datetime import datetime
+
 def hashing(val:str) -> str:
     hashed = sha256(val.encode()).hexdigest()
     return hashed
@@ -22,3 +24,8 @@ def is_windows():
 def is_linux():
     os_name = system()
     return os_name == "Linux"
+
+def get_current_datetime():
+    now = datetime.now()
+    # Format: YYYYMMDD_HHMMSS
+    return now.strftime("%Y%m%d_%H%M%S")
