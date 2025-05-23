@@ -20,7 +20,7 @@ class Btn(CTkButton):
             self.configure(text=text)
 
 class Input(CTkEntry):
-    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, **kwargs):
+    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True, **kwargs):
         super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text,show=show, **kwargs)
         add_bidi_support_for_entry(self._entry)
         
@@ -31,7 +31,7 @@ class Input(CTkEntry):
         self.show_err_callback = show_err_callback
         self.err_message = err_message
         self.placeholder_text = placeholder_text
-        
+        self.placeholder_empty = placeholder_empty
         
         self._set_limit()
         self._set_justify()
@@ -79,15 +79,19 @@ class Input(CTkEntry):
     def set_placeholder_text(self, text:str):
         if isarabic(text):
             text = render_text(text)
-            self.textvariable.set(text)
+        self.placeholder_text = text
+        self.textvariable.set(text)
             
     
     def get(self):
         val = self.textvariable.get()
-        if val == self.placeholder_text:
+        if self.placeholder_empty and val == self.placeholder_text:
             return ""
         else:
             return val
+    
+    def clear(self):
+        self.textvariable.set('')
             
         
                 
