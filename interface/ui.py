@@ -557,7 +557,6 @@ class Admin_page(Page):
             if self.edit_user_combobox:
                 self.edit_user_combobox.grid_forget()
                 self.edit_user_combobox.destroy()
-            print("hereeeeeeeeeeeeeee")
             self.edit_user_combobox = DropDown(content_frame, values=usernames, variable=selected_username, command=self.load_user_data)
             self.edit_user_combobox.grid(row=0, column=1)
 
