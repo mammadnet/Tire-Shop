@@ -2,7 +2,7 @@ from customtkinter import CTk
 from customtkinter import *
 from tkinter import ttk
 from .widgets import *
-from utilities import Concur, is_windows
+from utilities import Concur, is_windows, get_current_datetime
 from time import sleep
 
 from database import get_all_employees,get_all_employees_json, session, create_new_user, remove_user_by_username, update_user_by_username, get_all_username, user_by_username
@@ -679,7 +679,7 @@ class Admin_page(Page):
             
         def default_path(self):
             folder_name = "TSBackup"
-            file_name = "example.txt"
+            file_name = self.get_backupfile_name()
             if is_windows():
                 desktop_path = os.path.join(os.environ["USERPROFILE"], "Desktop")
 
@@ -709,7 +709,9 @@ class Admin_page(Page):
                 return file_path
                         
                         
-
+        def get_backupfile_name(self):
+            now = get_current_datetime()
+            return 'TS_' + now
             
             
     def _employee_panel_callback(self, *k):
