@@ -652,7 +652,7 @@ class Admin_page(Page):
                 message = str(message)
                 self.success_message_label.place(relx=.03, rely=.01)
                 self.success_message_label.configure(text=message)
-                Concur(lambda : self._clear_login_error(5)).start()
+                Concur(lambda : self._clear_success_message(5)).start()
             
         def _clear_success_message(self, sec):
             sleep(sec)
