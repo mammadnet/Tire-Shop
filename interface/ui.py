@@ -677,7 +677,39 @@ class Admin_page(Page):
             self.path_label = CTkLabel(self, text=render_text("مسیر ذخیره فایل"), text_color='white', font=(None, 15))
             self.path_label.grid(row=0, column=2, columnspan=2)
             
-        
+        def default_path(self):
+            folder_name = "TSBackup"
+            file_name = "example.txt"
+            if is_windows():
+                desktop_path = os.path.join(os.environ["USERPROFILE"], "Desktop")
+
+
+                folder_path = os.path.join(desktop_path, folder_name)
+
+                # Create the folder (if it doesn't already exist)
+                os.makedirs(folder_path, exist_ok=True)
+
+                # Create a file in that folder
+                file_path = os.path.join(folder_path, file_name)
+
+                return file_path
+            
+            else:
+                home_path = os.path.expanduser("~")
+
+                # Step 3: Construct the full path to the folder
+                folder_path = os.path.join(home_path, folder_name)
+
+                # Step 4: Create the folder (if it doesn’t already exist)
+                os.makedirs(folder_path, exist_ok=True)
+
+                # Step 5: Create a file inside the folder
+                file_path = os.path.join(folder_path, file_name)
+                
+                return file_path
+                        
+                        
+
             
             
     def _employee_panel_callback(self, *k):
