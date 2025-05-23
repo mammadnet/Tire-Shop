@@ -211,7 +211,8 @@ class Admin_page(Page):
         
         
         #----------------DELETE THIS LINES AFTER FINISH THE ADMIN PANEL DEVELOPMENT-----------
-        self.employee_panel(self.control_frame)
+        # self.employee_panel(self.control_frame)
+        self.backup(self.control_frame)
         
     class employee_panel(CTkFrame):
         def __init__(self, root):
@@ -654,7 +655,31 @@ class Admin_page(Page):
             
                 
     
-    
+    class backup(CTkFrame):
+        def __init__(self, root):
+            super().__init__(root)
+            self.pack(expand=True, fill="both")
+            self.configure(bg_color='transparent', fg_color="#5B5D76")
+            self.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            self.rowconfigure(tuple(range(0, 8)), weight=1)
+            self.columnconfigure((0, 3), weight=1, pad=20, uniform='a')
+            
+            # Setup button frame
+            self.btn_frame = CTkFrame(self, fg_color='transparent')
+            self.btn_frame.place(relwidth=.2, relheight=.3, relx=1, rely=.1, anchor="ne")
+            self.btn_frame.columnconfigure(0, weight=1)
+            self.btn_frame.rowconfigure((0,1,2,3), weight=1)
+
+            path =StringVar()
+            self.path_input = Input(self, 15, 150, 35, None, path, placeholder_empty=False)
+            self.path_input.grid(row=0, column=0, columnspan=2)
+            
+            self.path_label = CTkLabel(self, text=render_text("مسیر ذخیره فایل"), text_color='white', font=(None, 15))
+            self.path_label.grid(row=0, column=2, columnspan=2)
+            
+        
+            
+            
     def _employee_panel_callback(self, *k):
         # self.employee_panel(self.control_frame)
         print("hellloooooooo")
