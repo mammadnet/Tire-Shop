@@ -196,18 +196,10 @@ class Admin_page(Page):
         self.button_color = "#393A4E"
         self.button_hover_color = "#434357"
         
-        products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        products_btn.grid(row=0, column=0, sticky='e')
-        products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
-
-        backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        backup_btn.grid(row=1, column=0, sticky='e')
-        backup_btn.set_text('مدیر', fill='#FFFFFF', font_size=self.button_font_size)
-        
-        employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        employee_btn.grid(row=2, column=0, sticky='e')
-        employee_btn.set_text('کارمند', fill='#FFFFFF', font_size=self.button_font_size)
-        employee_btn.set_action(self._employee_panel_callback)
+        user_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
+        user_btn.grid(row=2, column=0, sticky='e')
+        user_btn.set_text('کاربران', fill='#FFFFFF', font_size=self.button_font_size)
+        user_btn.set_action(self._employee_panel_callback)
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rreturnbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
