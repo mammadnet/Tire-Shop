@@ -138,4 +138,9 @@ def update_user_by_username(
 
     return user
 
+def get_all_username(session=Session):
+    
+    users = get_all_employees_json(session)
+    
+    return [user['username'] for user in users]
 # create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
