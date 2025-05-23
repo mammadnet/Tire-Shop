@@ -670,15 +670,6 @@ class Admin_page(Page):
             self.btn_frame.columnconfigure(0, weight=1)
             self.btn_frame.rowconfigure((0,1,2,3), weight=1)
 
-            # Add checkboxes
-            self.cb_users = CTkCheckBox(self, text="Users", border_color="#a5a7c9", hover_color="#81828a")
-            self.cb_users.grid(row=1, column=0)
-
-            self.cb_products = CTkCheckBox(self, text="Products", border_color="#a5a7c9", hover_color="#81828a")
-            self.cb_products.grid(row=1, column=1)
-
-            self.cb_orders = CTkCheckBox(self, text="Orders", border_color="#a5a7c9", hover_color="#81828a")
-            self.cb_orders.grid(row=1, column=2)
             
             default_path = self.default_path()
             path = StringVar()
@@ -689,6 +680,22 @@ class Admin_page(Page):
             
             self.path_label = CTkLabel(self, text=render_text("مسیر ذخیره فایل"), text_color='white', font=(None, 15))
             self.path_label.grid(row=0, column=2, columnspan=2)
+            
+            self.path_label = CTkLabel(self, text=render_text('نام فایل'), text_color='white', font=(None, 15))
+            self.path_label.grid(row=1, column=2, columnspan=2)
+            
+            self.path_label = CTkLabel(self, text=self.get_backupfile_name(), text_color='#c5c6de', font=(None, 15))
+            self.path_label.grid(row=1, column=0, columnspan=2)
+            
+            # Add checkboxes
+            self.cb_users = CTkCheckBox(self, text="Users", border_color="#a5a7c9", hover_color="#81828a")
+            self.cb_users.grid(row=2, column=0)
+
+            self.cb_products = CTkCheckBox(self, text="Products", border_color="#a5a7c9", hover_color="#81828a")
+            self.cb_products.grid(row=2, column=1)
+
+            self.cb_orders = CTkCheckBox(self, text="Orders", border_color="#a5a7c9", hover_color="#81828a")
+            self.cb_orders.grid(row=2, column=2)
             
         def default_path(self):
             folder_name = "TSBackup"
