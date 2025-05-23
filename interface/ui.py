@@ -662,7 +662,7 @@ class Admin_page(Page):
             self.configure(bg_color='transparent', fg_color="#5B5D76")
             self.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
             self.rowconfigure(tuple(range(0, 8)), weight=1)
-            self.columnconfigure((0, 3), weight=1, pad=20, uniform='a')
+            self.columnconfigure((0, 2), weight=1, pad=20, uniform='a')
             
             # Setup button frame
             self.btn_frame = CTkFrame(self, fg_color='transparent')
@@ -670,6 +670,16 @@ class Admin_page(Page):
             self.btn_frame.columnconfigure(0, weight=1)
             self.btn_frame.rowconfigure((0,1,2,3), weight=1)
 
+            # Add checkboxes
+            self.cb_users = CTkCheckBox(self, text="Users", border_color="#a5a7c9", hover_color="#81828a")
+            self.cb_users.grid(row=1, column=0)
+
+            self.cb_products = CTkCheckBox(self, text="Products", border_color="#a5a7c9", hover_color="#81828a")
+            self.cb_products.grid(row=1, column=1)
+
+            self.cb_orders = CTkCheckBox(self, text="Orders", border_color="#a5a7c9", hover_color="#81828a")
+            self.cb_orders.grid(row=1, column=2)
+            
             default_path = self.default_path()
             path = StringVar()
             self.path_input = Input(self, 15, 280, 35, None, path, placeholder_empty=False)
