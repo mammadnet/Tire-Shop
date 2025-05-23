@@ -97,4 +97,45 @@ def remove_user_by_username(db:Session, username:str):
         return True
     return False
 
+
+def update_user_by_username(
+    session: Session,
+    username: str,
+    name: str = None,
+    lastname: str = None,
+    phone: str = None,
+    national:str = None,
+    new_username: str = None,
+    password: str = None
+) -> User:
+    # Fetch the user by current username
+    user = user_by_username(session, username)
+    if not user:
+        raise UsernameNotExistsException(f"Username '{username}' does not exist.")
+
+    # Check if the new username is different and not taken
+    if new_username and new_username != user.user_name:
+        existing_user = session.query(User).filter(User.user_name == new_username).first()
+        if existing_user:
+            raise UsernameAlreadyExistsException(f"Username '{new_username}' is already taken.")
+        user.user_name = new_username
+
+    # Apply other updates if provided
+    if name is not None:
+        user.name = name
+    if lastname is not None:
+        user.lastname = lastname
+    if phone is not None:
+        user.phone = phone
+    if national is not None:
+        user.national_number = national
+    if password is not None:
+        user.hashed_passwd = hashing(password)
+
+    # Save changes
+    session.commit()
+    session.refresh(user)
+
+    return user
+
 # create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
