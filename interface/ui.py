@@ -672,7 +672,7 @@ class Admin_page(Page):
 
             default_path = self.default_path()
             path = StringVar()
-            self.path_input = Input(self, 15, 150, 35, None, path, placeholder_empty=False)
+            self.path_input = Input(self, 15, 280, 35, None, path, placeholder_empty=False)
             self.path_input.grid(row=0, column=0, columnspan=2)
             self.path_input.set_textvariable(path)
             path.set(default_path)
