@@ -670,9 +670,12 @@ class Admin_page(Page):
             self.btn_frame.columnconfigure(0, weight=1)
             self.btn_frame.rowconfigure((0,1,2,3), weight=1)
 
-            path =StringVar()
+            default_path = self.default_path()
+            path = StringVar()
             self.path_input = Input(self, 15, 150, 35, None, path, placeholder_empty=False)
             self.path_input.grid(row=0, column=0, columnspan=2)
+            self.path_input.set_textvariable(path)
+            path.set(default_path)
             
             self.path_label = CTkLabel(self, text=render_text("مسیر ذخیره فایل"), text_color='white', font=(None, 15))
             self.path_label.grid(row=0, column=2, columnspan=2)
