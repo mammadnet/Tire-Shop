@@ -26,7 +26,7 @@ class Order(Base):
 class Product(Base):
     __tablename__ = 'product'
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    product_id : Mapped[int] = mapped_column(ForeignKey('brand.id'))
+    brand_id : Mapped[int] = mapped_column(ForeignKey('brand.id'))
     size_id : Mapped[int] = mapped_column(ForeignKey('size.id'))
     
     brand : Mapped['Brand'] = relationship(back_populates='products')
