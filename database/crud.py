@@ -180,4 +180,8 @@ def search_product_by_size(session: Session, width: int = None, ratio: int = Non
     if rim is not None:
         query = query.filter(Size.rim == rim)
     return query.all()
+
+def search_product_by_brand(session: Session, brand_name: str):
+    query = session.query(Product).join(Brand, Product.brand_id == Brand.id).filter(Brand.name == brand_name)
+    return query.all()
 # create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
