@@ -8,7 +8,7 @@ from time import sleep
 from database import get_all_employees,get_all_employees_json, session, create_new_user, remove_user_by_username, update_user_by_username, get_all_username, user_by_username
 from database import UsernameAlreadyExistsException, NationalNumberAlreadyExistsException
 
-from .panels import AdminEmployeePanel
+from .panels import AdminEmployeePanel, AdminBackupPanel
 
 from PIL import Image
 import os
@@ -218,7 +218,7 @@ class Admin_page(Page):
         #----------------DELETE THIS LINES AFTER FINISH THE ADMIN PANEL DEVELOPMENT-----------
         # self.employee_panel(self.control_frame)
         self.employee_frame = AdminEmployeePanel(self.control_frame)
-        self.backup_frame = self.backup(self.control_frame)
+        self.backup_frame = AdminBackupPanel(self.control_frame)
     
     def toggle_panel(self, panel:str):
         if panel == 'users' and self.current_panel != 'users':
@@ -229,99 +229,8 @@ class Admin_page(Page):
         elif panel == 'backup' and self.current_panel != 'backup':
             self.employee_frame.pack_forget()
             self.employee_frame.destroy()
-            self.backup_frame = self.backup(self.control_frame)
+            self.backup_frame = AdminBackupPanel(self.control_frame)
             self.current_panel = panel
-        
-    
-            
-                
-    
-    class backup(CTkFrame):
-        def __init__(self, root):
-            super().__init__(root)
-            self.pack(expand=True, fill="both")
-            self.configure(bg_color='transparent', fg_color="#5B5D76")
-            self.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
-            self.rowconfigure(tuple(range(0, 8)), weight=1)
-            self.columnconfigure((0, 2), weight=1, pad=20, uniform='a')
-            
-            # Setup button frame
-            self.btn_frame = CTkFrame(self, fg_color='transparent')
-            self.btn_frame.place(relwidth=.2, relheight=.3, relx=1, rely=.1, anchor="ne")
-            self.btn_frame.columnconfigure(0, weight=1)
-            self.btn_frame.rowconfigure((0,1,2,3), weight=1)
-
-            
-            default_path = self.default_path()
-            path = StringVar()
-            self.path_input = Input(self, 15, 280, 35, None, path, placeholder_empty=False)
-            self.path_input.grid(row=0, column=0, columnspan=2)
-            self.path_input.set_textvariable(path)
-            path.set(default_path)
-            
-            self.path_label = CTkLabel(self, text=render_text("مسیر ذخیره فایل"), text_color='white', font=(None, 15))
-            self.path_label.grid(row=0, column=2, columnspan=2)
-            
-            self.path_label = CTkLabel(self, text=render_text('نام فایل'), text_color='white', font=(None, 15))
-            self.path_label.grid(row=1, column=2, columnspan=2)
-            
-            self.path_label = CTkLabel(self, text=self.get_backupfile_name(), text_color='#c5c6de', font=(None, 15))
-            self.path_label.grid(row=1, column=0, columnspan=2)
-            
-            # Add checkboxes
-            self.cb_users = CTkCheckBox(self, text="Users", border_color="#a5a7c9", hover_color="#81828a")
-            self.cb_users.grid(row=2, column=0)
-
-            self.cb_products = CTkCheckBox(self, text="Products", border_color="#a5a7c9", hover_color="#81828a")
-            self.cb_products.grid(row=2, column=1)
-
-            self.cb_orders = CTkCheckBox(self, text="Orders", border_color="#a5a7c9", hover_color="#81828a")
-            self.cb_orders.grid(row=2, column=2)
-            
-                    # Add operation button
-            self.operation_btn = Btn(self, text="ذخیره",width=160, height=45, command=self.handle_checkboxes)
-            self.operation_btn.grid(row=3, column=0, columnspan=4)
-        
-        def handle_checkboxes(self):
-            if self.cb_users.get():
-                print("Users checkbox is checked — start users operation.")
-
-            if self.cb_products.get():
-                print("Products checkbox is checked — start products operation.")
-
-            if self.cb_orders.get():
-                print("Orders checkbox is checked — start orders operation.")
-                
-                
-        def default_path(self):
-            folder_name = "TSBackup"
-            if is_windows():
-                desktop_path = os.path.join(os.environ["USERPROFILE"], "Desktop")
-
-
-                folder_path = os.path.join(desktop_path, folder_name)
-
-                # Create the folder (if it doesn't already exist)
-                os.makedirs(folder_path, exist_ok=True)
-
-
-                return folder_path
-            
-            else:
-                home_path = os.path.expanduser("~")
-
-                # Step 3: Construct the full path to the folder
-                folder_path = os.path.join(home_path, folder_name)
-
-                # Step 4: Create the folder (if it doesn’t already exist)
-                os.makedirs(folder_path, exist_ok=True)
-                
-                return folder_path
-                        
-                        
-        def get_backupfile_name(self):
-            now = get_current_datetime()
-            return 'TS_' + now
             
             
     def _employee_panel_callback(self, *k):
