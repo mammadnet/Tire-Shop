@@ -32,12 +32,30 @@ class Product(Base):
     brand : Mapped['Brand'] = relationship(back_populates='products')
     size : Mapped['Size'] = relationship(back_populates='products')
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "brand_id": self.brand_id,
+            "size_id": self.size_id,
+            "brand": self.brand.name if self.brand else None,
+            "size": {
+                "width": self.size.width if self.size else None,
+                "ratio": self.size.ratio if self.size else None,
+                "rim": self.size.rim if self.size else None,
+            } if self.size else None
+        }
+
 class Brand(Base):
     __tablename__ = 'brand'
     
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(20), unique=True)
     products: Mapped[list['Product']] = relationship(back_populates='brand')
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
 
 class Size(Base):
     __tablename__ = 'size'
@@ -49,6 +67,13 @@ class Size(Base):
     width :   Mapped[int] = mapped_column()
     ratio :   Mapped[int] = mapped_column()
     rim   :   Mapped[int] = mapped_column()
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "width": self.width,
+            "ratio": self.ratio,
+            "rim": self.rim,
+        }
 #----------------------------------------
 
 
