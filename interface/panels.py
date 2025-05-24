@@ -535,3 +535,34 @@ class AdminBackupPanel(CTkFrame):
     def get_backupfile_name(self):
         now = get_current_datetime()
         return 'TS_' + now
+    
+    
+class ManagerProductPanel(CTkFrame):
+    def __init__(self, root):
+        super().__init__(root)
+        self.pack(expand=True, fill="both")
+        self.configure(bg_color='transparent', fg_color="transparent")
+
+        
+        # Setup button frame
+        self.btn_frame = CTkFrame(self, fg_color='transparent')
+        self.btn_frame.place(relwidth=.2, relheight=.3, relx=1, rely=.1, anchor="ne")
+        self.btn_frame.columnconfigure(0, weight=1)
+        self.btn_frame.rowconfigure((0,1,2,3), weight=1)
+        
+        product_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+        product_list_btn.set_text("لیست محصولات", "white", 13)
+        product_list_btn.grid(row=0,column=0 ,sticky="e")
+        
+        product_new_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+        product_new_btn.set_text("محصول جدید", "white", 13)
+        product_new_btn.grid(row=1,column=0 , sticky="e")
+        
+        product_delete_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+        product_delete_btn.set_text("حذف محصول", "white", 13)
+        product_delete_btn.grid(row=2,column=0 , sticky="e")
+        product_update_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+        product_update_btn.set_text("تغیرات محصول", "white", 13)
+        product_update_btn.grid(row=3,column=0 , sticky="e")
+
+
