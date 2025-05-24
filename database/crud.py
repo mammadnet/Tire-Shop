@@ -191,4 +191,18 @@ def search_product_by_size(session: Session, width: int = None, ratio: int = Non
 def search_product_by_brand(session: Session, brand_name: str):
     query = session.query(Product).join(Brand, Product.brand_id == Brand.id).filter(Brand.name == brand_name)
     return query.all()
+
+def search_product_by_size_json(session: Session, width: int = None, ratio: int = None, rim: int = None):
+    products = search_product_by_size(session, width, ratio, rim)
+    result = []
+    for product in products:
+        result.append(product.to_dict())
+    return result
+
+def search_product_by_brand_json(session: Session, brand_name: str):
+    products = search_product_by_brand(session, brand_name)
+    result = []
+    for product in products:
+        result.append(product.to_dict())
+    return result
 # create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
