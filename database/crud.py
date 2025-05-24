@@ -143,4 +143,31 @@ def get_all_username(session=Session):
     users = get_all_employees_json(session)
     
     return [user['username'] for user in users]
+
+
+def create_product(session: Session, brand_name: str, width: int, ratio: int, rim: int) -> Product:
+
+    # Find or create brand
+    brand = session.query(Brand).filter_by(name=brand_name).first()
+    if not brand:
+        brand = Brand(name=brand_name)
+        session.add(brand)
+        session.commit()  # Get the brand ID
+
+    # Find or create size
+    size = session.query(Size).filter_by(width=width, ratio=ratio, rim=rim).first()
+    if not size:
+        size = Size(width=width, ratio=ratio, rim=rim)
+        session.add(size)
+        session.commit()  # Get the size ID
+
+    # Create product
+    product = Product(
+        product_id=brand.id,
+        size_id=size.id
+    )
+    session.add(product)
+    session.commit()  # Get the product ID
+
+    return product
 # create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
