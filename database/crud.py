@@ -170,4 +170,14 @@ def create_product(session: Session, brand_name: str, width: int, ratio: int, ri
     session.commit()  # Get the product ID
 
     return product
+
+def search_product_by_size(session: Session, width: int = None, ratio: int = None, rim: int = None):
+    query = session.query(Product).join(Size, Product.size_id == Size.id)
+    if width is not None:
+        query = query.filter(Size.width == width)
+    if ratio is not None:
+        query = query.filter(Size.ratio == ratio)
+    if rim is not None:
+        query = query.filter(Size.rim == rim)
+    return query.all()
 # create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
