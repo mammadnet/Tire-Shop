@@ -146,13 +146,14 @@ def get_all_username(session=Session):
 
 
 def create_product(session: Session, brand_name: str, width: int, ratio: int, rim: int) -> Product:
-
+    is_new_product = False
     # Find or create brand
     brand = session.query(Brand).filter_by(name=brand_name).first()
     if not brand:
         brand = Brand(name=brand_name)
         session.add(brand)
         session.commit()  # Get the brand ID
+        is_new_product = True
 
     # Find or create size
     size = session.query(Size).filter_by(width=width, ratio=ratio, rim=rim).first()
@@ -160,14 +161,20 @@ def create_product(session: Session, brand_name: str, width: int, ratio: int, ri
         size = Size(width=width, ratio=ratio, rim=rim)
         session.add(size)
         session.commit()  # Get the size ID
+        is_new_product = True
 
     # Create product
-    product = Product(
-        product_id=brand.id,
-        size_id=size.id
-    )
-    session.add(product)
-    session.commit()  # Get the product ID
+    if not is_new_product:
+        product = session.query(Product).filter_by(brand_id=brand.id, size_id=size.id).first()
+        if product:
+            return product
+    else:
+        product = Product(
+            brand_id=brand.id,
+            size_id=size.id
+        )
+        session.add(product)
+        session.commit()  # Get the product ID
 
     return product
 
