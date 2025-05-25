@@ -583,7 +583,6 @@ class ManagerProductPanel(Panel):
         self.delete_product_frame = None
         self.update_product_frame = None
         self.toggle_view('new')  # Show the new product form by default
-        self.show_error_message("test error message")
 
     # Toggle between different views
     def toggle_view(self, view_name):
@@ -663,7 +662,7 @@ class ManagerProductPanel(Panel):
         name_label = CTkLabel(content_frame, text=render_text("برند:"), text_color="white", font=(None, 13))
         name_label.grid(row=1, column=1, sticky='e', ipadx=60)
         name = StringVar()
-        name_input = Input(content_frame, 15, 150, 35, "Name", name)
+        name_input = Input(content_frame, 15, 150, 35, "Name", name, just_english=True, show_err_callback=self.show_error_message)
         name_input.set_textvariable(name)
         name_input.grid(row=1, column=0)
 
@@ -672,7 +671,7 @@ class ManagerProductPanel(Panel):
         price = StringVar()
         price_label = CTkLabel(content_frame, text=render_text("قیمت:"), text_color="white", font=(None, 13))
         price_label.grid(row=2, column=1, sticky='e', ipadx=60)
-        price_input = Input(content_frame, 15, 150, 35, "Price", price)
+        price_input = Input(content_frame, 15, 150, 35, "Price", price, just_english=True, show_err_callback=self.show_error_message)
         price_input.set_textvariable(price)
         price_input.grid(row=2, column=0)
 
@@ -680,7 +679,7 @@ class ManagerProductPanel(Panel):
         quantity = StringVar()
         quantity_label = CTkLabel(content_frame, text=render_text("تعداد:"), text_color="white", font=(None, 13))
         quantity_label.grid(row=3, column=1, sticky='e', ipadx=60)
-        quantity_input = Input(content_frame, 15, 150, 35, "Quantity", quantity)
+        quantity_input = Input(content_frame, 15, 150, 35, "Quantity", quantity, just_english=True, show_err_callback=self.show_error_message)
         quantity_input.set_textvariable(quantity)
         quantity_input.grid(row=3, column=0)
 
@@ -688,7 +687,7 @@ class ManagerProductPanel(Panel):
         width = StringVar()
         width_label = CTkLabel(content_frame, text=render_text("پهنا:"), text_color="white", font=(None, 13))
         width_label.grid(row=1, column=3, sticky='e', ipadx=60)
-        width_input = Input(content_frame, 15, 150, 35, "Width", width)
+        width_input = Input(content_frame, 15, 150, 35, "Width", width, just_english=True, show_err_callback=self.show_error_message)
         width_input.set_textvariable(width)
         width_input.grid(row=1, column=2)
 
@@ -696,7 +695,7 @@ class ManagerProductPanel(Panel):
         ratio = StringVar()
         ratio_label = CTkLabel(content_frame, text=render_text("نسبت:"), text_color="white", font=(None, 13))
         ratio_label.grid(row=2, column=3, sticky='e', ipadx=60)
-        ratio_input = Input(content_frame, 15, 150, 35, "Ratio", ratio)
+        ratio_input = Input(content_frame, 15, 150, 35, "Ratio", ratio, just_english=True, show_err_callback=self.show_error_message)
         ratio_input.set_textvariable(ratio)
         ratio_input.grid(row=2, column=2, sticky='e')
 
@@ -704,7 +703,7 @@ class ManagerProductPanel(Panel):
         rim = StringVar()
         rim_label = CTkLabel(content_frame, text=render_text("رینگ:"), text_color="white", font=(None, 13))
         rim_label.grid(row=3, column=3, sticky='e', ipadx=60)
-        rim_input = Input(content_frame, 15, 150, 35, "Rim", rim)
+        rim_input = Input(content_frame, 15, 150, 35, "Rim", rim, just_english=True, show_err_callback=self.show_error_message)
         rim_input.set_textvariable(rim)
         rim_input.grid(row=3, column=2)
         
