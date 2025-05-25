@@ -30,7 +30,8 @@ class Product(Base):
     size_id : Mapped[int] = mapped_column(ForeignKey('size.id'))
     
     price : Mapped[float] = mapped_column(nullable=False)
-
+    quantity : Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    # Relationships
     brand : Mapped['Brand'] = relationship(back_populates='products')
     size : Mapped['Size'] = relationship(back_populates='products')
 

@@ -145,7 +145,7 @@ def get_all_username(session=Session):
     return [user['username'] for user in users]
 
 
-def create_product(session: Session, brand_name: str, price: float, width: int, ratio: int, rim: int) -> Product:
+def create_product(session: Session, brand_name: str, price: float, quantity: int, width: int, ratio: int, rim: int) -> Product:
     is_new_product = False
     # Find or create brand
     brand = session.query(Brand).filter_by(name=brand_name).first()
@@ -170,7 +170,8 @@ def create_product(session: Session, brand_name: str, price: float, width: int, 
         product = Product(
             brand_id=brand.id,
             size_id=size.id,
-            price=price
+            price=price,
+            quantity=quantity
         )
         session.add(product)
         session.commit()  # Get the product ID
