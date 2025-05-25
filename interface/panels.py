@@ -2,7 +2,7 @@ from customtkinter import *
 from .widgets import Item_button, Input, Btn, DropDown, render_text
 from database import session, get_all_employees_json, create_new_user, create_product
 from database import remove_user_by_username, update_user_by_username, user_by_username, get_all_username
-from database import get_all_products_json, delete_product_by_name_and_size
+from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id_json, update_product_by_id
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
@@ -576,6 +576,10 @@ class ManagerProductPanel(Panel):
         product_update_btn.set_text("تغیرات محصول", "white", 13)
         product_update_btn.set_action(lambda e: self.toggle_view('update'))
         product_update_btn.grid(row=3,column=0 , sticky="e")
+        
+        self.edit_product_frame = None
+        self.edit_product_combobox = None
+        self.edit_product_inputs = {}
 
         # Create table and new product form but hide them initially
         self.table = self.initialize_table(self)
@@ -589,11 +593,10 @@ class ManagerProductPanel(Panel):
         self.delete_product_frame = None
         self.delete_product_btn = None
         self.delete_product_combobox = None
-        self.update_product_frame = None
         
         self.product_new(self)
         self.delete_product(self)
-        
+        self.edit_product(self)
         self.toggle_view('list')  # Show the new product form by default
 
     # Toggle between different views
@@ -602,7 +605,7 @@ class ManagerProductPanel(Panel):
             self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
             self.new_product_frame.place_forget()
             self.delete_product_frame.place_forget()
-            # self.update_product_frame.place_forget()
+            self.edit_product_frame.place_forget()
         elif view_name == 'new':
             self.product_new(self)
             self.table.place_forget()
@@ -613,7 +616,7 @@ class ManagerProductPanel(Panel):
             self.delete_product(self)
         elif view_name == 'update':
             self.table.place_forget()
-            # self.update_product_frame = self.update_product(self)
+            self.edit_product_frame = self.edit_product(self)
 
     def initialize_table(self, window):
         style = ttk.Style()
@@ -810,4 +813,86 @@ class ManagerProductPanel(Panel):
         
         show_success_msg_callback("Product was deleted")
         self.delete_product(self)
-   
+
+
+    def edit_product(self, window):
+        if self.edit_product_frame:
+            content_frame = self.edit_product_frame
+        else:
+            content_frame = CTkFrame(window, fg_color="#5B5D76")
+            self.edit_product_frame = content_frame
+            
+        content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+        content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
+        content_frame.columnconfigure((0, 3), weight=1, pad=40, uniform='a')
+
+        # Label and dropdown to select product by brand and size
+        select_product_label = CTkLabel(content_frame, text="Product:", text_color="white", font=(None, 15))
+        select_product_label.grid(row=0, column=0)
+
+        products = get_all_products_json(session)
+        combo_items = [f'{product["id"]}:{product["brand"]}:{product["size"]["width"]}/{product["size"]["ratio"]}/{product["size"]["rim"]}' for product in products]
+        selected_product = StringVar()
+        if self.edit_product_combobox:
+            self.edit_product_combobox.grid_forget()
+            self.edit_product_combobox.destroy()
+
+        self.edit_product_combobox = DropDown(content_frame, values=combo_items, width=250, command=self.load_product_data)
+        self.edit_product_combobox.grid(row=0, column=1)
+
+        self.create_input_field(content_frame, render_text("برند:"), 1, 0, 'brand')
+        self.create_input_field(content_frame, render_text("پهنا:"), 1, 2, 'width')
+        self.create_input_field(content_frame, render_text("نسبت:"), 2, 0, 'ratio')
+        self.create_input_field(content_frame, render_text("رینگ:"), 2, 2, 'rim')
+        self.create_input_field(content_frame, render_text("قیمت:"), 3, 0, 'price')
+        self.create_input_field(content_frame, render_text("تعداد:"), 3, 2, 'quantity')
+
+        update_btn = Btn(content_frame, 160, 45, text='ویرایش محصول')
+        update_btn.configure(command=lambda: self.edit_product_action(
+            self.edit_product_combobox.get(),
+            self.show_error_message,
+            self.show_success_message
+        ))
+        update_btn.configure(font=(None, 16))
+        update_btn.set_text(text="Update Product")
+        update_btn.grid(row=6, column=0, columnspan=4)
+        # Helper function to create an input field
+        
+        
+    def create_input_field(self, window, label_text, row, column, field_key, **kwargs):
+        if field_key not in self.edit_product_inputs:
+            label = CTkLabel(window, text=label_text, text_color="white", font=(None, 13))
+            label.grid(row=row, column=column+1, **kwargs)
+            var = StringVar()
+            input_widget = Input(window, 15, 150, 35, None, var, placeholder_empty=False)
+            input_widget.set_textvariable(var)
+            input_widget.textvariable.set('')
+            input_widget.grid(row=row, column=column)
+            self.edit_product_inputs[field_key] = input_widget
+            
+    def edit_product_action(self, product_info, show_error_callback, show_success_callback):
+        try:
+            product_id, brand_name, size = product_info.split(':')
+            width, ratio, rim = map(int, size.split('/'))
+            price = float(self.edit_product_inputs['price'].get())
+            quantity = int(self.edit_product_inputs['quantity'].get())
+            update_product_by_id(session, product_id, brand_name, width, ratio, rim, price, quantity)
+            show_success_callback(f'The product information has been changed.')
+            self.edit_product(self)
+            for v in list(self.edit_product_inputs.values()):
+                v.textvariable.set('')
+        except Exception as e:
+            show_error_callback(e)
+            
+    def load_product_data(self, product_info):
+        product_id, brand_name, size = product_info.split(':')
+        width, ratio, rim = map(int, size.split('/'))
+        product_data = get_product_by_id_json(session, product_id)
+
+        if product_data:
+            self.edit_product_inputs['brand'].set_placeholder_text(brand_name)
+            self.edit_product_inputs['width'].set_placeholder_text(str(width))
+            self.edit_product_inputs['ratio'].set_placeholder_text(str(ratio))
+            self.edit_product_inputs['rim'].set_placeholder_text(str(rim))
+            self.edit_product_inputs['price'].set_placeholder_text(str(product_data['price']))
+            self.edit_product_inputs['quantity'].set_placeholder_text(str(product_data['quantity']))
