@@ -552,17 +552,97 @@ class ManagerProductPanel(CTkFrame):
         
         product_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
         product_list_btn.set_text("لیست محصولات", "white", 13)
+        product_list_btn.set_action(lambda e: self.toggle_view('list'))
         product_list_btn.grid(row=0,column=0 ,sticky="e")
         
         product_new_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
         product_new_btn.set_text("محصول جدید", "white", 13)
+        product_new_btn.set_action(lambda e: self.toggle_view('new'))
         product_new_btn.grid(row=1,column=0 , sticky="e")
         
         product_delete_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
         product_delete_btn.set_text("حذف محصول", "white", 13)
+        product_delete_btn.set_action(lambda e: self.toggle_view('delete'))
         product_delete_btn.grid(row=2,column=0 , sticky="e")
+        
         product_update_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
         product_update_btn.set_text("تغیرات محصول", "white", 13)
+        product_update_btn.set_action(lambda e: self.toggle_view('update'))
         product_update_btn.grid(row=3,column=0 , sticky="e")
 
+        # Create table and new product form but hide them initially
+        self.table = self.initialize_table(self)
+        self.insert_content_to_table(self.table,[{"id": 1,"name": "John Doe","role": "Employee", "price": 100,"quantity": 50}])
+        
+        self.new_product_frame = None
+        self.delete_product_frame = None
+        self.update_product_frame = None
+        self.toggle_view('new')  # Show the new product form by default
 
+    # Toggle between different views
+    def toggle_view(self, view_name):
+        if view_name == 'list':
+            self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            # self.new_product_frame.place_forget()
+            # self.delete_product_frame.place_forget()
+            # self.update_product_frame.place_forget()
+        elif view_name == 'new':
+            self.table.place_forget()
+            self.new_product_frame = self.product_new(self)
+        elif view_name == 'delete':
+            self.table.place_forget()
+            # self.delete_product_frame = self.delete_product(self)
+        elif view_name == 'update':
+            self.table.place_forget()
+            # self.update_product_frame = self.update_product(self)
+
+    def initialize_table(self, window):
+        style = ttk.Style()
+        if is_windows():
+            style.theme_use('clam')
+        
+        # Configure Treeview style
+        style.configure("Custom1.Treeview",
+        background="#494A5F",
+        foreground="black",
+        fieldbackground="#393A4E",
+        rowheight=50,
+        borderwidth=0
+        )
+        
+        style.configure("Custom1.Treeview.Heading",
+        background="#5B5D76",     # Header background color
+        foreground="white",       # Header text color
+        font=("Helvetica", 10, "bold"),
+        relief='flat')
+        
+        style.map("Custom1.Treeview.Heading",
+        background=[("active", "#6b6d87")],
+        foreground=[("active", "white")])
+        
+        table = ttk.Treeview(window, style="Custom1.Treeview")
+        table.configure(columns=("id", "name", "price", "quantity"))
+        table.configure(show="headings", selectmode="none")
+        
+        
+        table.column("id", width=40, anchor="center")
+        table.column("name", width=150, anchor="center")
+        table.column("price", width=100, anchor="center")
+        table.column("quantity", width=100, anchor="center")
+        
+        table.heading("id", text="id", anchor='center')
+        table.heading("name", text="name", anchor='center')
+        table.heading("price", text="price", anchor='center')
+        table.heading("quantity", text="quantity", anchor='center')
+        
+        table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+        return table
+    
+    
+    def insert_content_to_table(self, table:ttk.Treeview, content:list[dict]):
+        table.delete(*table.get_children())
+
+        for row in content:
+            vals = (row["id"], row["name"], row["price"], row["quantity"])
+            table.insert(parent="", index=0, values=vals)
+            
