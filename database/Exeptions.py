@@ -17,3 +17,10 @@ class NoDataFoundError(Exception):
         self.message = f"No data found in the table '{self.table_name}'."
         super().__init__(self.message)
 
+class ProductAlreadyExistsException(Exception):
+    def __init__(self, product_name):
+        super().__init__(f"Product '{product_name}' already exists in the database.")
+        
+class ProductNotExistsException(Exception):
+    def __init__(self, product_name):
+        super().__init__(f"Product '{product_name}' does not exist in the database.")
