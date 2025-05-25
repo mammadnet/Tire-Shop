@@ -646,3 +646,64 @@ class ManagerProductPanel(CTkFrame):
             vals = (row["id"], row["name"], row["price"], row["quantity"])
             table.insert(parent="", index=0, values=vals)
             
+    
+    
+    def product_new(self, window):
+        content_frame = CTkFrame(window, fg_color="#5B5D76")
+        content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+        content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
+        content_frame.columnconfigure((0, 3), weight=1, uniform='a')
+
+        name_label = CTkLabel(content_frame, text=render_text("برند:"), text_color="white", font=(None, 13))
+        name_label.grid(row=1, column=1, sticky='e', ipadx=60)
+        name = StringVar()
+        name_input = Input(content_frame, 15, 150, 35, "Name", name)
+        name_input.set_textvariable(name)
+        name_input.grid(row=1, column=0)
+
+        
+        # قیمت
+        price = StringVar()
+        price_label = CTkLabel(content_frame, text=render_text("قیمت:"), text_color="white", font=(None, 13))
+        price_label.grid(row=2, column=1, sticky='e', ipadx=60)
+        price_input = Input(content_frame, 15, 150, 35, "Price", price)
+        price_input.set_textvariable(price)
+        price_input.grid(row=2, column=0)
+
+        # تعداد
+        quantity = StringVar()
+        quantity_label = CTkLabel(content_frame, text=render_text("تعداد:"), text_color="white", font=(None, 13))
+        quantity_label.grid(row=3, column=1, sticky='e', ipadx=60)
+        quantity_input = Input(content_frame, 15, 150, 35, "Quantity", quantity)
+        quantity_input.set_textvariable(quantity)
+        quantity_input.grid(row=3, column=0)
+
+        # پهنا
+        width = StringVar()
+        width_label = CTkLabel(content_frame, text=render_text("پهنا:"), text_color="white", font=(None, 13))
+        width_label.grid(row=1, column=3, sticky='e', ipadx=60)
+        width_input = Input(content_frame, 15, 150, 35, "Width", width)
+        width_input.set_textvariable(width)
+        width_input.grid(row=1, column=2)
+
+        # نسبت
+        ratio = StringVar()
+        ratio_label = CTkLabel(content_frame, text=render_text("نسبت:"), text_color="white", font=(None, 13))
+        ratio_label.grid(row=2, column=3, sticky='e', ipadx=60)
+        ratio_input = Input(content_frame, 15, 150, 35, "Ratio", ratio)
+        ratio_input.set_textvariable(ratio)
+        ratio_input.grid(row=2, column=2, sticky='e')
+
+        # رینگ
+        rim = StringVar()
+        rim_label = CTkLabel(content_frame, text=render_text("رینگ:"), text_color="white", font=(None, 13))
+        rim_label.grid(row=3, column=3, sticky='e', ipadx=60)
+        rim_input = Input(content_frame, 15, 150, 35, "Rim", rim)
+        rim_input.set_textvariable(rim)
+        rim_input.grid(row=3, column=2)
+        
+        btn = Btn(content_frame, 160, 45)
+        btn.configure(font=(None, 16))
+        btn.set_text(text='ایجاد محصول')
+        btn.grid(row=5, column=0, columnspan=4)
+
