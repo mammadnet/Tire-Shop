@@ -584,13 +584,15 @@ class ManagerProductPanel(Panel):
         self.new_product_inputs: list[Input] = []
         
         self.new_product_frame = None
-        self.product_new(self)  # Create the new product form
+        
         
         self.delete_product_frame = None
         self.delete_product_btn = None
         self.delete_product_combobox = None
         self.update_product_frame = None
         
+        self.product_new(self)
+        self.delete_product(self)
         
         self.toggle_view('list')  # Show the new product form by default
 
@@ -599,11 +601,12 @@ class ManagerProductPanel(Panel):
         if view_name == 'list':
             self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
             self.new_product_frame.place_forget()
-            # self.delete_product_frame.place_forget()
+            self.delete_product_frame.place_forget()
             # self.update_product_frame.place_forget()
         elif view_name == 'new':
+            self.product_new(self)
             self.table.place_forget()
-            self.new_product_frame = self.product_new(self)
+            self.delete_product_frame.place_forget()
         elif view_name == 'delete':
             self.table.place_forget()
             self.new_product_frame.place_forget()
@@ -768,13 +771,14 @@ class ManagerProductPanel(Panel):
             content_frame = CTkFrame(window, fg_color="#5B5D76")
             self.delete_product_frame = content_frame
             
-            content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
             content_frame.rowconfigure((0, 3), weight=1)
             content_frame.columnconfigure((0, 1), weight=1, pad=20, uniform='a')
 
             text = render_text("نام محصول:")
             product_label = CTkLabel(content_frame, text=text, text_color="white", font=(None, 15))
             product_label.grid(row=0, column=1)
+        
+        content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         
         # Fetch all products and populate the dropdown
         products = get_all_products_json(session)
