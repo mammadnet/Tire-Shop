@@ -8,7 +8,7 @@ from .connection import session
 
 from utilities import hashing
 
-from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException
+from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException
 
 # Check if a user is exist
 def exist_check_user(session:Session, by:InstrumentedAttribute, pat):
@@ -145,7 +145,7 @@ def get_all_username(session=Session):
     return [user['username'] for user in users]
 
 
-def create_product(session: Session, brand_name: str, width: int, ratio: int, rim: int) -> Product:
+def create_product(session: Session, brand_name: str, price: float, width: int, ratio: int, rim: int) -> Product:
     is_new_product = False
     # Find or create brand
     brand = session.query(Brand).filter_by(name=brand_name).first()
@@ -165,13 +165,12 @@ def create_product(session: Session, brand_name: str, width: int, ratio: int, ri
 
     # Create product
     if not is_new_product:
-        product = session.query(Product).filter_by(brand_id=brand.id, size_id=size.id).first()
-        if product:
-            return product
+        raise ProductAlreadyExistsException(f"Product with brand '{brand_name}' and size '{width}/{ratio}/{rim}' already exists.")
     else:
         product = Product(
             brand_id=brand.id,
-            size_id=size.id
+            size_id=size.id,
+            price=price
         )
         session.add(product)
         session.commit()  # Get the product ID
