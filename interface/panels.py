@@ -5,8 +5,49 @@ from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
 
+class Panel(CTkFrame):
+    def __init__(self, root):
+        super().__init__(root)
+        
+        self.error_message_label = CTkLabel(self, text_color="firebrick1")
+        self.success_message_label = CTkLabel(self, text_color="green")
+    
+    
+    def show_error_message(self, message:str | Exception=None):
+            if message:
+                self.clear_success_message()
+                message = str(message)
+                self.error_message_label.place(relx=.03, rely=.01)
+                self.error_message_label.configure(text=message)
+                Concur(lambda : self._clear_login_error(5)).start()
+        
+    def _clear_login_error(self, sec):
+        sleep(sec)
+        self.clear_error_message()
+        
+    def clear_error_message(self):
+        self.error_message_label.place_forget()
+        
+        
+    
+    def show_success_message(self, message:str=None):
+        if message:
+            self.clear_error_message()
+            message = str(message)
+            self.success_message_label.place(relx=.03, rely=.01)
+            self.success_message_label.configure(text=message)
+            Concur(lambda : self._clear_success_message(5)).start()
+        
+    def _clear_success_message(self, sec):
+        sleep(sec)
+        self.clear_success_message()
+    
+    def clear_success_message(self):
+        self.success_message_label.place_forget()
+    
 
-class AdminEmployeePanel(CTkFrame):
+
+class AdminEmployeePanel(Panel):
         def __init__(self, root):
             super().__init__(root)
             self.pack(expand=True, fill="both")
@@ -412,44 +453,8 @@ class AdminEmployeePanel(CTkFrame):
                 show_error_callback(e)
                 
         
-        #------------------------------------------------------------
-        def show_error_message(self, message:str | Exception=None):
-            if message:
-                self.clear_success_message()
-                message = str(message)
-                self.error_message_label.place(relx=.03, rely=.01)
-                self.error_message_label.configure(text=message)
-                Concur(lambda : self._clear_login_error(5)).start()
         
-        def _clear_login_error(self, sec):
-            sleep(sec)
-            self.clear_error_message()
-            
-        def clear_error_message(self):
-            self.error_message_label.place_forget()
-            
-            
-        
-        def show_success_message(self, message:str=None):
-            if message:
-                self.clear_error_message()
-                message = str(message)
-                self.success_message_label.place(relx=.03, rely=.01)
-                self.success_message_label.configure(text=message)
-                Concur(lambda : self._clear_success_message(5)).start()
-            
-        def _clear_success_message(self, sec):
-            sleep(sec)
-            self.clear_success_message()
-        
-        def clear_success_message(self):
-            self.success_message_label.place_forget()
-            
-            
-
-
-
-class AdminBackupPanel(CTkFrame):
+class AdminBackupPanel(Panel):
     def __init__(self, root):
         super().__init__(root)
         self.pack(expand=True, fill="both")
@@ -537,7 +542,7 @@ class AdminBackupPanel(CTkFrame):
         return 'TS_' + now
     
     
-class ManagerProductPanel(CTkFrame):
+class ManagerProductPanel(Panel):
     def __init__(self, root):
         super().__init__(root)
         self.pack(expand=True, fill="both")
@@ -578,6 +583,7 @@ class ManagerProductPanel(CTkFrame):
         self.delete_product_frame = None
         self.update_product_frame = None
         self.toggle_view('new')  # Show the new product form by default
+        self.show_error_message("test error message")
 
     # Toggle between different views
     def toggle_view(self, view_name):
