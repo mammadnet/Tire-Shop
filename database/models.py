@@ -28,7 +28,9 @@ class Product(Base):
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     brand_id : Mapped[int] = mapped_column(ForeignKey('brand.id'))
     size_id : Mapped[int] = mapped_column(ForeignKey('size.id'))
+    price_id : Mapped[int] = mapped_column(ForeignKey('price.id'), nullable=True)
     
+    price : Mapped['Price'] = relationship(back_populates='products', uselist=False)
     brand : Mapped['Brand'] = relationship(back_populates='products')
     size : Mapped['Size'] = relationship(back_populates='products')
 
@@ -42,7 +44,21 @@ class Product(Base):
                 "width": self.size.width if self.size else None,
                 "ratio": self.size.ratio if self.size else None,
                 "rim": self.size.rim if self.size else None,
-            } if self.size else None
+            } if self.size else None,
+            "price": self.price.price if self.price else None
+        }
+
+class Price(Base):
+    __tablename__ = 'price'
+    
+    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    price : Mapped[float] = mapped_column(nullable=False)
+    products: Mapped[list['Product']] = relationship(back_populates='price')
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "price": self.price,
         }
 
 class Brand(Base):
