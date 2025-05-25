@@ -2,6 +2,7 @@ from customtkinter import *
 from .widgets import Item_button, Input, Btn, DropDown, render_text
 from database import session, get_all_employees_json, create_new_user, create_product
 from database import remove_user_by_username, update_user_by_username, user_by_username, get_all_username
+from database import get_all_products_json, delete_product_by_name_and_size
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
@@ -583,15 +584,21 @@ class ManagerProductPanel(Panel):
         self.new_product_inputs: list[Input] = []
         
         self.new_product_frame = None
+        self.product_new(self)  # Create the new product form
+        
         self.delete_product_frame = None
+        self.delete_product_btn = None
+        self.delete_product_combobox = None
         self.update_product_frame = None
+        
+        
         self.toggle_view('list')  # Show the new product form by default
 
     # Toggle between different views
     def toggle_view(self, view_name):
         if view_name == 'list':
             self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
-            # self.new_product_frame.place_forget()
+            self.new_product_frame.place_forget()
             # self.delete_product_frame.place_forget()
             # self.update_product_frame.place_forget()
         elif view_name == 'new':
@@ -599,7 +606,8 @@ class ManagerProductPanel(Panel):
             self.new_product_frame = self.product_new(self)
         elif view_name == 'delete':
             self.table.place_forget()
-            # self.delete_product_frame = self.delete_product(self)
+            self.new_product_frame.place_forget()
+            self.delete_product(self)
         elif view_name == 'update':
             self.table.place_forget()
             # self.update_product_frame = self.update_product(self)
@@ -657,7 +665,12 @@ class ManagerProductPanel(Panel):
     
     
     def product_new(self, window):
-        content_frame = CTkFrame(window, fg_color="#5B5D76")
+        if self.new_product_frame:
+            content_frame = self.new_product_frame
+        else:
+            content_frame = CTkFrame(window, fg_color="#5B5D76")
+            self.new_product_frame = content_frame
+            
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
         content_frame.columnconfigure((0, 3), weight=1, uniform='a')
@@ -747,4 +760,50 @@ class ManagerProductPanel(Panel):
             return False
         
         return True
+    
+    def delete_product(self, window):
+        if self.delete_product_frame:
+            content_frame = self.delete_product_frame
+        else:
+            content_frame = CTkFrame(window, fg_color="#5B5D76")
+            self.delete_product_frame = content_frame
+            
+            content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            content_frame.rowconfigure((0, 3), weight=1)
+            content_frame.columnconfigure((0, 1), weight=1, pad=20, uniform='a')
 
+            text = render_text("نام محصول:")
+            product_label = CTkLabel(content_frame, text=text, text_color="white", font=(None, 15))
+            product_label.grid(row=0, column=1)
+        
+        # Fetch all products and populate the dropdown
+        products = get_all_products_json(session)
+        combo_delete_items = [f'{product['brand']}:{product['size']['width']}/{product['size']['ratio']}/{product['size']['rim']}' for product in products]
+
+        if self.delete_product_combobox:
+            self.delete_product_combobox.destroy()
+        
+        self.delete_product_combobox = DropDown(content_frame, values=combo_delete_items, width=250)
+        self.delete_product_combobox.grid(row=0, column=0)
+
+        if not self.delete_product_btn:
+            self.delete_product_btn = Btn(content_frame, 160, 45)
+        
+            self.delete_product_btn.configure(font=(None, 16))
+            self.delete_product_btn.set_text(text='حذف محصول')
+            self.delete_product_btn.grid(row=1, column=0, columnspan=4)
+        
+        self.delete_product_btn.configure(command=lambda : self.delete_product_action(self.delete_product_combobox.get(), self.show_error_message, self.show_success_message))
+
+    def delete_product_action(self, product_info, show_msg_callback, show_success_msg_callback):
+        
+        try:
+            brand, size = product_info.split(':')
+            width, ratio, rim = map(int, size.split('/'))
+            delete_product_by_name_and_size(session, brand, width, ratio, rim)
+        except Exception as e:
+            show_msg_callback(e)
+        
+        show_success_msg_callback("Product was deleted")
+        self.delete_product(self)
+   
