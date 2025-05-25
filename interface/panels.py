@@ -1,6 +1,7 @@
 from customtkinter import *
 from .widgets import Item_button, Input, Btn, DropDown, render_text
-from database import session, get_all_employees_json, create_new_user, remove_user_by_username, update_user_by_username, user_by_username, get_all_username
+from database import session, get_all_employees_json, create_new_user, create_product
+from database import remove_user_by_username, update_user_by_username, user_by_username, get_all_username
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
@@ -579,10 +580,12 @@ class ManagerProductPanel(Panel):
         self.table = self.initialize_table(self)
         self.insert_content_to_table(self.table,[{"id": 1,"name": "John Doe","role": "Employee", "price": 100,"quantity": 50}])
         
+        self.new_product_inputs: list[Input] = []
+        
         self.new_product_frame = None
         self.delete_product_frame = None
         self.update_product_frame = None
-        self.toggle_view('new')  # Show the new product form by default
+        self.toggle_view('list')  # Show the new product form by default
 
     # Toggle between different views
     def toggle_view(self, view_name):
@@ -665,6 +668,7 @@ class ManagerProductPanel(Panel):
         name_input = Input(content_frame, 15, 150, 35, "Name", name, just_english=True, show_err_callback=self.show_error_message)
         name_input.set_textvariable(name)
         name_input.grid(row=1, column=0)
+        self.new_product_inputs.append(name_input)
 
         
         # قیمت
@@ -674,7 +678,7 @@ class ManagerProductPanel(Panel):
         price_input = Input(content_frame, 15, 150, 35, "Price", price, just_english=True, show_err_callback=self.show_error_message)
         price_input.set_textvariable(price)
         price_input.grid(row=2, column=0)
-
+        self.new_product_inputs.append(price_input)
         # تعداد
         quantity = StringVar()
         quantity_label = CTkLabel(content_frame, text=render_text("تعداد:"), text_color="white", font=(None, 13))
@@ -682,7 +686,7 @@ class ManagerProductPanel(Panel):
         quantity_input = Input(content_frame, 15, 150, 35, "Quantity", quantity, just_english=True, show_err_callback=self.show_error_message)
         quantity_input.set_textvariable(quantity)
         quantity_input.grid(row=3, column=0)
-
+        self.new_product_inputs.append(quantity_input)
         # پهنا
         width = StringVar()
         width_label = CTkLabel(content_frame, text=render_text("پهنا:"), text_color="white", font=(None, 13))
@@ -690,7 +694,7 @@ class ManagerProductPanel(Panel):
         width_input = Input(content_frame, 15, 150, 35, "Width", width, just_english=True, show_err_callback=self.show_error_message)
         width_input.set_textvariable(width)
         width_input.grid(row=1, column=2)
-
+        self.new_product_inputs.append(width_input)
         # نسبت
         ratio = StringVar()
         ratio_label = CTkLabel(content_frame, text=render_text("نسبت:"), text_color="white", font=(None, 13))
@@ -698,7 +702,7 @@ class ManagerProductPanel(Panel):
         ratio_input = Input(content_frame, 15, 150, 35, "Ratio", ratio, just_english=True, show_err_callback=self.show_error_message)
         ratio_input.set_textvariable(ratio)
         ratio_input.grid(row=2, column=2, sticky='e')
-
+        self.new_product_inputs.append(ratio_input)
         # رینگ
         rim = StringVar()
         rim_label = CTkLabel(content_frame, text=render_text("رینگ:"), text_color="white", font=(None, 13))
@@ -706,9 +710,41 @@ class ManagerProductPanel(Panel):
         rim_input = Input(content_frame, 15, 150, 35, "Rim", rim, just_english=True, show_err_callback=self.show_error_message)
         rim_input.set_textvariable(rim)
         rim_input.grid(row=3, column=2)
+        self.new_product_inputs.append(rim_input)
         
         btn = Btn(content_frame, 160, 45)
         btn.configure(font=(None, 16))
         btn.set_text(text='ایجاد محصول')
+        btn.configure(command=lambda : self.new_product_action(
+            self.show_error_message,
+            name_input.get(), price_input.get(), quantity_input.get(),
+            width_input.get(), ratio_input.get(), rim_input.get()))
         btn.grid(row=5, column=0, columnspan=4)
+        
+    
+    def new_product_action(self, show_err_callback, name:str=None, price:str=None, quantity:str=None, width:str=None, ratio:str=None, rim:str=None):
+        if self.check_value_inputs_in_new_product(show_err_callback, name, price, quantity, width, ratio, rim):
+            try:
+                create_product(session, name, price, quantity, width, ratio, rim)
+                self.show_success_message("New product was created")
+                self.clear_new_product_inputs()
+            except Exception as e:
+                show_err_callback(e)
+    def clear_new_product_inputs(self):
+        for input in self.new_product_inputs:
+            input.clear()
+    def check_value_inputs_in_new_product(self, show_err_callback, name:str=None, price:str=None, quantity:str=None, width:str=None, ratio:str=None, rim:str=None):
+        if not (name and price and quantity and width and ratio and rim):
+            show_err_callback("Inputs cannot be empty.")
+            return False
+        
+        if not price.isdigit() or not quantity.isdigit():
+            show_err_callback("Price and Quantity must be numbers.")
+            return False
+        
+        if not width.isdigit() or not ratio.isdigit() or not rim.isdigit():
+            show_err_callback("Width, Ratio, and Rim must be numbers.")
+            return False
+        
+        return True
 
