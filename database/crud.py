@@ -205,4 +205,23 @@ def search_product_by_brand_json(session: Session, brand_name: str):
     for product in products:
         result.append(product.to_dict())
     return result
+
+def get_all_products(session: Session):
+    return session.query(Product).all()
+
+def get_all_products_json(session: Session):
+    products = get_all_products(session)
+    return [product.to_dict() for product in products]
+
+def delete_product_by_name_and_size(session: Session, brand_name: str, width: int, ratio: int, rim: int) -> bool:
+    brand = session.query(Brand).filter_by(name=brand_name).first()
+    size = session.query(Size).filter_by(width=width, ratio=ratio, rim=rim).first()
+    if not brand or not size:
+        return False
+    product = session.query(Product).filter_by(brand_id=brand.id, size_id=size.id).first()
+    if not product:
+        return False
+    session.delete(product)
+    session.commit()
+    return True
 # create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
