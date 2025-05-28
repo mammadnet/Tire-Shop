@@ -875,11 +875,15 @@ class ManagerProductPanel(Panel):
             
     def edit_product_action(self, product_info, show_error_callback, show_success_callback):
         try:
-            product_id, brand_name, size = product_info.split(':')
-            width, ratio, rim = map(int, size.split('/'))
-            price = float(self.edit_product_inputs['price'].get())
-            quantity = int(self.edit_product_inputs['quantity'].get())
-            update_product_by_id(session, product_id, brand_name, width, ratio, rim, price, quantity)
+            product_id, _, _ = product_info.split(':')
+            new_brand_name = self.edit_product_inputs['brand'].get()
+            new_width = int(self.edit_product_inputs['width'].get())
+            new_ratio = int(self.edit_product_inputs['ratio'].get())
+            new_rim = int(self.edit_product_inputs['rim'].get())
+            
+            new_price = float(self.edit_product_inputs['price'].get())
+            new_quantity = int(self.edit_product_inputs['quantity'].get())
+            update_product_by_id(session, product_id, new_brand_name, new_width, new_ratio, new_rim, new_quantity, new_price)
             show_success_callback(f'The product information has been changed.')
             self.edit_product(self)
             for v in list(self.edit_product_inputs.values()):
