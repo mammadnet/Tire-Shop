@@ -583,7 +583,7 @@ class ManagerProductPanel(Panel):
 
         # Create table and new product form but hide them initially
         self.table = self.initialize_table(self)
-        self.insert_content_to_table(self.table,[{"id": 1,"name": "John Doe","role": "Employee", "price": 100,"quantity": 50}])
+        self.insert_content_to_table(self.table, get_all_products_json(session))
         
         self.new_product_inputs: list[Input] = []
         
@@ -603,6 +603,7 @@ class ManagerProductPanel(Panel):
     def toggle_view(self, view_name):
         if view_name == 'list':
             self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            self.insert_content_to_table(self.table, get_all_products_json(session))
             self.new_product_frame.place_forget()
             self.delete_product_frame.place_forget()
             self.edit_product_frame.place_forget()
@@ -646,17 +647,19 @@ class ManagerProductPanel(Panel):
         foreground=[("active", "white")])
         
         table = ttk.Treeview(window, style="Custom1.Treeview")
-        table.configure(columns=("id", "name", "price", "quantity"))
+        table.configure(columns=("id", "name", "size", "price", "quantity"))
         table.configure(show="headings", selectmode="none")
         
         
         table.column("id", width=40, anchor="center")
         table.column("name", width=150, anchor="center")
+        table.column("size", width=150, anchor="center")
         table.column("price", width=100, anchor="center")
         table.column("quantity", width=100, anchor="center")
         
         table.heading("id", text="id", anchor='center')
         table.heading("name", text="name", anchor='center')
+        table.heading("size", text="size", anchor='center')
         table.heading("price", text="price", anchor='center')
         table.heading("quantity", text="quantity", anchor='center')
         
@@ -668,7 +671,7 @@ class ManagerProductPanel(Panel):
         table.delete(*table.get_children())
 
         for row in content:
-            vals = (row["id"], row["name"], row["price"], row["quantity"])
+            vals = (row["id"], row["brand"], f"{row['size']['width']}/{row['size']['ratio']}/{row['size']['rim']}", row["price"], row["quantity"])
             table.insert(parent="", index=0, values=vals)
             
     
