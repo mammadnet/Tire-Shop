@@ -610,13 +610,16 @@ class ManagerProductPanel(Panel):
             self.product_new(self)
             self.table.place_forget()
             self.delete_product_frame.place_forget()
+            self.edit_product_frame.place_forget()
         elif view_name == 'delete':
             self.table.place_forget()
             self.new_product_frame.place_forget()
+            self.edit_product_frame.place_forget()
             self.delete_product(self)
         elif view_name == 'update':
             self.table.place_forget()
-            self.edit_product_frame = self.edit_product(self)
+            self.delete_product_frame.place_forget()
+            self.edit_product(self)
 
     def initialize_table(self, window):
         style = ttk.Style()
