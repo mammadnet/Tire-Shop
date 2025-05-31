@@ -47,6 +47,7 @@ class Product(Base):
                 "rim": self.size.rim if self.size else None,
             } if self.size else None,
             "price": self.price,
+            "quantity": self.quantity,
         }
 
 
