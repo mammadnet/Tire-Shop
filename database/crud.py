@@ -266,3 +266,11 @@ def update_product_by_id(session: Session, product_id: int, new_brand_name: str,
     session.refresh(product)
     print(product.to_dict(), new_brand_name)
     return product
+
+
+def get_all_employee_usernames(session: Session):
+    employees = session.query(Employee).all()
+    return [employee.user_name for employee in employees]
+
+
+
