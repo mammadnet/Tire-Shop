@@ -272,5 +272,20 @@ def get_all_employee_usernames(session: Session):
     employees = session.query(Employee).all()
     return [employee.user_name for employee in employees]
 
+def get_all_employee_and_manager_usernames(session: Session):
+    employees = session.query(Employee).all()
+    managers = session.query(Manager).all()
+    usernames = [employee.user_name for employee in employees] + [manager.user_name for manager in managers]
+    return usernames
+
+def get_all_employee_and_manager(session: Session):
+    employees = session.query(Employee).all()
+    managers = session.query(Manager).all()
+    return employees + managers
+
+def get_all_employee_and_manager_json(session: Session):
+    users = get_all_employee_and_manager(session)
+    return [user.to_dict() for user in users]
+
 
 
