@@ -3,6 +3,7 @@ from .widgets import Item_button, Input, Btn, DropDown, render_text
 from database import session, get_all_employees_json, create_new_user, create_product
 from database import remove_user_by_username, update_user_by_username, user_by_username, get_all_username
 from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
+from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
@@ -116,7 +117,7 @@ class AdminEmployeePanel(Panel):
                 self.edit_user_frame.place_forget()
                 self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
                 self.current_view = 'list'
-                self.insert_content_to_table(self.table, get_all_employees_json(session))
+                self.insert_content_to_table(self.table, get_all_employee_and_manager_json(session))
             elif view_name == 'new' and self.current_view != 'new':
                 self.table.place_forget()
                 self.delete_user_frame.place_forget()
@@ -127,7 +128,7 @@ class AdminEmployeePanel(Panel):
                 self.table.place_forget()
                 self.new_employee_frame.place_forget()
                 self.edit_user_frame.place_forget()
-                self.delete_user(self, get_all_employees_json(session))
+                self.delete_user(self, get_all_employee_and_manager_json(session))
                 self.current_view = 'delete'
             elif view_name == 'edit' and self.current_view != 'edit':
                 self.table.place_forget()
@@ -360,7 +361,7 @@ class AdminEmployeePanel(Panel):
                 show_msg_callback(e)
             
             show_success_msg_callback("User was deleted")
-            self.delete_user(self, get_all_employees_json(session))
+            self.delete_user(self, get_all_employee_and_manager_json(session))
         
         #-----------------------------------------------------------------
         
@@ -380,7 +381,7 @@ class AdminEmployeePanel(Panel):
             select_user_label = CTkLabel(content_frame, text="Username:", text_color="white", font=(None, 15))
             select_user_label.grid(row=0, column=0)
 
-            usernames = get_all_username(session)  # Fetch list of usernames
+            usernames = get_all_employee_and_manager_usernames(session)  # Fetch list of usernames
             selected_username = StringVar()
             if self.edit_user_combobox:
                 self.edit_user_combobox.grid_forget()
