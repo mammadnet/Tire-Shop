@@ -2,7 +2,7 @@ from customtkinter import *
 from .widgets import Item_button, Input, Btn, DropDown, render_text
 from database import session, get_all_employees_json, create_new_user, create_product
 from database import remove_user_by_username, update_user_by_username, user_by_username, get_all_username
-from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id_json, update_product_by_id
+from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
@@ -1042,6 +1042,8 @@ class ManagerEmployeePanel(Panel):
         table.heading("national", text="national", anchor='center')
         table.heading("startDate", text="startDate", anchor='center')
         
+        self.create_user_rule = 'employee'
+        
         table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         return table
         
@@ -1064,12 +1066,6 @@ class ManagerEmployeePanel(Panel):
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
         content_frame.columnconfigure((0, 3), weight=1, pad=20, uniform='a')
 
-        # First column
-        rule_label = CTkLabel(content_frame, text="Rule:", text_color="white", font=(None, 15))
-        rule_label.grid(row=0, column=1, sticky='w')
-        combo_rule_items = ['Employee', 'Manager']
-        rule_comboBox = DropDown(content_frame, values=combo_rule_items)
-        rule_comboBox.grid(row=0, column=2)
 
         name_label = CTkLabel(content_frame, text="Name:", text_color="white", font=(None, 13))
         name_label.grid(row=1, column=0)
@@ -1137,7 +1133,7 @@ class ManagerEmployeePanel(Panel):
             self.show_error_message,
             name_input.get(), lastname_input.get(), national_input.get(),
             phone_input.get(), username_input.get(), password_input.get(),
-            password_repeate_input.get(), rule_comboBox.get()))
+            password_repeate_input.get(), self.create_user_rule))
         btn.configure(font=(None, 16))
         btn.set_text(text='ایجاد کاربر')
         btn.grid(row=5, column=0, columnspan=4)
@@ -1241,7 +1237,7 @@ class ManagerEmployeePanel(Panel):
         select_user_label = CTkLabel(content_frame, text="Username:", text_color="white", font=(None, 15))
         select_user_label.grid(row=0, column=0)
 
-        usernames = get_all_username(session)  # Fetch list of usernames
+        usernames = get_all_employee_usernames(session)  # Fetch list of usernames
         selected_username = StringVar()
         if self.edit_user_combobox:
             self.edit_user_combobox.grid_forget()
