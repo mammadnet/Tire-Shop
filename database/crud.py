@@ -8,7 +8,7 @@ from .connection import session
 
 from utilities import hashing
 
-from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException
+from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException, ProductNotExistsException
 
 # Check if a user is exist
 def exist_check_user(session:Session, by:InstrumentedAttribute, pat):
@@ -213,6 +213,15 @@ def get_all_products_json(session: Session):
     products = get_all_products(session)
     return [product.to_dict() for product in products]
 
+def get_product_by_id(session: Session, product_id: int) -> Product:
+    product = session.query(Product).filter_by(id=product_id).first()
+    if not product:
+        raise ProductNotExistsException(f"Product with id '{product_id}' does not exist.")
+    return product
+def get_product_by_id_json(session: Session, product_id: int) -> dict:
+    product = get_product_by_id(session, product_id)
+    return product.to_dict()
+
 def delete_product_by_name_and_size(session: Session, brand_name: str, width: int, ratio: int, rim: int) -> bool:
     brand = session.query(Brand).filter_by(name=brand_name).first()
     size = session.query(Size).filter_by(width=width, ratio=ratio, rim=rim).first()
@@ -224,4 +233,36 @@ def delete_product_by_name_and_size(session: Session, brand_name: str, width: in
     session.delete(product)
     session.commit()
     return True
-# create_new_user(session, 'admin', 'admin', '234', '1234', 'admin', 'admin', 'admin')
+
+def update_product_by_id(session: Session, product_id: int, new_brand_name: str, new_width: int, new_ratio: int, new_rim: int, new_quantity: int, new_price: float) -> Product:
+    # Find the product by ID
+    product = session.query(Product).filter_by(id=product_id).first()
+    if not product:
+        raise ProductNotExistsException(f"Product with id '{product_id}' does not exist.")
+
+    # Find or create the new brand
+    brand = session.query(Brand).filter_by(name=new_brand_name).first()
+    if not brand:
+        brand = Brand(name=new_brand_name)
+        session.add(brand)
+        session.commit()
+
+    # Find or create the new size
+    size = session.query(Size).filter_by(width=new_width, ratio=new_ratio, rim=new_rim).first()
+    if not size:
+        size = Size(width=new_width, ratio=new_ratio, rim=new_rim)
+        session.add(size)
+        session.commit()
+
+    # Update product's price and quantity
+    product.price = new_price
+    product.quantity = new_quantity
+    
+    # Update product's brand and size
+    product.brand_id = brand.id
+    product.size_id = size.id
+
+    session.commit()
+    session.refresh(product)
+    print(product.to_dict(), new_brand_name)
+    return product
