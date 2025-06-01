@@ -213,26 +213,27 @@ class Admin_page(Page):
         backup_btn.set_action(lambda _: self.toggle_panel('backup'))
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
         
-        self.current_panel = 'users'
+        self.current_panel = None
         
         #----------------DELETE THIS LINES AFTER FINISH THE ADMIN PANEL DEVELOPMENT-----------
         # self.employee_panel(self.control_frame)
-        self.employee_frame = AdminEmployeePanel(self.control_frame)
-        self.backup_frame = AdminBackupPanel(self.control_frame)
+        self.employee_frame = None
+        self.backup_frame = None
+        self.toggle_panel('users')
     
     def toggle_panel(self, panel:str):
         if panel == 'users' and self.current_panel != 'users':
-            self.backup_frame.pack_forget()
-            self.backup_frame.destroy()
+            if self.backup_frame:
+                self.backup_frame.destroy()
             self.employee_frame = AdminEmployeePanel(self.control_frame)
-            self.current_panel = panel
+            self.current_panel = 'users'
         elif panel == 'backup' and self.current_panel != 'backup':
-            self.employee_frame.pack_forget()
-            self.employee_frame.destroy()
+            if self.employee_frame:
+                self.employee_frame.destroy()
             self.backup_frame = AdminBackupPanel(self.control_frame)
-            self.current_panel = panel
-            
-            
+            self.current_panel = 'backup'
+
+
     def _employee_panel_callback(self, *k):
         # self.employee_panel(self.control_frame)
         print("hellloooooooo")
