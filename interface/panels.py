@@ -1320,3 +1320,48 @@ class ManagerEmployeePanel(Panel):
         self.pack_forget()
         return super().destroy()
     
+    
+    
+class EmployeeSellPanel(Panel):
+    def __init__(self, root):
+        super().__init__(root)
+        self.pack(expand=True, fill="both")
+        self.configure(bg_color='transparent', fg_color='transparent')
+        
+        # Setup button frame
+        self.btn_frame = CTkFrame(self, fg_color='transparent')
+        self.btn_frame.place(relwidth=.2, relheight=.3, relx=1, rely=.1, anchor="ne")
+        self.btn_frame.columnconfigure(0, weight=1)
+        self.btn_frame.rowconfigure((0,1), weight=1)
+
+        sell_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+        sell_btn.set_text("فروش محصول", "white", 13)
+        sell_btn.grid(row=0,column=0 ,sticky="e")
+        sell_btn.set_action(lambda e: self.toggle_view('sell'))
+        
+        product_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+        product_list_btn.set_text("لیست محصولات", "white", 13)
+        product_list_btn.grid(row=1,column=0 , sticky="e")
+        product_list_btn.set_action(lambda e: self.toggle_view('list'))
+        
+        self.error_message_label = CTkLabel(self, text_color="firebrick1")
+        self.success_message_label = CTkLabel(self, text_color="green")
+        
+        # Create table and new employee form but hide them initially
+        self.table = self.initialize_table(self)
+        self.insert_content_to_table(self.table, get_all_products_json(session))
+        
+        # Call employee_new once to create all widgets
+        self.product_new(self)
+        
+        # Remember the content_frame to toggle visibility
+        self.new_product_frame = self.winfo_children()[-1]
+        self.new_product_frame.place_forget()
+        
+        # Show table by default
+        self.current_view = None
+        self.toggle_view('list')
+
+
+            
+    #--------------------------------------------------------------------
