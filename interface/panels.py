@@ -455,6 +455,10 @@ class AdminEmployeePanel(Panel):
         except Exception as e:
             show_error_callback(e)
             
+    def destroy(self):
+        self.pack_forget()
+        super().destroy()
+            
     
         
 class AdminBackupPanel(Panel):
