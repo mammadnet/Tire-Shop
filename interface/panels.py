@@ -1450,6 +1450,10 @@ class EmployeeSellPanel(Panel):
         self.create_sell_labels(content_frame, render_text("موجودی:"), 2, 3, 'quantity')
         self.create_input_field(content_frame, render_text("تعداد:"), 4, 2, 'quantity')
         
+        sell_btn = Btn(content_frame, 160, 45)
+        sell_btn.configure(font=(None, 16))
+        sell_btn.set_text(text='ثبت فروش')
+        sell_btn.grid(row=6, column=0, columnspan=4)
     
     def create_input_field(self, window, label_text, row, column, field_key, **kwargs):
         if field_key not in self.sell_inputs:
