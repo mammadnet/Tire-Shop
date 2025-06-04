@@ -1429,11 +1429,13 @@ class EmployeeSellPanel(Panel):
             content_frame = CTkFrame(window, fg_color="#5B5D76")
             self.sell_frame = content_frame
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
-        content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
-        content_frame.columnconfigure((0,1,2,3), weight=1, pad=20, uniform='a')
+        content_frame.rowconfigure(tuple(range(0, 8)), weight=10)
+        content_frame.columnconfigure(tuple(range(1,4)), weight=10, pad=20, uniform='a')
+        content_frame.columnconfigure(0, weight=1, uniform='a')
+        content_frame.columnconfigure(4, weight=1, uniform='a')
         # Create input fields for selling a product
         product_label = CTkLabel(content_frame, text="Product:", text_color="white", font=(None, 15))
-        product_label.grid(row=0, column=0)
+        product_label.grid(row=0, column=1)
         products = get_all_products_json(session)
         combo_items = [f'{product["id"]}:{product["brand"]}:{product["size"]["width"]}/{product["size"]["ratio"]}/{product["size"]["rim"]}' for product in products]
         selected_product = StringVar()
@@ -1441,13 +1443,32 @@ class EmployeeSellPanel(Panel):
             self.sell_combobox.grid_forget()
             self.sell_combobox.destroy() 
         self.sell_combobox = DropDown(content_frame, values=combo_items, width=250, variable=selected_product)
-        self.sell_combobox.grid(row=0, column=1)
-        self.create_sell_labels(content_frame, render_text("برند:"), 1, 0, 'brand')
-        self.create_sell_labels(content_frame, render_text("قیمت:"), 1, 2, 'price')
-        self.create_sell_labels(content_frame, render_text("پهنا:"), 2, 0, 'width')
-        self.create_sell_labels(content_frame, render_text("نسبت:"), 2, 1, 'ratio')
-        self.create_sell_labels(content_frame, render_text("رینگ:"), 2, 2, 'rim')
-        self.create_input_field(content_frame, render_text("تعداد:"), 5, 1, 'quantity')
+        self.sell_combobox.grid(row=0, column=2)
+        self.create_sell_labels(content_frame, render_text("برند:"), 1, 1, 'brand')
+        self.create_sell_labels(content_frame, render_text("قیمت:"), 1, 3, 'price')
+        self.create_sell_labels(content_frame, render_text("سایز:"), 2, 2, 'size')
+        self.create_input_field(content_frame, render_text("تعداد:"), 4, 2, 'quantity')
         
     
-    
+    def create_input_field(self, window, label_text, row, column, field_key, **kwargs):
+        if field_key not in self.sell_inputs:
+            label = CTkLabel(window, text=label_text, text_color="white", font=(None, 13))
+            label.grid(row=row, column=column+1, **kwargs)
+            var = StringVar()
+            input_widget = Input(window, 15, 150, 35, None, var, placeholder_empty=False)
+            input_widget.set_textvariable(var)
+            input_widget.textvariable.set('')
+            input_widget.grid(row=row, column=column)
+            self.sell_inputs[field_key] = input_widget
+            
+            
+    def create_sell_labels(self, window, label_name, row, column, field_key, **kwargs):
+        if field_key not in self.sell_labels:
+            temp_frame = CTkFrame(window, fg_color="#444759", corner_radius=10)
+            temp_frame.grid(row=row, column=column, sticky="ew", **kwargs)
+            label = CTkLabel(temp_frame, text=label_name, text_color="white", font=(None, 13))
+            label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+            label_val = CTkLabel(temp_frame, text="?", text_color="white", font=(None, 13))
+            label_val.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+            self.sell_labels[field_key] = label_val
+
