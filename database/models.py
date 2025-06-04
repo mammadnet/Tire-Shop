@@ -10,8 +10,10 @@ class Customer(Base):
     
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(20), nullable=False)
-    lastName: Mapped[str] = mapped_column(String(20), nullable=False)
-    orders: Mapped[list['Order']] = relationship('Order')
+    phone: Mapped[str] = mapped_column(String(20), nullable=False)
+    address: Mapped[str] = mapped_column(String(100), nullable=False)
+    
+    orders: Mapped[list['Order']] = relationship('Order', back_populates='customer')
 
 
 class Order(Base):
