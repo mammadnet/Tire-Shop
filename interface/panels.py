@@ -1442,11 +1442,12 @@ class EmployeeSellPanel(Panel):
         if self.sell_combobox:
             self.sell_combobox.grid_forget()
             self.sell_combobox.destroy() 
-        self.sell_combobox = DropDown(content_frame, values=combo_items, width=250, variable=selected_product)
+        self.sell_combobox = DropDown(content_frame, values=combo_items, width=250, variable=selected_product, command=self._update_sell_labels)
         self.sell_combobox.grid(row=0, column=2)
         self.create_sell_labels(content_frame, render_text("برند:"), 1, 1, 'brand')
         self.create_sell_labels(content_frame, render_text("قیمت:"), 1, 3, 'price')
-        self.create_sell_labels(content_frame, render_text("سایز:"), 2, 2, 'size')
+        self.create_sell_labels(content_frame, render_text("سایز:"), 2, 1, 'size')
+        self.create_sell_labels(content_frame, render_text("موجودی:"), 2, 3, 'quantity')
         self.create_input_field(content_frame, render_text("تعداد:"), 4, 2, 'quantity')
         
     
@@ -1472,3 +1473,33 @@ class EmployeeSellPanel(Panel):
             label_val.pack(expand=True, fill="both", padx=10, pady=5, side="right")
             self.sell_labels[field_key] = label_val
 
+
+    def update_sell_labels(self, product_info):
+        # product_info is expected to be a dict with keys: 'brand', 'price', 'size'
+        # 'size' itself is a dict with keys: 'width', 'ratio', 'rim'
+        if not product_info:
+            # Clear labels if no product_info
+            self.sell_labels['brand'].configure(text="?")
+            self.sell_labels['price'].configure(text="?")
+            self.sell_labels['size'].configure(text="?")
+            return
+
+        brand = product_info.get('brand', '?')
+        price = product_info.get('price', '?')
+        size = product_info.get('size', {})
+        quantity = product_info.get('quantity', '?')
+        size_str = f"{size.get('width', '?')}/{size.get('ratio', '?')}/{size.get('rim', '?')}"
+        self.sell_labels['brand'].configure(text=str(brand))
+        self.sell_labels['price'].configure(text=str(price))
+        self.sell_labels['size'].configure(text=size_str)
+        self.sell_labels['quantity'].configure(text=str(quantity))
+        
+    def _update_sell_labels(self, product_info):
+        # product_info is expected to be a string in the format "id:brand:width/ratio/rim"
+        product_id = product_info.split(':')[0]
+        product_data = get_product_by_id_json(session, product_id)
+        if product_data:
+            self.update_sell_labels(product_data)
+        else:
+            self.update_sell_labels({})
+        
