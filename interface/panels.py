@@ -1494,4 +1494,12 @@ class EmployeeSellPanel(Panel):
         self.sell_labels['size'].configure(text=size_str)
         self.sell_labels['quantity'].configure(text=str(quantity))
         
+    def _update_sell_labels(self, product_info):
+        # product_info is expected to be a string in the format "id:brand:width/ratio/rim"
+        product_id = product_info.split(':')[0]
+        product_data = get_product_by_id_json(session, product_id)
+        if product_data:
+            self.update_sell_labels(product_data)
+        else:
+            self.update_sell_labels({})
         
