@@ -16,13 +16,26 @@ class Customer(Base):
 
 class Order(Base):
     __tablename__ = 'order'
-    
     id : Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     customer_id : Mapped[int] = mapped_column(ForeignKey("customer.id"))
     customer : Mapped['Customer'] = relationship(back_populates='orders')
-    name : Mapped[str] = mapped_column(String)
+
+
+    date: Mapped[datetime.date] = mapped_column(Date, default=datetime.datetime.now().date(), nullable=False)
+    products: Mapped[list['ProductsOrder']] = relationship('ProductsOrder', backref='order')
+
+class ProductsOrder(Base):
+    __tablename__ = 'products_order'
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    order_id: Mapped[int] = mapped_column(ForeignKey('order.id'))
     
-# Many to Many relationship between tire sizes and brands
+    brand: Mapped[str] = mapped_column(String(20), nullable=False)
+    price: Mapped[float] = mapped_column(nullable=False)
+    width: Mapped[int] = mapped_column(nullable=False)
+    ratio: Mapped[int] = mapped_column(nullable=False)
+    rim: Mapped[int] = mapped_column(nullable=False)
+    quantity: Mapped[int] = mapped_column(Integer, default=1)
+
 class Product(Base):
     __tablename__ = 'product'
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
