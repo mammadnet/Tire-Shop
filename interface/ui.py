@@ -8,7 +8,7 @@ from time import sleep
 from database import get_all_employees,get_all_employees_json, session, create_new_user, remove_user_by_username, update_user_by_username, get_all_username, user_by_username
 from database import UsernameAlreadyExistsException, NationalNumberAlreadyExistsException
 
-from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel
+from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel, EmployeeSellPanel
 
 from PIL import Image
 import os
@@ -341,6 +341,8 @@ class Employee_page(Page):
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=2, column=0, sticky='e')
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
+        
+        EmployeeSellPanel(self.control_frame)
 
     def destroy(self):
         self.main_frame.pack_forget()
