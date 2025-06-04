@@ -1359,7 +1359,7 @@ class EmployeeSellPanel(Panel):
         self.sell_inputs = {}
         self.sell_labels = {}
         self.sell_combobox = None
-
+        self.sell(self)
         
 
         
@@ -1421,5 +1421,33 @@ class EmployeeSellPanel(Panel):
             vals = (row["id"], row["brand"], f"{row['size']['width']}/{row['size']['ratio']}/{row['size']['rim']}", row["price"], row["quantity"])
             table.insert(parent="", index=0, values=vals)
             
+    
+    def sell(self, window):
+        if self.sell_frame:
+            content_frame = self.sell_frame
+        else:
+            content_frame = CTkFrame(window, fg_color="#5B5D76")
+            self.sell_frame = content_frame
+        content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+        content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
+        content_frame.columnconfigure((0,1,2,3), weight=1, pad=20, uniform='a')
+        # Create input fields for selling a product
+        product_label = CTkLabel(content_frame, text="Product:", text_color="white", font=(None, 15))
+        product_label.grid(row=0, column=0)
+        products = get_all_products_json(session)
+        combo_items = [f'{product["id"]}:{product["brand"]}:{product["size"]["width"]}/{product["size"]["ratio"]}/{product["size"]["rim"]}' for product in products]
+        selected_product = StringVar()
+        if self.sell_combobox:
+            self.sell_combobox.grid_forget()
+            self.sell_combobox.destroy() 
+        self.sell_combobox = DropDown(content_frame, values=combo_items, width=250, variable=selected_product)
+        self.sell_combobox.grid(row=0, column=1)
+        self.create_sell_labels(content_frame, render_text("برند:"), 1, 0, 'brand')
+        self.create_sell_labels(content_frame, render_text("قیمت:"), 1, 2, 'price')
+        self.create_sell_labels(content_frame, render_text("پهنا:"), 2, 0, 'width')
+        self.create_sell_labels(content_frame, render_text("نسبت:"), 2, 1, 'ratio')
+        self.create_sell_labels(content_frame, render_text("رینگ:"), 2, 2, 'rim')
+        self.create_input_field(content_frame, render_text("تعداد:"), 5, 1, 'quantity')
+        
     
     
