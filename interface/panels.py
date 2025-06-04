@@ -1359,6 +1359,7 @@ class EmployeeSellPanel(Panel):
         self.sell_inputs = {}
         self.sell_labels = {}
         self.sell_combobox = None
+        self.customer_sell_inputs = {}
         self.sell(self)
         
 
@@ -1448,24 +1449,34 @@ class EmployeeSellPanel(Panel):
         self.create_sell_labels(content_frame, render_text("قیمت:"), 1, 3, 'price')
         self.create_sell_labels(content_frame, render_text("سایز:"), 2, 1, 'size')
         self.create_sell_labels(content_frame, render_text("موجودی:"), 2, 3, 'quantity')
-        self.create_input_field(content_frame, render_text("تعداد:"), 4, 2, 'quantity')
+
+        self.create_input_field(content_frame, render_text("تعداد:"), 3, 2, 'quantity', container=self.sell_inputs)
+
+        self.create_input_field(content_frame, render_text("نام مشتری:"), 4, 1, 'customer_name', container=self.customer_sell_inputs)
+        self.create_input_field(content_frame, render_text("تلفن مشتری:"), 4, 3, 'customer_phone', container=self.customer_sell_inputs)
+        self.create_input_field(content_frame, render_text("آدرس مشتری:"), 5, 1, 'customer_address', container=self.customer_sell_inputs)
+        
+        
         
         sell_btn = Btn(content_frame, 160, 45)
         sell_btn.configure(font=(None, 16))
         sell_btn.set_text(text='ثبت فروش')
         sell_btn.grid(row=6, column=0, columnspan=4)
-    
-    def create_input_field(self, window, label_text, row, column, field_key, **kwargs):
+
+    def create_input_field(self, window, label_text, row, column, field_key, container, **kwargs):
         if field_key not in self.sell_inputs:
-            label = CTkLabel(window, text=label_text, text_color="white", font=(None, 13))
-            label.grid(row=row, column=column+1, **kwargs)
+            temp_frame = CTkFrame(window, fg_color="transparent", corner_radius=10)
+            temp_frame.grid(row=row, column=column, sticky="ew", **kwargs)
+
+            label = CTkLabel(temp_frame, text=label_text, text_color="white", font=(None, 13))
+            label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
             var = StringVar()
-            input_widget = Input(window, 15, 150, 35, None, var, placeholder_empty=False)
+            input_widget = Input(temp_frame, 15, 150, 35, None, var, placeholder_empty=False)
             input_widget.set_textvariable(var)
             input_widget.textvariable.set('')
-            input_widget.grid(row=row, column=column)
-            self.sell_inputs[field_key] = input_widget
-            
+            input_widget.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+            container[field_key] = input_widget
+
             
     def create_sell_labels(self, window, label_name, row, column, field_key, **kwargs):
         if field_key not in self.sell_labels:
