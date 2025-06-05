@@ -1,4 +1,4 @@
-from .models import User,Employee,Admin,Manager,Order,Customer,Product,Size,Brand
+from .models import User,Employee,Admin,Manager,Order,Customer,Product,Size,Brand, ProductsOrder
 
 from sqlalchemy.orm import Session, InstrumentedAttribute
 
@@ -326,3 +326,39 @@ def create_customer(session: Session, name: str, lastname: str, phone: str, nati
     session.add(new_customer)
     session.commit()
     session.refresh(new_customer)
+    
+
+def create_order(self, session: Session, customer: Customer, product: Product, quantity: int) -> Order:
+    # Check if customer exists
+    if not customer:
+        raise ValueError("Customer does not exist.")
+
+    # Check if product exists
+    if not product:
+        raise ValueError("Product does not exist.")
+
+    # Create new order
+    new_order = Order(
+        customer=customer,
+    )
+
+    session.add(new_order)
+    session.commit()
+    session.refresh(new_order)
+
+    # Create ProductsOrder association
+    products_order = ProductsOrder(
+        order_id=new_order.id,
+        price=product.price,
+        width=product.size.width,
+        ratio=product.size.ratio,
+        rim=product.size.rim,
+        brand=product.brand.name,
+        quantity=quantity
+    )
+
+    session.add(products_order)
+    session.commit()
+
+    return new_order
+    
