@@ -2,8 +2,9 @@ from customtkinter import *
 from .widgets import Item_button, Input, Btn, DropDown, render_text
 from database import session, get_all_employees_json, create_new_user, create_product
 from database import remove_user_by_username, update_user_by_username, user_by_username, get_all_username
-from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
+from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
 from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames, get_all_customers, get_customer_by_id
+from database import create_order, get_customer_by_national_id, get_or_create_customer, check_customer_equal
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
@@ -1463,12 +1464,16 @@ class EmployeeSellPanel(Panel):
         self.create_input_field(content_frame, render_text("نام مشتری:"), 5, 1, 'customer_name', container=self.customer_sell_inputs)
         self.create_input_field(content_frame, render_text("تلفن مشتری:"), 5, 3, 'customer_phone', container=self.customer_sell_inputs)
         self.create_input_field(content_frame, render_text("آدرس مشتری:"), 6, 1, 'customer_address', container=self.customer_sell_inputs)
-        
-        
-        
+        self.create_input_field(content_frame, render_text("شماره ملی:"), 6, 3, 'customer_national_number', container=self.customer_sell_inputs)
+
+
         sell_btn = Btn(content_frame, 160, 45)
         sell_btn.configure(font=(None, 16))
         sell_btn.set_text(text='ثبت فروش')
+        sell_btn.configure(command=lambda: self.sell_action(
+            self.show_error_message,
+            self.show_success_message
+        ))
         sell_btn.grid(row=7, column=0, columnspan=4)
 
     def create_input_field(self, window, label_text, row, column, field_key, container, **kwargs):
@@ -1517,6 +1522,7 @@ class EmployeeSellPanel(Panel):
         self.sell_labels['size'].configure(text=size_str)
         self.sell_labels['quantity'].configure(text=str(quantity))
         
+        
     def _update_sell_labels(self, product_info):
         # product_info is expected to be a string in the format "id:brand:width/ratio/rim"
         product_id = product_info.split(':')[0]
@@ -1541,3 +1547,35 @@ class EmployeeSellPanel(Panel):
             self.customer_sell_inputs['customer_name'].set_placeholder_text(customer_data.name)
             self.customer_sell_inputs['customer_phone'].set_placeholder_text(customer_data.phone)
             self.customer_sell_inputs['customer_address'].set_placeholder_text(customer_data.address)
+            self.customer_sell_inputs['customer_national_number'].set_placeholder_text(customer_data.national_number)
+    def sell_action(self, show_error_callback, show_success_callback):
+        try:
+            product_info = self.sell_combobox.get().split(':')
+            product_id = product_info[0]
+            quantity = int(self.sell_inputs['quantity'].get()) if self.sell_inputs['quantity'].get() else 0
+            customer_info = self.sell_userinfo_combobox.get().split(':')
+            customer_id = customer_info[0]
+            customer_name = self.customer_sell_inputs['customer_name'].get()
+            customer_address = self.customer_sell_inputs['customer_address'].get()
+            customer_phone = self.customer_sell_inputs['customer_phone'].get()
+            customer_national_id = self.customer_sell_inputs['customer_national_number'].get()
+            # Validate inputs
+            if not product_id or not quantity or not customer_name or not customer_address or not customer_phone or not customer_national_id:
+                raise ValueError("Please fill all fields.")
+
+            self.sell_product(session, product_id, customer_name, customer_address, customer_phone, customer_national_id, quantity)
+            show_success_callback(f'The product has been sold successfully.')
+            self.sell(self)
+            for v in list(self.sell_inputs.values()):
+                v.textvariable.set('')
+        except Exception as ve:
+            show_error_callback(str(ve))
+  
+
+    def sell_product(self, session, product_id, customer_name, customer_address, customer_phone, customer_national_id, quantity):
+
+        product = get_product_by_id(session, product_id)
+        customer = get_or_create_customer(session, customer_name, customer_address, customer_phone, customer_national_id)
+
+
+        create_order(session, customer, product, quantity)
