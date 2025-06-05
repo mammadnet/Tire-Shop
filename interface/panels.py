@@ -1677,3 +1677,10 @@ class EmployeeReportPanel(Panel):
         
         return table
 
+    def insert_content_to_table(self, table:ttk.Treeview, orders:list):
+        table.delete(*table.get_children())
+
+        for order in orders:
+            for product in order.products:
+                vals = (order.id, product.brand, f"{product.width}/{product.ratio}/{product.rim}", product.price, order.customer.name, order.date)
+                table.insert(parent="", index=0, values=vals)
