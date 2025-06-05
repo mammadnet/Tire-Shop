@@ -1624,4 +1624,56 @@ class EmployeeReportPanel(Panel):
         self.current_view = None
         
     
-    
+    def initialize_table(self, window):
+        style = ttk.Style()
+        if is_windows():
+            style.theme_use('clam')
+        
+        # Configure Treeview style
+        style.configure("Custom1.Treeview",
+        background="#494A5F",
+        foreground="black",
+        fieldbackground="#393A4E",
+        rowheight=50,
+        borderwidth=0
+        )
+        
+        style.configure("Custom1.Treeview.Heading",
+        background="#5B5D76",     # Header background color
+        foreground="white",       # Header text color
+        font=("Helvetica", 10, "bold"),
+        relief='flat')
+        
+        style.map("Custom1.Treeview.Heading",
+        background=[("active", "#6b6d87")],
+        foreground=[("active", "white")])
+        
+        if self.sell_report_table:
+            table = self.sell_report_table
+        else:
+            self.sell_report_table = ttk.Treeview(window, style="Custom1.Treeview")
+            table = self.sell_report_table
+        
+        
+        table.configure(columns=("id", "brand", "size", "price", "customer", "date"))
+        table.configure(show="headings", selectmode="none")
+        
+        
+        table.column("id", width=40, anchor="center")
+        table.column("brand", width=100, anchor="center")
+        table.column("size", width=150, anchor="center")
+        table.column("price", width=120, anchor="center")
+        table.column("customer", width=140, anchor="center")
+        table.column("date", width=200, anchor="center")
+        
+        table.heading("id", text="id", anchor='center')
+        table.heading("brand", text="brand", anchor='center')
+        table.heading("size", text="size", anchor='center')
+        table.heading("price", text="price", anchor='center')
+        table.heading("customer", text="customer", anchor='center')
+        table.heading("date", text="date", anchor='center')
+        # Place the table in the window
+        table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+        
+        return table
+
