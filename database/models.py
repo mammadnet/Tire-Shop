@@ -12,7 +12,7 @@ class Customer(Base):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     phone: Mapped[str] = mapped_column(String(20), nullable=False)
     address: Mapped[str] = mapped_column(String(100), nullable=False)
-    
+    national_number: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
     orders: Mapped[list['Order']] = relationship('Order', back_populates='customer')
 
 
