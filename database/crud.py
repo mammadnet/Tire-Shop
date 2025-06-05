@@ -309,18 +309,18 @@ def get_customer_by_id_json(session: Session, customer_id: int) -> dict:
 
 
 
-def create_customer(session: Session, name: str, lastname: str, phone: str, national_number: str) -> Customer:
+def create_customer(session: Session, name: str, address: str, phone: str, national_number: str) -> Customer:
     # Check if customer with same national number exists
-    exist_check = exist_check(session, Customer.national_number, national_number)
-    if exist_check:
+    exist = exist_check(session, Customer.national_number, national_number)
+    if exist:
         raise NationalNumberAlreadyExistsException(national_number)
 
     # Create new customer
     new_customer = Customer(
-        name=name,
-        lastname=lastname, 
+        name=name, 
         phone=phone,
-        national_number=national_number
+        national_number=national_number,
+        address=address
     )
 
     session.add(new_customer)
@@ -328,7 +328,7 @@ def create_customer(session: Session, name: str, lastname: str, phone: str, nati
     session.refresh(new_customer)
     
 
-def create_order(self, session: Session, customer: Customer, product: Product, quantity: int) -> Order:
+def create_order(session: Session, customer: Customer, product: Product, quantity: int) -> Order:
     # Check if customer exists
     if not customer:
         raise ValueError("Customer does not exist.")
@@ -361,4 +361,28 @@ def create_order(self, session: Session, customer: Customer, product: Product, q
     session.commit()
 
     return new_order
-    
+
+def check_customer_equal(customer: Customer, name: str, phone: str, national_number: str) -> bool:
+    return (customer.name == name and
+            customer.phone == phone and
+            customer.national_number == national_number)
+
+def get_customer_by_national_id(session: Session, national_id: str) -> Customer:
+    customer = session.query(Customer).filter_by(national_number=national_id).first()
+    if not customer:
+        raise CustomerNotExistsException(national_id)
+    return customer
+
+def get_or_create_customer(session: Session, name: str, address: str, phone: str, national_number: str) -> Customer:
+    # Try to find existing customer
+    try:
+        customer = get_customer_by_national_id(session, national_number)
+        if not check_customer_equal(customer, name, phone, national_number):
+            raise NationalNumberAlreadyExistsException(national_number)
+        # If customer exists and matches, return it
+        return customer
+    except CustomerNotExistsException:
+        # Create new customer if not found
+        create_customer(session, name, address, phone, national_number)
+        return get_customer_by_national_id(session, national_number)
+
