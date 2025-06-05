@@ -1440,6 +1440,7 @@ class EmployeeSellPanel(Panel):
         products = get_all_products_json(session)
         combo_items = [f'{product["id"]}:{product["brand"]}:{product["size"]["width"]}/{product["size"]["ratio"]}/{product["size"]["rim"]}' for product in products]
         selected_product = StringVar()
+        selected_product.set("Select Product")
         if self.sell_combobox:
             self.sell_combobox.grid_forget()
             self.sell_combobox.destroy() 
@@ -1454,7 +1455,9 @@ class EmployeeSellPanel(Panel):
 
         customers = get_all_customers(session)
         self.user_info_combo_items = [f'{customer.id}:{customer.name}' for customer in customers]
-        self.sell_userinfo_combobox = DropDown(content_frame, values=self.user_info_combo_items, width=250, variable=selected_product, command=self.update_customer_info_inputs)
+        selected_customer = StringVar()
+        selected_customer.set("Select Customer")
+        self.sell_userinfo_combobox = DropDown(content_frame, values=self.user_info_combo_items, width=250, variable=selected_customer, command=self.update_customer_info_inputs)
         self.sell_userinfo_combobox.grid(row=4, column=2)
         
         self.create_input_field(content_frame, render_text("نام مشتری:"), 5, 1, 'customer_name', container=self.customer_sell_inputs)
