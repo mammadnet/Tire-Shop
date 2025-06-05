@@ -1470,7 +1470,11 @@ class EmployeeSellPanel(Panel):
         sell_btn = Btn(content_frame, 160, 45)
         sell_btn.configure(font=(None, 16))
         sell_btn.set_text(text='ثبت فروش')
-
+        sell_btn.configure(command=lambda: self.sell_action(
+            self.show_error_message,
+            self.show_success_message
+        ))
+        sell_btn.grid(row=7, column=0, columnspan=4)
 
     def create_input_field(self, window, label_text, row, column, field_key, container, **kwargs):
         if field_key not in self.sell_inputs:
