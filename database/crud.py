@@ -216,7 +216,7 @@ def get_all_products_json(session: Session):
 def get_product_by_id(session: Session, product_id: int) -> Product:
     product = session.query(Product).filter_by(id=product_id).first()
     if not product:
-        raise ProductNotExistsException(f"Product with id '{product_id}' does not exist.")
+        raise ProductNotExistsException(product_id)
     return product
 def get_product_by_id_json(session: Session, product_id: int) -> dict:
     product = get_product_by_id(session, product_id)
