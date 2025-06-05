@@ -356,11 +356,27 @@ def create_order(session: Session, customer: Customer, product: Product, quantit
         brand=product.brand.name,
         quantity=quantity
     )
+    decrease_product_quantity(session, product.id, quantity)  # Decrease product quantity
 
     session.add(products_order)
     session.commit()
 
     return new_order
+
+
+def decrease_product_quantity(session: Session, product_id: int, quantity: int) -> Product:
+    product = session.query(Product).filter_by(id=product_id).first()
+    if not product:
+        raise ProductNotExistsException(product_id)
+    
+    if product.quantity < quantity:
+        raise ValueError("Not enough product quantity available.")
+    
+    product.quantity -= quantity
+    session.commit()
+    session.refresh(product)
+    
+    return product
 
 def check_customer_equal(customer: Customer, name: str, phone: str, national_number: str) -> bool:
     return (customer.name == name and
