@@ -1588,6 +1588,8 @@ class EmployeeSellPanel(Panel):
         create_order(session, customer, product, quantity)
         
     def clear_sell_inputs(self):
+        for label in self.sell_labels.values():
+            label.configure(text="?")
         for input in self.sell_inputs.values():
             input.set_placeholder_text('')
         for input in self.customer_sell_inputs.values():
