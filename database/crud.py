@@ -305,3 +305,24 @@ def get_customer_by_id_json(session: Session, customer_id: int) -> dict:
     if customer:
         return customer.to_dict()
     return None
+
+
+
+
+def create_customer(session: Session, name: str, lastname: str, phone: str, national_number: str) -> Customer:
+    # Check if customer with same national number exists
+    exist_check = exist_check(session, Customer.national_number, national_number)
+    if exist_check:
+        raise NationalNumberAlreadyExistsException(national_number)
+
+    # Create new customer
+    new_customer = Customer(
+        name=name,
+        lastname=lastname, 
+        phone=phone,
+        national_number=national_number
+    )
+
+    session.add(new_customer)
+    session.commit()
+    session.refresh(new_customer)
