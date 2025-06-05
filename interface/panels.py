@@ -1572,4 +1572,10 @@ class EmployeeSellPanel(Panel):
             show_error_callback(str(ve))
   
 
-    
+    def sell_product(self, session, product_id, customer_name, customer_address, customer_phone, customer_national_id, quantity):
+
+        product = get_product_by_id(session, product_id)
+        customer = get_or_create_customer(session, customer_name, customer_address, customer_phone, customer_national_id)
+
+
+        create_order(session, customer, product, quantity)
