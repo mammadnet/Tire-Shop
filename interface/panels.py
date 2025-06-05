@@ -1430,7 +1430,7 @@ class EmployeeSellPanel(Panel):
             content_frame = CTkFrame(window, fg_color="#5B5D76")
             self.sell_frame = content_frame
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
-        content_frame.rowconfigure(tuple(range(0, 8)), weight=10)
+        content_frame.rowconfigure(tuple(range(0, 9)), weight=10)
         content_frame.columnconfigure(tuple(range(1,4)), weight=10, pad=20, uniform='a')
         content_frame.columnconfigure(0, weight=1, uniform='a')
         content_frame.columnconfigure(4, weight=1, uniform='a')
@@ -1457,16 +1457,16 @@ class EmployeeSellPanel(Panel):
         self.sell_userinfo_combobox = DropDown(content_frame, values=self.user_info_combo_items, width=250, variable=selected_product, command=self.update_customer_info_inputs)
         self.sell_userinfo_combobox.grid(row=4, column=2)
         
-        self.create_input_field(content_frame, render_text("نام مشتری:"), 4, 1, 'customer_name', container=self.customer_sell_inputs)
-        self.create_input_field(content_frame, render_text("تلفن مشتری:"), 4, 3, 'customer_phone', container=self.customer_sell_inputs)
-        self.create_input_field(content_frame, render_text("آدرس مشتری:"), 5, 1, 'customer_address', container=self.customer_sell_inputs)
+        self.create_input_field(content_frame, render_text("نام مشتری:"), 5, 1, 'customer_name', container=self.customer_sell_inputs)
+        self.create_input_field(content_frame, render_text("تلفن مشتری:"), 5, 3, 'customer_phone', container=self.customer_sell_inputs)
+        self.create_input_field(content_frame, render_text("آدرس مشتری:"), 6, 1, 'customer_address', container=self.customer_sell_inputs)
         
         
         
         sell_btn = Btn(content_frame, 160, 45)
         sell_btn.configure(font=(None, 16))
         sell_btn.set_text(text='ثبت فروش')
-        sell_btn.grid(row=6, column=0, columnspan=4)
+        sell_btn.grid(row=7, column=0, columnspan=4)
 
     def create_input_field(self, window, label_text, row, column, field_key, container, **kwargs):
         if field_key not in self.sell_inputs:
