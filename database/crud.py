@@ -402,3 +402,9 @@ def get_or_create_customer(session: Session, name: str, address: str, phone: str
         create_customer(session, name, address, phone, national_number)
         return get_customer_by_national_id(session, national_number)
 
+def get_all_orders(session: Session):
+    return session.query(Order).all()
+
+def get_all_orders_json(session: Session):
+    orders = get_all_orders(session)
+    return [order.to_dict() for order in orders]
