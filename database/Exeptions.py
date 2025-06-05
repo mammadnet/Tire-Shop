@@ -24,3 +24,7 @@ class ProductAlreadyExistsException(Exception):
 class ProductNotExistsException(Exception):
     def __init__(self, product_name):
         super().__init__(f"Product '{product_name}' does not exist in the database.")
+
+class CustomerNotExistsException(Exception):
+    def __init__(self, customer_id):
+        super().__init__(f"Customer with ID '{customer_id}' does not exist in the database.")

@@ -8,7 +8,7 @@ from .connection import session
 
 from utilities import hashing
 
-from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException, ProductNotExistsException
+from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException, ProductNotExistsException, CustomerNotExistsException
 
 # Check if a user is exist
 def exist_check(session:Session, by:InstrumentedAttribute, pat):
@@ -298,13 +298,13 @@ def get_all_customers_json(session: Session):
 
 def get_customer_by_id(session: Session, customer_id: int) -> Customer:
     customer = session.query(Customer).filter_by(id=customer_id).first()
+    if not customer:
+        raise CustomerNotExistsException(customer_id)
     return customer
 
 def get_customer_by_id_json(session: Session, customer_id: int) -> dict:
     customer = get_customer_by_id(session, customer_id)
-    if customer:
-        return customer.to_dict()
-    return None
+    return customer.to_dict()
 
 
 
