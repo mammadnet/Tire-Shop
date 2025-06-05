@@ -4,7 +4,7 @@ from database import session, get_all_employees_json, create_new_user, create_pr
 from database import remove_user_by_username, update_user_by_username, user_by_username, get_all_username
 from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
 from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames, get_all_customers, get_customer_by_id
-from database import create_order, get_customer_by_national_id, get_or_create_customer, check_customer_equal
+from database import create_order, get_customer_by_national_id, get_or_create_customer, check_customer_equal, get_all_orders
 from database import ProductNotExistsException
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
@@ -1594,3 +1594,34 @@ class EmployeeSellPanel(Panel):
             input.set_placeholder_text('')
         for input in self.customer_sell_inputs.values():
             input.set_placeholder_text('')
+#-----------------------------------------------------
+
+class EmployeeReportPanel(Panel):
+    def __init__(self, root):
+        super().__init__(root)
+        self.pack(expand=True, fill="both")
+        self.configure(bg_color='transparent', fg_color='transparent')
+        
+        # Setup button frame
+        self.btn_frame = CTkFrame(self, fg_color='transparent')
+        self.btn_frame.place(relwidth=.2, relheight=.3, relx=1, rely=.1, anchor="ne")
+        self.btn_frame.columnconfigure(0, weight=1)
+        self.btn_frame.rowconfigure((0,1), weight=1)
+
+        report_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+        report_btn.set_text("گزارش فروش", "white", 13)
+        report_btn.grid(row=0,column=0 ,sticky="e")
+        
+        customer_report_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
+        customer_report_btn.set_text("گزارش مشتریان", "white", 13)
+        customer_report_btn.grid(row=1,column=0 , sticky="e")
+        
+        self.sell_report_table = None
+        # Create table 
+        self.initialize_table(self)
+        self.insert_content_to_table(self.sell_report_table, get_all_orders(session))
+        # Show table by default
+        self.current_view = None
+        
+    
+    
