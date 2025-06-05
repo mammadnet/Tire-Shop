@@ -1361,6 +1361,7 @@ class EmployeeSellPanel(Panel):
         self.sell_inputs = {}
         self.sell_labels = {}
         self.sell_combobox = None
+        self.sell_userinfo_combobox = None
         self.customer_sell_inputs = {}
         self.sell(self)
         
@@ -1459,6 +1460,9 @@ class EmployeeSellPanel(Panel):
         self.user_info_combo_items = [f'{customer.id}:{customer.name}' for customer in customers]
         selected_customer = StringVar()
         selected_customer.set("Select Customer")
+        if self.sell_userinfo_combobox:
+            self.sell_userinfo_combobox.grid_forget()
+            self.sell_userinfo_combobox.destroy()
         self.sell_userinfo_combobox = DropDown(content_frame, values=self.user_info_combo_items, width=250, variable=selected_customer, command=self.update_customer_info_inputs)
         self.sell_userinfo_combobox.grid(row=4, column=2)
         
@@ -1567,8 +1571,8 @@ class EmployeeSellPanel(Panel):
             self.sell_product(session, product_id, customer_name, customer_address, customer_phone, customer_national_id, quantity)
             show_success_callback(f'The product has been sold successfully.')
             self.sell(self)
-            for v in list(self.sell_inputs.values()):
-                v.textvariable.set('')
+            self.clear_sell_inputs()
+            self.sell(self)
         except ProductNotExistsException as ve:
             show_error_callback("Please select a valid product.")
         except Exception as ve:
@@ -1582,3 +1586,9 @@ class EmployeeSellPanel(Panel):
 
 
         create_order(session, customer, product, quantity)
+        
+    def clear_sell_inputs(self):
+        for input in self.sell_inputs.values():
+            input.set_placeholder_text('')
+        for input in self.customer_sell_inputs.values():
+            input.set_placeholder_text('')
