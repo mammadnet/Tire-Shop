@@ -11,7 +11,7 @@ from utilities import hashing
 from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException, ProductNotExistsException
 
 # Check if a user is exist
-def exist_check_user(session:Session, by:InstrumentedAttribute, pat):
+def exist_check(session:Session, by:InstrumentedAttribute, pat):
     subq = exists(by).where(by == pat).select()
     exist_check = session.execute(subq).scalar()
     return exist_check
@@ -49,9 +49,9 @@ def create_new_user(session: Session, name:str, lastname:str, phone:str, nationa
     
     
     with session as db:
-        exist_national_id_check = exist_check_user(session, User.national_number, national_number)
-        exist_username_check = exist_check_user(session, User.user_name, username)
-                
+        exist_national_id_check = exist_check(session, User.national_number, national_number)
+        exist_username_check = exist_check(session, User.user_name, username)
+
         if exist_national_id_check:
             raise NationalNumberAlreadyExistsException(national_number)
         
