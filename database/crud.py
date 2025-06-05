@@ -289,3 +289,19 @@ def get_all_employee_and_manager_json(session: Session):
 
 
 
+def get_all_customers(session: Session):
+    return session.query(Customer).all()
+
+def get_all_customers_json(session: Session):
+    customers = get_all_customers(session)
+    return [customer.to_dict() for customer in customers]
+
+def get_customer_by_id(session: Session, customer_id: int) -> Customer:
+    customer = session.query(Customer).filter_by(id=customer_id).first()
+    return customer
+
+def get_customer_by_id_json(session: Session, customer_id: int) -> dict:
+    customer = get_customer_by_id(session, customer_id)
+    if customer:
+        return customer.to_dict()
+    return None
