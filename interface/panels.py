@@ -1548,4 +1548,28 @@ class EmployeeSellPanel(Panel):
             self.customer_sell_inputs['customer_phone'].set_placeholder_text(customer_data.phone)
             self.customer_sell_inputs['customer_address'].set_placeholder_text(customer_data.address)
             self.customer_sell_inputs['customer_national_number'].set_placeholder_text(customer_data.national_number)
+    def sell_action(self, show_error_callback, show_success_callback):
+        try:
+            product_info = self.sell_combobox.get().split(':')
+            product_id = product_info[0]
+            quantity = int(self.sell_inputs['quantity'].get()) if self.sell_inputs['quantity'].get() else 0
+            customer_info = self.sell_userinfo_combobox.get().split(':')
+            customer_id = customer_info[0]
+            customer_name = self.customer_sell_inputs['customer_name'].get()
+            customer_address = self.customer_sell_inputs['customer_address'].get()
+            customer_phone = self.customer_sell_inputs['customer_phone'].get()
+            customer_national_id = self.customer_sell_inputs['customer_national_number'].get()
+            # Validate inputs
+            if not product_id or not quantity or not customer_name or not customer_address or not customer_phone or not customer_national_id:
+                raise ValueError("Please fill all fields.")
+
+            self.sell_product(session, product_id, customer_name, customer_address, customer_phone, customer_national_id, quantity)
+            show_success_callback(f'The product has been sold successfully.')
+            self.sell(self)
+            for v in list(self.sell_inputs.values()):
+                v.textvariable.set('')
+        except Exception as ve:
+            show_error_callback(str(ve))
+  
+
     
