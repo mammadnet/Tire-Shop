@@ -3,7 +3,7 @@ from .widgets import Item_button, Input, Btn, DropDown, render_text
 from database import session, get_all_employees_json, create_new_user, create_product
 from database import remove_user_by_username, update_user_by_username, user_by_username, get_all_username
 from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
-from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames
+from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames, get_all_customers, get_customer_by_id
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
@@ -1452,6 +1452,11 @@ class EmployeeSellPanel(Panel):
 
         self.create_input_field(content_frame, render_text("تعداد:"), 3, 2, 'quantity', container=self.sell_inputs)
 
+        customers = get_all_customers(session)
+        self.user_info_combo_items = [f'{customer.id}:{customer.name}' for customer in customers]
+        self.sell_userinfo_combobox = DropDown(content_frame, values=self.user_info_combo_items, width=250, variable=selected_product, command=self.update_customer_info_inputs)
+        self.sell_userinfo_combobox.grid(row=4, column=2)
+        
         self.create_input_field(content_frame, render_text("نام مشتری:"), 4, 1, 'customer_name', container=self.customer_sell_inputs)
         self.create_input_field(content_frame, render_text("تلفن مشتری:"), 4, 3, 'customer_phone', container=self.customer_sell_inputs)
         self.create_input_field(content_frame, render_text("آدرس مشتری:"), 5, 1, 'customer_address', container=self.customer_sell_inputs)
@@ -1517,4 +1522,19 @@ class EmployeeSellPanel(Panel):
             self.update_sell_labels(product_data)
         else:
             self.update_sell_labels({})
+            
+    def update_customer_info_inputs(self, customer_info):
+        # customer_info is expected to be a string in the format "id:name"
+        if not customer_info:
+            self.customer_sell_inputs['customer_name'].set_placeholder_text('')
+            self.customer_sell_inputs['customer_phone'].set_placeholder_text('')
+            self.customer_sell_inputs['customer_address'].set_placeholder_text('')
+            return
         
+        customer_id, customer_name = customer_info.split(':')
+        customer_data = get_customer_by_id(session, customer_id)
+        
+        if customer_data:
+            self.customer_sell_inputs['customer_name'].set_placeholder_text(customer_data.name)
+            self.customer_sell_inputs['customer_phone'].set_placeholder_text(customer_data.phone)
+            self.customer_sell_inputs['customer_address'].set_placeholder_text(customer_data.address)
