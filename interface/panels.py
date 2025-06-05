@@ -5,6 +5,7 @@ from database import remove_user_by_username, update_user_by_username, user_by_u
 from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
 from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames, get_all_customers, get_customer_by_id
 from database import create_order, get_customer_by_national_id, get_or_create_customer, check_customer_equal
+from database import ProductNotExistsException
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
 from time import sleep
@@ -1568,6 +1569,8 @@ class EmployeeSellPanel(Panel):
             self.sell(self)
             for v in list(self.sell_inputs.values()):
                 v.textvariable.set('')
+        except ProductNotExistsException as ve:
+            show_error_callback("Please select a valid product.")
         except Exception as ve:
             show_error_callback(str(ve))
   
