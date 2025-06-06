@@ -8,7 +8,7 @@ from time import sleep
 from database import get_all_employees,get_all_employees_json, session, create_new_user, remove_user_by_username, update_user_by_username, get_all_username, user_by_username
 from database import UsernameAlreadyExistsException, NationalNumberAlreadyExistsException
 
-from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel, EmployeeSellPanel
+from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel, EmployeeSellPanel, EmployeeReportPanel
 
 from PIL import Image
 import os
@@ -332,6 +332,7 @@ class Employee_page(Page):
         
         sell_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         sell_btn.grid(row=0, column=0, sticky='e')
+        sell_btn.set_action(lambda _: self.toggle_panel('sell'))
         sell_btn.set_text('فروش', fill='#FFFFFF', font_size=self.button_font_size)
         
         products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
@@ -340,10 +341,22 @@ class Employee_page(Page):
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=2, column=0, sticky='e')
+        reports_btn.set_action(lambda _: self.toggle_panel('report'))
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         
-        EmployeeSellPanel(self.control_frame)
+        self.current_panel = None
+        self.employee_sell_panel = None
+        self.employee_report_panel = None
 
+    def toggle_panel(self, panel:str):
+        if panel == 'sell' and self.current_panel != 'sell':
+            self.employee_sell_panel = EmployeeSellPanel(self.control_frame)
+            self.employee_report_panel.destroy()
+            self.current_panel = 'sell'
+        elif panel == 'report' and self.current_panel != 'report':
+            self.employee_report_panel = EmployeeReportPanel(self.control_frame)
+            self.employee_sell_panel.destroy()
+            self.current_panel = 'report'
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
