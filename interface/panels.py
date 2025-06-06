@@ -1730,4 +1730,81 @@ class EmployeeReportPanel(Panel):
         self.customer_report_label_total_orders = create_updatable_labels(dropdown_frame, render_text("تعداد سفارشات:"), 1, 2, "total_orders", container=self.customer_report_labels)
         
         
+    def initialize_customer_report_table(self, window):
+        style = ttk.Style()
+
+        if is_windows():
+            style.theme_use('clam')
+        
+        
+        # Configure table style
+        style.configure("Custom1.Treeview",
+            background="#494A5F",
+            foreground="black",
+            fieldbackground="#393A4E",
+            rowheight=50,
+            borderwidth=0
+        )
+        
+        style.configure("Custom1.Treeview.Heading",
+            background="#5B5D76",
+            foreground="white",
+            font=("Helvetica", 10, "bold"),
+            relief='flat'
+        )
+        
+        style.map("Custom1.Treeview.Heading",
+            background=[("active", "#6b6d87")],
+            foreground=[("active", "white")]
+        )
+        
+        # Create frame to hold dropdown and table
+        if self.customer_report_table:
+            table = self.customer_report_table
+        else:
+            self.customer_report_table = ttk.Treeview(window, style="Custom1.Treeview")
+            table = self.customer_report_table
+            
+            
+        # configure table
+        table.configure(columns=("order_id", "product_id", "size", "quantity", "price", "date"))
+        table.configure(show="headings", selectmode="none")
+        
+        # Configure columns
+        table.column("order_id", width=80, anchor="center")
+        table.column("product_id", width=150, anchor="center")
+        table.column("size", width=150, anchor="center")
+        table.column("quantity", width=100, anchor="center")
+        table.column("price", width=120, anchor="center")
+        table.column("date", width=150, anchor="center")
+        
+        # Configure headings
+        table.heading("order_id", text="Order ID", anchor='center')
+        table.heading("product_id", text="Product ID", anchor='center')
+        table.heading("size", text="Size", anchor='center')
+        table.heading("quantity", text="Quantity", anchor='center')
+        table.heading("price", text="Price", anchor='center')
+        table.heading("date", text="Date", anchor='center')
+        
+        table.pack(fill='both', expand=True, padx=5, pady=5)
+        
+        return table
+
+    def insert_to_customer_table(self, orders:list):
+        # Clear existing entries
+        table = self.customer_report_table
+        table.delete(*table.get_children())
+        # Insert new entries
+        for order in orders:
+            for product in order.products:
+                vals = (
+                    order.id,
+                    product.brand,
+                    f"{product.width}/{product.ratio}/{product.rim}",
+                    product.quantity,
+                    product.price,
+                    order.date
+                )
+                table.insert(parent="", index=0, values=vals)
+                
     
