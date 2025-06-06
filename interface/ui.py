@@ -347,15 +347,19 @@ class Employee_page(Page):
         self.current_panel = None
         self.employee_sell_panel = None
         self.employee_report_panel = None
+        
+        self.toggle_panel("sell")
 
     def toggle_panel(self, panel:str):
         if panel == 'sell' and self.current_panel != 'sell':
+            if self.employee_report_panel:
+                self.employee_report_panel.destroy()
             self.employee_sell_panel = EmployeeSellPanel(self.control_frame)
-            self.employee_report_panel.destroy()
             self.current_panel = 'sell'
         elif panel == 'report' and self.current_panel != 'report':
+            if self.employee_sell_panel:
+                self.employee_sell_panel.destroy()
             self.employee_report_panel = EmployeeReportPanel(self.control_frame)
-            self.employee_sell_panel.destroy()
             self.current_panel = 'report'
     def destroy(self):
         self.main_frame.pack_forget()
