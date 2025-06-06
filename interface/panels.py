@@ -1860,4 +1860,7 @@ class EmployeeReportPanel(Panel):
         else:
             # Clear table if no orders found
             self.clear_info(False)
-            
+    
+    def destroy(self):
+        self.pack_forget()
+        return super().destroy()
