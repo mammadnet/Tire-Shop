@@ -177,9 +177,7 @@ class Page:
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
-        
-    def hide(self):
-        self.main_frame.pack_forget()
+
         
 
 class Admin_page(Page):
@@ -233,10 +231,6 @@ class Admin_page(Page):
             self.backup_frame = AdminBackupPanel(self.control_frame)
             self.current_panel = 'backup'
 
-
-    def _employee_panel_callback(self, *k):
-        # self.employee_panel(self.control_frame)
-        print("hellloooooooo")
         
         
         

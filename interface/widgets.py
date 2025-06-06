@@ -81,7 +81,6 @@ class Input(CTkEntry):
         
     def _set_english_only(self, *k):
         val = self.textvariable.get()
-        print(val, '----->', isarabic(val))
         arabic = False
         if val:
             # Check if the first or last character is Arabic
