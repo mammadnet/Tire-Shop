@@ -1748,6 +1748,7 @@ class EmployeeReportPanel(Panel):
         self.customer_report_dropdown.configure(values=combo_items)
         self.customer_report_dropdown.grid(row=0, column=0)
 
+        self.clear_info(True)
         self.customer_report_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         
         
@@ -1827,6 +1828,12 @@ class EmployeeReportPanel(Panel):
                     order.date
                 )
                 table.insert(parent="", index=0, values=vals)
+    
+    def clear_info(self, reset=True):
+        for label in self.customer_report_labels.values():
+            label.configure(text="?" if reset else "0")
+        self.customer_report_table.delete(*self.customer_report_table.get_children())
+        
 
     def customer_report_action(self, customer_info:str):
         if not customer_info:
@@ -1849,7 +1856,5 @@ class EmployeeReportPanel(Panel):
             self.insert_to_customer_table(customer.orders)
         else:
             # Clear table if no orders found
-            self.customer_report_table.delete(*self.customer_report_table.get_children())
-            for label in self.customer_report_labels.values():
-                label.configure(text="0")
+            self.clear_info(False)
             
