@@ -8,7 +8,7 @@ from time import sleep
 from database import get_all_employees,get_all_employees_json, session, create_new_user, remove_user_by_username, update_user_by_username, get_all_username, user_by_username
 from database import UsernameAlreadyExistsException, NationalNumberAlreadyExistsException
 
-from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel, EmployeeSellPanel, EmployeeReportPanel
+from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel, ManagerReportPanel, EmployeeSellPanel, EmployeeReportPanel
 
 from PIL import Image
 import os
@@ -281,11 +281,13 @@ class Manager_page(Page):
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.grid(row=3, column=0, sticky='e')
+        reports_btn.set_action(lambda _: self.toggle_panel('report'))
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
 
         self.current_panel = None
         self.product_frame = None
         self.employee_frame = None
+        self.report_frame = None
         self.toggle_panel('products')
         
     def toggle_panel(self, panel:str):
@@ -294,11 +296,22 @@ class Manager_page(Page):
             self.current_panel = 'products'
             if self.employee_frame:
                 self.employee_frame.destroy()
+            if self.report_frame:
+                self.report_frame.destroy()
         elif panel == 'employee' and self.current_panel != 'employee':
             self.employee_frame = ManagerEmployeePanel(self.control_frame)
             self.current_panel = 'employee'
+            if self.report_frame:
+                self.report_frame.destroy()
             if self.product_frame:
                 self.product_frame.destroy()
+        elif panel == 'report' and self.current_panel != 'report':
+            self.report_frame = ManagerReportPanel(self.control_frame)
+            if self.product_frame:
+                self.product_frame.destroy()
+            if self.employee_frame:
+                self.employee_frame.destroy()
+            self.current_panel = 'report'
         else:
             print("Panel not found")
 
