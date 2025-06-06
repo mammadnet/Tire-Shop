@@ -203,4 +203,16 @@ class DropDown(CTkComboBox):
                         button_color=button_color, corner_radius=15, border_color=border_color, **kwargs)
         
         
-        
+
+def create_updatable_labels(window, label_name, row, column, field_key, container:dict, **kwargs):
+    if field_key not in container:
+        temp_frame = CTkFrame(window, fg_color="#444759", corner_radius=10)
+        temp_frame.grid(row=row, column=column, sticky="ew", **kwargs)
+        label = CTkLabel(temp_frame, text=label_name, text_color="white", font=(None, 13))
+        label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+        label_val = CTkLabel(temp_frame, text="?", text_color="white", font=(None, 13))
+        label_val.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+        if container is not None:
+            container[field_key] = label_val
+        return label_val
+    return container[field_key]
