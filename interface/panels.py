@@ -1704,12 +1704,12 @@ class EmployeeReportPanel(Panel):
         content_frame.columnconfigure(0, weight=1, uniform='a')
         content_frame.columnconfigure(4, weight=1, uniform='a')
         
-        dropdown_frame = CTkFrame(content_frame, fg_color="red")
+        dropdown_frame = CTkFrame(content_frame, fg_color="transparent")
         dropdown_frame.place(relx=0.5, rely=0.05, relwidth=1, relheight=0.15,anchor="n")
         dropdown_frame.rowconfigure((0, 1), weight=1)
         dropdown_frame.columnconfigure((0,1,2,3), weight=1)
         
-        table_frame = CTkFrame(content_frame, fg_color="blue")
+        table_frame = CTkFrame(content_frame, fg_color="#45475C", corner_radius=10)
         table_frame.place(relx=0, rely=0.2, relwidth=1, relheight=0.8, anchor='nw')
         
         # Add dropdown for customer selection
