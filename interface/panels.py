@@ -1807,4 +1807,28 @@ class EmployeeReportPanel(Panel):
                 )
                 table.insert(parent="", index=0, values=vals)
                 
-    
+    def customer_report_action(self, customer_info:str):
+        if not customer_info:
+            return
+            
+        # Extract customer id from dropdown selection
+        customer_id = customer_info.split(':')[0]
+        
+        # Get customer's orders
+        customer = get_customer_by_id(session, customer_id)
+        if customer and customer.orders:
+            self.customer_report_label_total_orders.configure(text=len(customer.orders))
+            total_buy = 0
+            for products in customer.orders:
+                total_buy += sum(product.price * product.quantity for product in products.products)
+            # Update total buy label
+            self.customer_report_label_total_orders.configure(text=len(customer.orders))
+            self.customer_report_label_total_buy.configure(text=str(total_buy))
+            # Update table with customer's orders
+            self.insert_to_customer_table(customer.orders)
+        else:
+            # Clear table if no orders found
+            self.customer_report_table.delete(*self.customer_report_table.get_children())
+            for label in self.customer_report_labels.values():
+                label.configure(text="0")
+            
