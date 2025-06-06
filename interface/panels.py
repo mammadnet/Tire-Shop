@@ -1618,13 +1618,13 @@ class EmployeeReportPanel(Panel):
         
         self.sell_report_table = None
         # Create table 
-        self.initialize_table(self)
-        self.insert_content_to_table(self.sell_report_table, get_all_orders(session))
+        self.initialize_report_table(self)
+        self.insert_content_to_report_table(self.sell_report_table, get_all_orders(session))
         # Show table by default
         self.current_view = None
         
     
-    def initialize_table(self, window):
+    def initialize_report_table(self, window):
         style = ttk.Style()
         if is_windows():
             style.theme_use('clam')
@@ -1677,10 +1677,12 @@ class EmployeeReportPanel(Panel):
         
         return table
 
-    def insert_content_to_table(self, table:ttk.Treeview, orders:list):
+    def insert_content_to_report_table(self, table:ttk.Treeview, orders:list):
         table.delete(*table.get_children())
 
         for order in orders:
             for product in order.products:
                 vals = (order.id, product.brand, f"{product.width}/{product.ratio}/{product.rim}", product.price, order.customer.name, order.date)
                 table.insert(parent="", index=0, values=vals)
+    
+    
