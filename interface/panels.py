@@ -1721,7 +1721,7 @@ class EmployeeReportPanel(Panel):
             content_frame.columnconfigure(0, weight=1, uniform='a')
             content_frame.columnconfigure(4, weight=1, uniform='a')
             
-            dropdown_frame = CTkFrame(content_frame, fg_color="red")
+            dropdown_frame = CTkFrame(content_frame, fg_color="transparent")
             dropdown_frame.rowconfigure((0, 1), weight=1)
             dropdown_frame.columnconfigure((0,1,2,3), weight=1)
             dropdown_frame.place(relx=0.5, rely=0.05, relwidth=1, relheight=0.15,anchor="n")
