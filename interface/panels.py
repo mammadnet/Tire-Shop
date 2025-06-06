@@ -1608,16 +1608,25 @@ class EmployeeReportPanel(Panel):
         self.btn_frame.columnconfigure(0, weight=1)
         self.btn_frame.rowconfigure((0,1), weight=1)
 
+        
         report_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
         report_btn.set_text("گزارش فروش", "white", 13)
+        report_btn.set_action(lambda _: self.toogle_view('sell'))
         report_btn.grid(row=0,column=0 ,sticky="e")
         
         customer_report_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
         customer_report_btn.set_text("گزارش مشتریان", "white", 13)
+        customer_report_btn.set_action(lambda _: self.toogle_view('customer'))
         customer_report_btn.grid(row=1,column=0 , sticky="e")
         
         self.sell_report_table = None
         self.customer_report_frame = None
+        
+        self.initialized_customer_report = False
+        self.initialized_sell_report = False
+        
+        self.customer_report_label_total_buy = None
+        self.customer_report_label_total_orders = None
         # Create table 
         # self.initialize_report_table(self)
         # self.insert_content_to_report_table(self.sell_report_table, get_all_orders(session))
@@ -1626,7 +1635,19 @@ class EmployeeReportPanel(Panel):
         self.customer_report_labels = {}
         self.customer_report(self)
         # Show table by default
-        self.current_view = None
+        self.current_view = 'customer'
+
+    def toogle_view(self, view_name):
+        if view_name == 'sell' and self.current_view != 'sell':
+            self.initialize_report_table(self)
+            self.insert_content_to_report_table(self.sell_report_table, get_all_orders(session))
+            self.customer_report_frame.place_forget()
+            self.current_view = 'sell'
+        elif view_name == 'customer' and self.current_view != 'customer':
+            
+            self.sell_report_table.place_forget()
+            self.customer_report(self)
+            self.current_view = 'customer'
         
     
     def initialize_report_table(self, window):
@@ -1658,8 +1679,7 @@ class EmployeeReportPanel(Panel):
         else:
             self.sell_report_table = ttk.Treeview(window, style="Custom1.Treeview")
             table = self.sell_report_table
-        
-        
+            
         table.configure(columns=("id", "brand", "size", "price", "customer", "date"))
         table.configure(show="headings", selectmode="none")
         
@@ -1692,42 +1712,43 @@ class EmployeeReportPanel(Panel):
 #---------------------------------------------------------------
 
     def customer_report(self, window):
-        if self.customer_report_frame:
-            content_frame = self.customer_report_frame
-        else:
+        if not self.initialized_customer_report:
             content_frame = CTkFrame(window, fg_color="#5B5D76")
             self.customer_report_frame = content_frame
             
-        content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
-        content_frame.rowconfigure(tuple(range(0, 9)), weight=10)
-        content_frame.columnconfigure(tuple(range(1,4)), weight=10, pad=20, uniform='a')
-        content_frame.columnconfigure(0, weight=1, uniform='a')
-        content_frame.columnconfigure(4, weight=1, uniform='a')
+            content_frame.rowconfigure(tuple(range(0, 9)), weight=10)
+            content_frame.columnconfigure(tuple(range(1,4)), weight=10, pad=20, uniform='a')
+            content_frame.columnconfigure(0, weight=1, uniform='a')
+            content_frame.columnconfigure(4, weight=1, uniform='a')
+            
+            dropdown_frame = CTkFrame(content_frame, fg_color="red")
+            dropdown_frame.rowconfigure((0, 1), weight=1)
+            dropdown_frame.columnconfigure((0,1,2,3), weight=1)
+            dropdown_frame.place(relx=0.5, rely=0.05, relwidth=1, relheight=0.15,anchor="n")
+            self.customer_report_dropdown_frame = dropdown_frame
+            
+            table_frame = CTkFrame(content_frame, fg_color="#45475C", corner_radius=10)
+            table_frame.place(relx=0, rely=0.2, relwidth=1, relheight=0.8, anchor='nw')
+            self.initialize_customer_report_table(table_frame)
         
-        dropdown_frame = CTkFrame(content_frame, fg_color="transparent")
-        dropdown_frame.place(relx=0.5, rely=0.05, relwidth=1, relheight=0.15,anchor="n")
-        dropdown_frame.rowconfigure((0, 1), weight=1)
-        dropdown_frame.columnconfigure((0,1,2,3), weight=1)
-        
-        table_frame = CTkFrame(content_frame, fg_color="#45475C", corner_radius=10)
-        table_frame.place(relx=0, rely=0.2, relwidth=1, relheight=0.8, anchor='nw')
-        
+            self.customer_report_label_total_buy = create_updatable_labels(dropdown_frame, render_text("مجموع خرید:"), 0, 2, "total_buy", container=self.customer_report_labels)
+            self.customer_report_label_total_orders = create_updatable_labels(dropdown_frame, render_text("تعداد سفارشات:"), 1, 2, "total_orders", container=self.customer_report_labels)
+            
+            self.initialized_customer_report = True
+            
         # Add dropdown for customer selection
         customers = get_all_customers(session)
         combo_items = [f'{customer.id}:{customer.name}' for customer in customers]
 
         if self.customer_report_dropdown:
-            self.customer_report_dropdown.place_forget()
+            self.customer_report_dropdown.grid_forget()
             self.customer_report_dropdown.destroy()
-        else:
-            self.customer_report_dropdown = DropDown(dropdown_frame, width=250, variable=StringVar(value=render_text("انتخاب مشتری:")), command=lambda x: self.customer_report_action(x))
-            self.customer_report_dropdown.configure(values=combo_items)
-
+    
+        self.customer_report_dropdown = DropDown(self.customer_report_dropdown_frame, width=250, variable=StringVar(value=render_text("انتخاب مشتری:")), command=lambda x: self.customer_report_action(x))
+        self.customer_report_dropdown.configure(values=combo_items)
         self.customer_report_dropdown.grid(row=0, column=0)
-        
-        self.initialize_customer_report_table(table_frame)
-        self.customer_report_label_total_buy = create_updatable_labels(dropdown_frame, render_text("مجموع خرید:"), 0, 2, "total_buy", container=self.customer_report_labels)
-        self.customer_report_label_total_orders = create_updatable_labels(dropdown_frame, render_text("تعداد سفارشات:"), 1, 2, "total_orders", container=self.customer_report_labels)
+
+        self.customer_report_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         
         
     def initialize_customer_report_table(self, window):
@@ -1764,27 +1785,27 @@ class EmployeeReportPanel(Panel):
         else:
             self.customer_report_table = ttk.Treeview(window, style="Custom1.Treeview")
             table = self.customer_report_table
-            
-            
-        # configure table
-        table.configure(columns=("order_id", "product_id", "size", "quantity", "price", "date"))
-        table.configure(show="headings", selectmode="none")
         
-        # Configure columns
-        table.column("order_id", width=80, anchor="center")
-        table.column("product_id", width=150, anchor="center")
-        table.column("size", width=150, anchor="center")
-        table.column("quantity", width=100, anchor="center")
-        table.column("price", width=120, anchor="center")
-        table.column("date", width=150, anchor="center")
-        
-        # Configure headings
-        table.heading("order_id", text="Order ID", anchor='center')
-        table.heading("product_id", text="Product ID", anchor='center')
-        table.heading("size", text="Size", anchor='center')
-        table.heading("quantity", text="Quantity", anchor='center')
-        table.heading("price", text="Price", anchor='center')
-        table.heading("date", text="Date", anchor='center')
+            
+            # configure table
+            table.configure(columns=("order_id", "product_id", "size", "quantity", "price", "date"))
+            table.configure(show="headings", selectmode="none")
+            
+            # Configure columns
+            table.column("order_id", width=80, anchor="center")
+            table.column("product_id", width=150, anchor="center")
+            table.column("size", width=150, anchor="center")
+            table.column("quantity", width=100, anchor="center")
+            table.column("price", width=120, anchor="center")
+            table.column("date", width=150, anchor="center")
+            
+            # Configure headings
+            table.heading("order_id", text="Order ID", anchor='center')
+            table.heading("product_id", text="Product ID", anchor='center')
+            table.heading("size", text="Size", anchor='center')
+            table.heading("quantity", text="Quantity", anchor='center')
+            table.heading("price", text="Price", anchor='center')
+            table.heading("date", text="Date", anchor='center')
         
         table.pack(fill='both', expand=True, padx=5, pady=5)
         
@@ -1806,7 +1827,7 @@ class EmployeeReportPanel(Panel):
                     order.date
                 )
                 table.insert(parent="", index=0, values=vals)
-                
+
     def customer_report_action(self, customer_info:str):
         if not customer_info:
             return
