@@ -1789,12 +1789,13 @@ class EmployeeReportPanel(Panel):
         
             
             # configure table
-            table.configure(columns=("order_id", "product_id", "size", "quantity", "price", "date"))
+            table.configure(columns=("order_id", "product_id","brand", "size", "quantity", "price", "date"))
             table.configure(show="headings", selectmode="none")
             
             # Configure columns
             table.column("order_id", width=80, anchor="center")
             table.column("product_id", width=150, anchor="center")
+            table.column("brand", width=150, anchor="center")
             table.column("size", width=150, anchor="center")
             table.column("quantity", width=100, anchor="center")
             table.column("price", width=120, anchor="center")
@@ -1803,6 +1804,7 @@ class EmployeeReportPanel(Panel):
             # Configure headings
             table.heading("order_id", text="Order ID", anchor='center')
             table.heading("product_id", text="Product ID", anchor='center')
+            table.heading("brand", text="Brand", anchor='center')
             table.heading("size", text="Size", anchor='center')
             table.heading("quantity", text="Quantity", anchor='center')
             table.heading("price", text="Price", anchor='center')
@@ -1821,6 +1823,7 @@ class EmployeeReportPanel(Panel):
             for product in order.products:
                 vals = (
                     order.id,
+                    product.id,
                     product.brand,
                     f"{product.width}/{product.ratio}/{product.rim}",
                     product.quantity,
