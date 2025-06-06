@@ -10,27 +10,61 @@ class Customer(Base):
     
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(20), nullable=False)
-    lastName: Mapped[str] = mapped_column(String(20), nullable=False)
-    orders: Mapped[list['Order']] = relationship('Order')
+    phone: Mapped[str] = mapped_column(String(20), nullable=False)
+    address: Mapped[str] = mapped_column(String(100), nullable=False)
+    national_number: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
+    orders: Mapped[list['Order']] = relationship('Order', back_populates='customer')
 
 
 class Order(Base):
     __tablename__ = 'order'
-    
     id : Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     customer_id : Mapped[int] = mapped_column(ForeignKey("customer.id"))
     customer : Mapped['Customer'] = relationship(back_populates='orders')
-    name : Mapped[str] = mapped_column(String)
+
+
+    date: Mapped[datetime.date] = mapped_column(Date, default=datetime.datetime.now().date(), nullable=False)
+    products: Mapped[list['ProductsOrder']] = relationship('ProductsOrder', backref='order')
+
+class ProductsOrder(Base):
+    __tablename__ = 'products_order'
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    order_id: Mapped[int] = mapped_column(ForeignKey('order.id'))
     
-# Many to Many relationship between tire sizes and brands
+    brand: Mapped[str] = mapped_column(String(20), nullable=False)
+    price: Mapped[float] = mapped_column(nullable=False)
+    width: Mapped[int] = mapped_column(nullable=False)
+    ratio: Mapped[int] = mapped_column(nullable=False)
+    rim: Mapped[int] = mapped_column(nullable=False)
+    quantity: Mapped[int] = mapped_column(Integer, default=1)
+
 class Product(Base):
     __tablename__ = 'product'
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    product_id : Mapped[int] = mapped_column(ForeignKey('brand.id'))
+    brand_id : Mapped[int] = mapped_column(ForeignKey('brand.id'))
     size_id : Mapped[int] = mapped_column(ForeignKey('size.id'))
     
+    price : Mapped[float] = mapped_column(nullable=False)
+    quantity : Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    # Relationships
     brand : Mapped['Brand'] = relationship(back_populates='products')
     size : Mapped['Size'] = relationship(back_populates='products')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "brand_id": self.brand_id,
+            "size_id": self.size_id,
+            "brand": self.brand.name if self.brand else None,
+            "size": {
+                "width": self.size.width if self.size else None,
+                "ratio": self.size.ratio if self.size else None,
+                "rim": self.size.rim if self.size else None,
+            } if self.size else None,
+            "price": self.price,
+            "quantity": self.quantity,
+        }
+
 
 class Brand(Base):
     __tablename__ = 'brand'
@@ -38,6 +72,11 @@ class Brand(Base):
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(20), unique=True)
     products: Mapped[list['Product']] = relationship(back_populates='brand')
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
 
 class Size(Base):
     __tablename__ = 'size'
@@ -49,6 +88,13 @@ class Size(Base):
     width :   Mapped[int] = mapped_column()
     ratio :   Mapped[int] = mapped_column()
     rim   :   Mapped[int] = mapped_column()
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "width": self.width,
+            "ratio": self.ratio,
+            "rim": self.rim,
+        }
 #----------------------------------------
 
 

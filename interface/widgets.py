@@ -20,7 +20,7 @@ class Btn(CTkButton):
             self.configure(text=text)
 
 class Input(CTkEntry):
-    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True, **kwargs):
+    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True,just_english:bool=False, **kwargs):
         super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text,show=show, **kwargs)
         add_bidi_support_for_entry(self._entry)
         
@@ -32,8 +32,10 @@ class Input(CTkEntry):
         self.err_message = err_message
         self.placeholder_text = placeholder_text
         self.placeholder_empty = placeholder_empty
+        self.just_english = just_english
         
         self._set_limit()
+        self._set_just_english()
         self._set_justify()
         
     def disable(self):
@@ -74,7 +76,30 @@ class Input(CTkEntry):
                 self.configure(justify=LEFT)
                 
     def _set_justify(self):
-        self.textvariable.trace_add('write', self._add_justify_for_arabic)
+        if not self.just_english:
+            self.textvariable.trace_add('write', self._add_justify_for_arabic)
+        
+    def _set_english_only(self, *k):
+        val = self.textvariable.get()
+        print(val, '----->', isarabic(val))
+        arabic = False
+        if val:
+            # Check if the first or last character is Arabic
+            if isarabic(val[0]):
+                self.textvariable.set(val[1:])
+                arabic = True
+            
+            elif isarabic(val[-1]):
+                self.textvariable.set(val[:-1])
+                arabic = True
+                
+            if arabic and self.show_err_callback:
+                message = 'Only English characters are allowed.'
+                self.show_err_callback(message)
+    
+    def _set_just_english(self):
+        if self.just_english:
+            self.textvariable.trace_add('write', self._set_english_only)
     
     def set_placeholder_text(self, text:str):
         if isarabic(text):
@@ -178,4 +203,16 @@ class DropDown(CTkComboBox):
                         button_color=button_color, corner_radius=15, border_color=border_color, **kwargs)
         
         
-        
+
+def create_updatable_labels(window, label_name, row, column, field_key, container:dict, **kwargs):
+    if field_key not in container:
+        temp_frame = CTkFrame(window, fg_color="#444759", corner_radius=10)
+        temp_frame.grid(row=row, column=column, sticky="ew", **kwargs)
+        label = CTkLabel(temp_frame, text=label_name, text_color="white", font=(None, 13))
+        label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+        label_val = CTkLabel(temp_frame, text="?", text_color="white", font=(None, 13))
+        label_val.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+        if container is not None:
+            container[field_key] = label_val
+        return label_val
+    return container[field_key]

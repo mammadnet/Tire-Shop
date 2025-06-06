@@ -1,7 +1,7 @@
-from interface.ui import Login_page, Admin_page, Manager_page, Page
+from interface.ui import Login_page, Admin_page, Manager_page, Page, Employee_page
 from interface.widgets import Root
 from customtkinter import *
-from database import login_permission, session, is_admin,is_manager, user_by_username_pass
+from database import login_permission, session, is_admin,is_manager,is_employee, user_by_username_pass
 root = Root()
 
 def login_action(username, password, login_page:Login_page):
@@ -11,7 +11,8 @@ def login_action(username, password, login_page:Login_page):
         Admin_page(root, user.name, user.lastname, user.type, logout_action)
     elif is_manager(user):
         Manager_page(root, user.name, user.lastname, user.type, logout_action)
-    
+    elif is_employee(user):
+        Employee_page(root, user.name, user.lastname, user.type, logout_action)
     else:
         # call a fucntion in side object
         login_page.login_error_message('Password or username is incorrect.')
