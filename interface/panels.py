@@ -1322,7 +1322,46 @@ class ManagerEmployeePanel(Panel):
         self.pack_forget()
         return super().destroy()
     
-    
+class ManagerDashboardPanel(Panel):
+    def __init__(self, root):
+        super().__init__(root)
+        self.pack(expand=True, fill="both", padx=20, pady=20)
+        self.configure(bg_color="transparent", fg_color="transparent")
+
+        # Setup button frame
+        self.content_frame = CTkFrame(self, fg_color="#373849", corner_radius=20)
+        self.content_frame.rowconfigure((0,1,2,3), weight=1)
+        self.content_frame.columnconfigure((1,2,3), weight=10)
+        self.content_frame.columnconfigure(0, weight=1)
+        self.content_frame.columnconfigure(4, weight=1)
+        
+        
+        self.content_frame.pack(fill="both", expand=True)
+
+        self.labels = {}
+        self.employee_number = create_updatable_labels(self.content_frame, render_text("تعداد کارمندان"), 0, 1, "employee_number",container=self.labels)     
+        self.daily_sell =         create_updatable_labels(self.content_frame, render_text("فروش روزانه"), 0, 3, "daily_sell",container=self.labels)
+        self.monthly_sell =       create_updatable_labels(self.content_frame, render_text("فروش ماهانه"), 1, 1, "monthly_sell",container=self.labels)
+        self.customer_number =  create_updatable_labels(self.content_frame, render_text("تعداد مشتریان"), 1, 3, "customer_number",container=self.labels)
+        self.product_number =    create_updatable_labels(self.content_frame, render_text("تعداد محصولات"), 2, 1, "product_number",container=self.labels)
+        self.product_size_number = create_updatable_labels(self.content_frame, render_text("تعداد سایزها"), 2, 3, "product_size_number",container=self.labels)
+        self.product_brand_number = create_updatable_labels(self.content_frame, render_text("تعداد برندها"), 3, 2, "product_brand_number",container=self.labels)
+
+
+    def toogle_view(self, view_name):
+        if self.current_view:
+            self.current_view.pack_forget()
+        if view_name == 'employee':
+            self.current_view = self.employee_panel
+        elif view_name == 'product':
+            self.current_view = self.product_panel
+        elif view_name == 'report':
+            self.current_view = self.report_panel
+        if self.current_view:
+            self.current_view.pack(expand=True, fill="both")
+
+
+
 class ManagerReportPanel(Panel):
     def __init__(self, root):
         super().__init__(root)
