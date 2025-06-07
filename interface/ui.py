@@ -8,7 +8,7 @@ from time import sleep
 from database import get_all_employees,get_all_employees_json, session, create_new_user, remove_user_by_username, update_user_by_username, get_all_username, user_by_username
 from database import UsernameAlreadyExistsException, NationalNumberAlreadyExistsException
 
-from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel, ManagerReportPanel, EmployeeSellPanel, EmployeeReportPanel, ManagerDashboardPanel
+from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel, ManagerReportPanel, EmployeeSellPanel, EmployeeReportPanel, ManagerDashboardPanel, AdminRestorePanel
 
 from PIL import Image
 import os
@@ -210,7 +210,7 @@ class Admin_page(Page):
         reports_btn.grid(row=3, column=0, sticky='e')
         
         backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        backup_btn.set_action(lambda _: self.toggle_panel('backup'))
+        backup_btn.set_action(lambda _: self.toggle_panel('restore'))
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
         backup_btn.grid(row=4, column=0, sticky='e')
         
@@ -220,19 +220,31 @@ class Admin_page(Page):
         # self.employee_panel(self.control_frame)
         self.employee_frame = None
         self.backup_frame = None
+        self.restore_frame = None
         self.toggle_panel('users')
     
     def toggle_panel(self, panel:str):
         if panel == 'users' and self.current_panel != 'users':
             if self.backup_frame:
                 self.backup_frame.destroy()
+            if self.restore_frame:
+                self.restore_frame.destroy()
             self.employee_frame = AdminEmployeePanel(self.control_frame)
             self.current_panel = 'users'
         elif panel == 'backup' and self.current_panel != 'backup':
             if self.employee_frame:
                 self.employee_frame.destroy()
+            if self.restore_frame:
+                self.restore_frame.destroy()
             self.backup_frame = AdminBackupPanel(self.control_frame)
             self.current_panel = 'backup'
+        elif panel == 'restore' and self.current_panel != 'restore':
+            if self.employee_frame:
+                self.employee_frame.destroy()
+            if self.backup_frame:
+                self.backup_frame.destroy()
+            self.restore_frame = AdminRestorePanel(self.control_frame)
+            self.current_panel = 'restore'
 
         
         
