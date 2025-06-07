@@ -73,13 +73,12 @@ class Login_page:
         login_frame.columnconfigure(0, weight=1)
 
         self.error_massage_lable = CTkLabel(login_frame, text_color='firebrick1')
-        self.error_massage_lable.grid(row=0, column=0, pady=(0, 10))
         
         self.username = StringVar()
         self.password = StringVar()
         
 
-        username_entry = Input(login_frame, 30, 300, 50, 'نام کاربری', self.username, show_err_callback=self.login_error_message)
+        username_entry = Input(login_frame, 30, 300, 50, 'نام کاربری', self.username, show_err_callback=self.login_error_message, just_english=True)
         username_entry.configure(font=(None, 18))
         username_entry.set_placeholder_text("نام کاربری")
         username_entry.grid(row=1, column=0)

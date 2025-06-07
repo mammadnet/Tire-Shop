@@ -20,7 +20,7 @@ class Btn(CTkButton):
             self.configure(text=text)
 
 class Input(CTkEntry):
-    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True,just_english:bool=True, **kwargs):
+    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True,just_english:bool=False, **kwargs):
         super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text,show=show, **kwargs)
         add_bidi_support_for_entry(self._entry)
         
@@ -81,6 +81,9 @@ class Input(CTkEntry):
         
     def _set_english_only(self, *k):
         val = self.textvariable.get()
+        if val == self.placeholder_text:
+            return
+        # Check if the text contains Arabic characters
         arabic = False
         if val:
             # Check if the first or last character is Arabic
