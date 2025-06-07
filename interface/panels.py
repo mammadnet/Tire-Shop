@@ -5,7 +5,7 @@ from database import remove_user_by_username, update_user_by_username, user_by_u
 from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
 from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames, get_all_customers, get_customer_by_id
 from database import create_order, get_customer_by_national_id, get_or_create_customer, check_customer_equal, get_all_orders
-from database import get_total_product_quantity, get_brands_count, get_sizes_count, get_customers_count, get_employees_count, get_monthly_sales
+from database import get_total_product_quantity, get_brands_count, get_sizes_count, get_customers_count, get_employees_count, get_monthly_sales, get_daily_sales
 from database import ProductNotExistsException
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
@@ -1353,7 +1353,7 @@ class ManagerDashboardPanel(Panel):
     def update_labels(self):
         # Update the labels with the latest data
         self.labels['employee_number'].configure(text=str(get_employees_count(session)))
-        # self.labels['daily_sell'].set_text(str(get_daily_sell(session)))
+        self.labels['daily_sell'].configure(text=str(get_daily_sales(session)))
         self.labels['monthly_sell'].configure(text=str(get_monthly_sales(session)))
         self.labels['customer_number'].configure(text=str(get_customers_count(session)))
         self.labels['product_number'].configure(text=str(get_total_product_quantity(session)))
@@ -1883,8 +1883,8 @@ class EmployeeSellPanel(Panel):
             self.sell(self)
         except ProductNotExistsException as ve:
             show_error_callback("Please select a valid product.")
-        except Exception as e:
-            show_error_callback(str(e))
+        except Exception as ve:
+            show_error_callback(str(ve))
   
 
     def sell_product(self, session, product_id, customer_name, customer_address, customer_phone, customer_national_id, quantity):
