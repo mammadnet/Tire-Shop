@@ -3,6 +3,7 @@ from interface.widgets import Root
 from customtkinter import *
 from database import login_permission, session, is_admin,is_manager,is_employee, user_by_username_pass, admin_exists, create_new_user
 root = Root()
+root.title("Tire Shop")
 
 def login_action(username, password, login_page:Login_page):
     user = user_by_username_pass(session, username, password)
