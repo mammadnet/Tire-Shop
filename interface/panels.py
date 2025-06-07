@@ -5,6 +5,7 @@ from database import remove_user_by_username, update_user_by_username, user_by_u
 from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id, get_product_by_id_json, update_product_by_id, get_all_employee_usernames
 from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames, get_all_customers, get_customer_by_id
 from database import create_order, get_customer_by_national_id, get_or_create_customer, check_customer_equal, get_all_orders
+from database import get_total_product_quantity, get_brands_count, get_sizes_count, get_customers_count, get_employees_count
 from database import ProductNotExistsException
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
@@ -1339,26 +1340,24 @@ class ManagerDashboardPanel(Panel):
         self.content_frame.pack(fill="both", expand=True)
 
         self.labels = {}
-        self.employee_number = create_updatable_labels(self.content_frame, render_text("تعداد کارمندان"), 0, 1, "employee_number",font_size=16,container=self.labels)     
-        self.daily_sell =         create_updatable_labels(self.content_frame, render_text("فروش روزانه"), 0, 3, "daily_sell",font_size=16,container=self.labels)
-        self.monthly_sell =       create_updatable_labels(self.content_frame, render_text("فروش ماهانه"), 1, 1, "monthly_sell",font_size=16,container=self.labels)
-        self.customer_number =  create_updatable_labels(self.content_frame, render_text("تعداد مشتریان"), 1, 3, "customer_number",font_size=16,container=self.labels)
-        self.product_number =    create_updatable_labels(self.content_frame, render_text("تعداد محصولات"), 2, 1, "product_number",font_size=16,container=self.labels)
-        self.product_size_number = create_updatable_labels(self.content_frame, render_text("تعداد سایزها"), 2, 3, "product_size_number",font_size=16,container=self.labels)
-        self.product_brand_number = create_updatable_labels(self.content_frame, render_text("تعداد برندها"), 3, 2, "product_brand_number",font_size=16,container=self.labels)
+        create_updatable_labels(self.content_frame, render_text("تعداد کارمندان"), 0, 1, "employee_number",font_size=16,container=self.labels)     
+        create_updatable_labels(self.content_frame, render_text("فروش روزانه"), 0, 3, "daily_sell",font_size=16,container=self.labels)
+        create_updatable_labels(self.content_frame, render_text("فروش ماهانه"), 1, 1, "monthly_sell",font_size=16,container=self.labels)
+        create_updatable_labels(self.content_frame, render_text("تعداد مشتریان"), 1, 3, "customer_number",font_size=16,container=self.labels)
+        create_updatable_labels(self.content_frame, render_text("تعداد محصولات"), 2, 1, "product_number",font_size=16,container=self.labels)
+        create_updatable_labels(self.content_frame, render_text("تعداد سایزها"), 2, 3, "product_size_number",font_size=16,container=self.labels)
+        create_updatable_labels(self.content_frame, render_text("تعداد برندها"), 3, 2, "product_brand_number",font_size=16,container=self.labels)
 
+        self.update_labels()
 
-    def toogle_view(self, view_name):
-        if self.current_view:
-            self.current_view.pack_forget()
-        if view_name == 'employee':
-            self.current_view = self.employee_panel
-        elif view_name == 'product':
-            self.current_view = self.product_panel
-        elif view_name == 'report':
-            self.current_view = self.report_panel
-        if self.current_view:
-            self.current_view.pack(expand=True, fill="both")
+    def update_labels(self):
+        # Update the labels with the latest data
+        self.labels['employee_number'].set_text(str(get_employees_count(session)))
+        self.labels['customer_number'].configure(text=str(get_customers_count(session)))
+        self.labels['product_number'].configure(text=str(get_total_product_quantity(session)))
+        self.labels['product_size_number'].configure(text=str(get_sizes_count(session)))
+        self.labels['product_brand_number'].configure(text=str(get_brands_count(session)))
+
 
 
 
