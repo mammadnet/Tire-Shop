@@ -6,6 +6,7 @@ from database import get_all_products_json, delete_product_by_name_and_size, get
 from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames, get_all_customers, get_customer_by_id
 from database import create_order, get_customer_by_national_id, get_or_create_customer, check_customer_equal, get_all_orders
 from database import get_total_product_quantity, get_brands_count, get_sizes_count, get_customers_count, get_employees_count, get_monthly_sales, get_daily_sales
+from database import backup_database, restore_database
 from database import ProductNotExistsException
 from utilities import Concur, is_windows, get_current_datetime
 from tkinter import ttk
@@ -496,30 +497,33 @@ class AdminBackupPanel(Panel):
         self.path_label = CTkLabel(self, text=self.get_backupfile_name(), text_color='#c5c6de', font=(None, 15))
         self.path_label.grid(row=1, column=0, columnspan=2)
         
-        # Add checkboxes
-        self.cb_users = CTkCheckBox(self, text="Users", border_color="#a5a7c9", hover_color="#81828a")
-        self.cb_users.grid(row=2, column=0)
 
-        self.cb_products = CTkCheckBox(self, text="Products", border_color="#a5a7c9", hover_color="#81828a")
-        self.cb_products.grid(row=2, column=1)
-
-        self.cb_orders = CTkCheckBox(self, text="Orders", border_color="#a5a7c9", hover_color="#81828a")
-        self.cb_orders.grid(row=2, column=2)
         
-                # Add operation button
-        self.operation_btn = Btn(self, text="ذخیره",width=160, height=45, command=self.handle_checkboxes)
+        # Add operation button
+        self.operation_btn = Btn(self, text="ذخیره",width=160, height=45, command=self.handle_backup)
         self.operation_btn.grid(row=3, column=0, columnspan=4)
     
-    def handle_checkboxes(self):
-        if self.cb_users.get():
-            print("Users checkbox is checked — start users operation.")
 
-        if self.cb_products.get():
-            print("Products checkbox is checked — start products operation.")
+    def handle_backup(self):
+        path = self.path_input.get()
+        if not path:
+            self.show_error_message("Path cannot be empty.")
+            return
 
-        if self.cb_orders.get():
-            print("Orders checkbox is checked — start orders operation.")
-            
+        os.makedirs(path, exist_ok=True)  # Ensure the directory exists
+        filename = self.get_backupfile_name() + '.db'
+        fullpath = os.path.join(path, filename)
+
+        dbPath = os.path.join(os.getcwd(), str(session.bind.url).split('///')[-1])
+        with open(fullpath, 'wb') as f:
+            f.write(b'')  # Create an empty file if it doesn't exist
+            f.close()
+        try:
+            print(dbPath, os.getcwd())
+            backup_database(dbPath, fullpath)
+            self.show_success_message(f"Backup saved to {fullpath}")
+        except Exception as e:
+            self.show_error_message(e)
             
     def default_path(self):
         folder_name = "TSBackup"
@@ -532,9 +536,8 @@ class AdminBackupPanel(Panel):
             # Create the folder (if it doesn't already exist)
             os.makedirs(folder_path, exist_ok=True)
 
-
             return folder_path
-        
+
         else:
             home_path = os.path.expanduser("~")
 
