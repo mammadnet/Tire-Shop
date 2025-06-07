@@ -15,6 +15,8 @@ import os
 
 class Login_page:
     def __init__(self, root, login_action):
+        self.root = root
+        
         self.login_action = login_action
         
         self.main_frame = CTkFrame(root, fg_color='#494A5F')
@@ -100,6 +102,7 @@ class Login_page:
         return self.main_frame
     
     def btn_command(self):
+        self.root.unbind('<Return>')  # Unbind the "Enter" key to prevent multiple calls
         self.login_action(self.username.get(), self.password.get(), self)
         
     def login_error_message(self, message:str=None):
