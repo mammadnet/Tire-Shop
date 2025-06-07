@@ -9,6 +9,7 @@ from .connection import session
 from utilities import hashing
 
 from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException, ProductNotExistsException, CustomerNotExistsException
+from datetime import datetime, timedelta
 
 # Check if a user is exist
 def exist_check(session:Session, by:InstrumentedAttribute, pat):
@@ -422,3 +423,14 @@ def get_total_product_quantity(session: Session) -> int:
 
 def get_employees_count(session: Session) -> int:
     return session.query(Employee).count()
+
+def get_monthly_sales(session: Session) -> float:
+    thirty_days_ago = datetime.now() - timedelta(days=30)
+    
+    total_sales = session.query(
+        func.sum(ProductsOrder.price * ProductsOrder.quantity)
+    ).join(Order).filter(
+        Order.date >= thirty_days_ago
+    ).scalar()
+    
+    return total_sales or 0.0
