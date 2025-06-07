@@ -408,6 +408,11 @@ def get_all_orders_json(session: Session):
     orders = get_all_orders(session)
     return [order.to_dict() for order in orders]
 
+def get_customers_count(session: Session) -> int:
+    return session.query(Customer).count()
+
+def get_sizes_count(session: Session) -> int:
+    return session.query(Size).count()
 
 def get_brands_count(session: Session) -> int:
     return session.query(Brand).count()
