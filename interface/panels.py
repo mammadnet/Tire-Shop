@@ -483,7 +483,7 @@ class AdminBackupPanel(Panel):
         
         default_path = self.default_path()
         path = StringVar()
-        self.path_input = Input(self, 15, 280, 35, None, path, placeholder_empty=False)
+        self.path_input = Input(self, 15, 280, 35, None, path, placeholder_empty=False, just_english=True, char_limit=40)
         self.path_input.grid(row=0, column=0, columnspan=2)
         self.path_input.set_textvariable(path)
         path.set(default_path)
@@ -511,6 +511,7 @@ class AdminBackupPanel(Panel):
             return
 
         os.makedirs(path, exist_ok=True)  # Ensure the directory exists
+        
         filename = self.get_backupfile_name() + '.db'
         fullpath = os.path.join(path, filename)
 
@@ -533,9 +534,6 @@ class AdminBackupPanel(Panel):
 
             folder_path = os.path.join(desktop_path, folder_name)
 
-            # Create the folder (if it doesn't already exist)
-            os.makedirs(folder_path, exist_ok=True)
-
             return folder_path
 
         else:
@@ -543,9 +541,6 @@ class AdminBackupPanel(Panel):
 
             # Step 3: Construct the full path to the folder
             folder_path = os.path.join(home_path, folder_name)
-
-            # Step 4: Create the folder (if it doesn’t already exist)
-            os.makedirs(folder_path, exist_ok=True)
             
             return folder_path
                     
