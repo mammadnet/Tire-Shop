@@ -434,3 +434,14 @@ def get_monthly_sales(session: Session) -> float:
     ).scalar()
     
     return total_sales or 0.0
+
+def get_daily_sales(session: Session) -> float:
+    today = datetime.now().date()
+    
+    total_sales = session.query(
+        func.sum(ProductsOrder.price * ProductsOrder.quantity)
+    ).join(Order).filter(
+        func.date(Order.date) == today
+    ).scalar()
+    
+    return total_sales or 0.0
