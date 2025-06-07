@@ -1,7 +1,7 @@
 from interface.ui import Login_page, Admin_page, Manager_page, Page, Employee_page
 from interface.widgets import Root
 from customtkinter import *
-from database import login_permission, session, is_admin,is_manager,is_employee, user_by_username_pass
+from database import login_permission, session, is_admin,is_manager,is_employee, user_by_username_pass, admin_exists, create_new_user
 root = Root()
 
 def login_action(username, password, login_page:Login_page):
@@ -23,9 +23,10 @@ def logout_action(active_page:Page):
     active_page.destroy()
     Login_page(root, login_action)
     
-        
+    
+if not admin_exists(session):
+    create_new_user(session, "admin", "admin", "1234", "1234", "admin", "admin", "admin")
+
 Login_page(root, login_action)
-
-
 
 root.mainloop()
