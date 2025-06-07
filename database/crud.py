@@ -419,3 +419,6 @@ def get_brands_count(session: Session) -> int:
 
 def get_total_product_quantity(session: Session) -> int:
     return session.query(Product).with_entities(func.sum(Product.quantity)).scalar() or 0
+
+def get_employees_count(session: Session) -> int:
+    return session.query(Employee).count()
