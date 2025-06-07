@@ -32,9 +32,26 @@ def user_by_username_pass(session:Session, username:str, passwd:str):
         user = db.execute(query).scalar()
         return user
     return None
-    
-    
 
+def get_all_users(session:Session):
+    """Get all users from the database"""
+    query = select(User)
+    result = session.execute(query).all()
+    return [user[0] for user in result]
+
+def user_by_national_id_phone(session:Session, national_id:str, phone:str) -> User:
+    """Retrieve a user by their national ID and phone number"""
+    try:
+        query = select(User).where(
+            User.national_number == national_id,
+            User.phone == phone
+        )
+        result = session.execute(query).first()
+        if result:
+            return result[0]  # Return the first element of the tuple
+        return None
+    except Exception as e:
+        raise e
 
 def create_new_user(session: Session, name:str, lastname:str, phone:str, national_number:str, level_type:str, username:str, passwd:str) -> User:
     level_type = level_type.lower()
