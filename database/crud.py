@@ -2,7 +2,7 @@ from .models import User,Employee,Admin,Manager,Order,Customer,Product,Size,Bran
 
 from sqlalchemy.orm import Session, InstrumentedAttribute
 
-from sqlalchemy import select, exists
+from sqlalchemy import select, exists, func
 
 from .connection import session
 
@@ -407,3 +407,10 @@ def get_all_orders(session: Session):
 def get_all_orders_json(session: Session):
     orders = get_all_orders(session)
     return [order.to_dict() for order in orders]
+
+
+def get_brands_count(session: Session) -> int:
+    return session.query(Brand).count()
+
+def get_total_product_quantity(session: Session) -> int:
+    return session.query(Product).with_entities(func.sum(Product.quantity)).scalar() or 0
