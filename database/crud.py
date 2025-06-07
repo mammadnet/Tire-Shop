@@ -445,3 +445,7 @@ def get_daily_sales(session: Session) -> float:
     ).scalar()
     
     return total_sales or 0.0
+
+
+def admin_exists(session: Session) -> bool:
+    return session.query(exists().where(User.type == 'admin')).scalar()
