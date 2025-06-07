@@ -11,9 +11,9 @@ from tkinter import ttk
 from time import sleep
 
 class Panel(CTkFrame):
-    def __init__(self, root):
-        super().__init__(root)
-        
+    def __init__(self, root, **kwargs):
+        super().__init__(root, **kwargs)
+
         self.error_message_label = CTkLabel(self, text_color="firebrick1")
         self.success_message_label = CTkLabel(self, text_color="green")
     
