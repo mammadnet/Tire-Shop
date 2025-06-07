@@ -5,6 +5,7 @@ from .crud import get_all_employee_usernames, get_all_employee_and_manager_usern
 from .crud import create_order, get_or_create_customer, get_customer_by_national_id, check_customer_equal, get_all_orders
 from .crud import get_total_product_quantity, get_brands_count, get_sizes_count, get_customers_count, get_employees_count, get_monthly_sales, get_daily_sales
 from .crud import admin_exists
+from .backup import backup_database, restore_database
 from .connection import session
 from utilities import hashing
 from .utilities import is_admin, is_manager, is_employee
