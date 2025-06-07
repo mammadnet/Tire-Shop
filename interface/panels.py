@@ -1881,8 +1881,8 @@ class EmployeeSellPanel(Panel):
             self.sell(self)
         except ProductNotExistsException as ve:
             show_error_callback("Please select a valid product.")
-        except Exception as ve:
-            show_error_callback(str(ve))
+        except Exception as e:
+            show_error_callback(str(e))
   
 
     def sell_product(self, session, product_id, customer_name, customer_address, customer_phone, customer_national_id, quantity):
