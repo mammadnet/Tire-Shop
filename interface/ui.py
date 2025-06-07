@@ -197,19 +197,19 @@ class Admin_page(Page):
         self.button_hover_color = "#434357"
         
         user_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        user_btn.grid(row=2, column=0, sticky='e')
         user_btn.set_text('کاربران', fill='#FFFFFF', font_size=self.button_font_size)
         user_btn.set_action(lambda _: self.toggle_panel('users'))
+        user_btn.grid(row=2, column=0, sticky='e')
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        reports_btn.grid(row=3, column=0, sticky='e')
         reports_btn.set_action(lambda _: self.toggle_panel('backup'))
         reports_btn.set_text('بکاپ', fill='#FFFFFF', font_size=self.button_font_size)
+        reports_btn.grid(row=3, column=0, sticky='e')
         
         backup_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        backup_btn.grid(row=4, column=0, sticky='e')
         backup_btn.set_action(lambda _: self.toggle_panel('backup'))
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
+        backup_btn.grid(row=4, column=0, sticky='e')
         
         self.current_panel = None
         
@@ -266,24 +266,24 @@ class Manager_page(Page):
         self.button_hover_color = "#434357"
         
         dashboard_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        dashboard_btn.grid(row=0, column=0, sticky='e')
         dashboard_btn.set_action(lambda _: self.toggle_panel('dashboard'))
         dashboard_btn.set_text('داشبورد', fill='#FFFFFF', font_size=self.button_font_size)
+        dashboard_btn.grid(row=0, column=0, sticky='e')
         
         products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        products_btn.grid(row=1, column=0, sticky='e')
         products_btn.set_action(lambda _: self.toggle_panel('products'))
         products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
+        products_btn.grid(row=1, column=0, sticky='e')
         
         employee_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        employee_btn.grid(row=2, column=0, sticky='e')
         employee_btn.set_action(lambda _: self.toggle_panel('employee'))
         employee_btn.set_text('کارمند', fill='#FFFFFF', font_size=self.button_font_size)
+        employee_btn.grid(row=2, column=0, sticky='e')
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        reports_btn.grid(row=3, column=0, sticky='e')
         reports_btn.set_action(lambda _: self.toggle_panel('report'))
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
+        reports_btn.grid(row=3, column=0, sticky='e')
 
         self.current_panel = None
         self.product_frame = None
@@ -295,31 +295,31 @@ class Manager_page(Page):
     # Function to toggle between different panels
     def toggle_panel(self, panel:str):
         if panel == 'products' and self.current_panel != 'products':
+            if self.dashboard_frame:
+                self.dashboard_frame.destroy()
+            if self.employee_frame:
+                self.employee_frame.destroy()
+            if self.report_frame:
+                self.report_frame.destroy()
             self.product_frame = ManagerProductPanel(self.control_frame)
             self.current_panel = 'products'
+        elif panel == 'employee' and self.current_panel != 'employee':
             if self.dashboard_frame:
                 self.dashboard_frame.destroy()
-            if self.employee_frame:
-                self.employee_frame.destroy()
             if self.report_frame:
                 self.report_frame.destroy()
-        elif panel == 'employee' and self.current_panel != 'employee':
+            if self.product_frame:
+                self.product_frame.destroy()
             self.employee_frame = ManagerEmployeePanel(self.control_frame)
             self.current_panel = 'employee'
-            if self.dashboard_frame:
-                self.dashboard_frame.destroy()
-            if self.report_frame:
-                self.report_frame.destroy()
-            if self.product_frame:
-                self.product_frame.destroy()
         elif panel == 'report' and self.current_panel != 'report':
-            self.report_frame = ManagerReportPanel(self.control_frame)
             if self.dashboard_frame:
                 self.dashboard_frame.destroy()
             if self.product_frame:
                 self.product_frame.destroy()
             if self.employee_frame:
                 self.employee_frame.destroy()
+            self.report_frame = ManagerReportPanel(self.control_frame)
             self.current_panel = 'report'
         elif panel == 'dashboard' and self.current_panel != 'dashboard':
             if self.product_frame:
@@ -356,18 +356,18 @@ class Employee_page(Page):
         self.button_hover_color = "#434357"
         
         sell_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        sell_btn.grid(row=0, column=0, sticky='e')
         sell_btn.set_action(lambda _: self.toggle_panel('sell'))
         sell_btn.set_text('فروش', fill='#FFFFFF', font_size=self.button_font_size)
+        sell_btn.grid(row=0, column=0, sticky='e')
         
         products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        products_btn.grid(row=1, column=0, sticky='e')
         products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
+        products_btn.grid(row=1, column=0, sticky='e')
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        reports_btn.grid(row=2, column=0, sticky='e')
         reports_btn.set_action(lambda _: self.toggle_panel('report'))
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
+        reports_btn.grid(row=2, column=0, sticky='e')
         
         self.current_panel = None
         self.employee_sell_panel = None
