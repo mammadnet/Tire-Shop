@@ -1339,13 +1339,13 @@ class ManagerDashboardPanel(Panel):
         self.content_frame.pack(fill="both", expand=True)
 
         self.labels = {}
-        self.employee_number = create_updatable_labels(self.content_frame, render_text("تعداد کارمندان"), 0, 1, "employee_number",container=self.labels)     
-        self.daily_sell =         create_updatable_labels(self.content_frame, render_text("فروش روزانه"), 0, 3, "daily_sell",container=self.labels)
-        self.monthly_sell =       create_updatable_labels(self.content_frame, render_text("فروش ماهانه"), 1, 1, "monthly_sell",container=self.labels)
-        self.customer_number =  create_updatable_labels(self.content_frame, render_text("تعداد مشتریان"), 1, 3, "customer_number",container=self.labels)
-        self.product_number =    create_updatable_labels(self.content_frame, render_text("تعداد محصولات"), 2, 1, "product_number",container=self.labels)
-        self.product_size_number = create_updatable_labels(self.content_frame, render_text("تعداد سایزها"), 2, 3, "product_size_number",container=self.labels)
-        self.product_brand_number = create_updatable_labels(self.content_frame, render_text("تعداد برندها"), 3, 2, "product_brand_number",container=self.labels)
+        self.employee_number = create_updatable_labels(self.content_frame, render_text("تعداد کارمندان"), 0, 1, "employee_number",font_size=16,container=self.labels)     
+        self.daily_sell =         create_updatable_labels(self.content_frame, render_text("فروش روزانه"), 0, 3, "daily_sell",font_size=16,container=self.labels)
+        self.monthly_sell =       create_updatable_labels(self.content_frame, render_text("فروش ماهانه"), 1, 1, "monthly_sell",font_size=16,container=self.labels)
+        self.customer_number =  create_updatable_labels(self.content_frame, render_text("تعداد مشتریان"), 1, 3, "customer_number",font_size=16,container=self.labels)
+        self.product_number =    create_updatable_labels(self.content_frame, render_text("تعداد محصولات"), 2, 1, "product_number",font_size=16,container=self.labels)
+        self.product_size_number = create_updatable_labels(self.content_frame, render_text("تعداد سایزها"), 2, 3, "product_size_number",font_size=16,container=self.labels)
+        self.product_brand_number = create_updatable_labels(self.content_frame, render_text("تعداد برندها"), 3, 2, "product_brand_number",font_size=16,container=self.labels)
 
 
     def toogle_view(self, view_name):
