@@ -2,13 +2,14 @@ from .models import User,Employee,Admin,Manager,Order,Customer,Product,Size,Bran
 
 from sqlalchemy.orm import Session, InstrumentedAttribute
 
-from sqlalchemy import select, exists
+from sqlalchemy import select, exists, func
 
 from .connection import session
 
 from utilities import hashing
 
 from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException, ProductNotExistsException, CustomerNotExistsException
+from datetime import datetime, timedelta
 
 # Check if a user is exist
 def exist_check(session:Session, by:InstrumentedAttribute, pat):
@@ -264,7 +265,6 @@ def update_product_by_id(session: Session, product_id: int, new_brand_name: str,
 
     session.commit()
     session.refresh(product)
-    print(product.to_dict(), new_brand_name)
     return product
 
 
@@ -408,3 +408,40 @@ def get_all_orders(session: Session):
 def get_all_orders_json(session: Session):
     orders = get_all_orders(session)
     return [order.to_dict() for order in orders]
+
+def get_customers_count(session: Session) -> int:
+    return session.query(Customer).count()
+
+def get_sizes_count(session: Session) -> int:
+    return session.query(Size).count()
+
+def get_brands_count(session: Session) -> int:
+    return session.query(Brand).count()
+
+def get_total_product_quantity(session: Session) -> int:
+    return session.query(Product).with_entities(func.sum(Product.quantity)).scalar() or 0
+
+def get_employees_count(session: Session) -> int:
+    return session.query(Employee).count()
+
+def get_monthly_sales(session: Session) -> float:
+    thirty_days_ago = datetime.now() - timedelta(days=30)
+    
+    total_sales = session.query(
+        func.sum(ProductsOrder.price * ProductsOrder.quantity)
+    ).join(Order).filter(
+        Order.date >= thirty_days_ago
+    ).scalar()
+    
+    return total_sales or 0.0
+
+def get_daily_sales(session: Session) -> float:
+    today = datetime.now().date()
+    
+    total_sales = session.query(
+        func.sum(ProductsOrder.price * ProductsOrder.quantity)
+    ).join(Order).filter(
+        func.date(Order.date) == today
+    ).scalar()
+    
+    return total_sales or 0.0

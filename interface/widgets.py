@@ -81,7 +81,6 @@ class Input(CTkEntry):
         
     def _set_english_only(self, *k):
         val = self.textvariable.get()
-        print(val, '----->', isarabic(val))
         arabic = False
         if val:
             # Check if the first or last character is Arabic
@@ -204,13 +203,13 @@ class DropDown(CTkComboBox):
         
         
 
-def create_updatable_labels(window, label_name, row, column, field_key, container:dict, **kwargs):
+def create_updatable_labels(window, label_name, row, column, field_key, container:dict,font_size=13, **kwargs):
     if field_key not in container:
         temp_frame = CTkFrame(window, fg_color="#444759", corner_radius=10)
         temp_frame.grid(row=row, column=column, sticky="ew", **kwargs)
-        label = CTkLabel(temp_frame, text=label_name, text_color="white", font=(None, 13))
+        label = CTkLabel(temp_frame, text=label_name, text_color="white", font=(None, font_size))
         label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
-        label_val = CTkLabel(temp_frame, text="?", text_color="white", font=(None, 13))
+        label_val = CTkLabel(temp_frame, text="?", text_color="white", font=(None, font_size))
         label_val.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         if container is not None:
             container[field_key] = label_val
