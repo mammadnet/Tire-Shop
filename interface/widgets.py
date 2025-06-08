@@ -3,11 +3,14 @@ from math import cos, pi, sin
 from typing import Iterator
 from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text, render_text
 
+# A customized CTkButton with a predefined style and bidi text support.
 class Btn(CTkButton):
     def __init__(self, master, width, height, corner_radius=20, text='', **kwargs):
         super().__init__(master, **kwargs)
+        # If the text is Arabic, render it correctly for right-to-left display.
         if isarabic(text):
             text = render_text(text)
+        # Apply a consistent style for buttons across the application.
         self.configure(text=text, corner_radius = corner_radius, fg_color='#AFB3ED', hover_color='#888bba', text_color='#494A5F', border_color='#8688B0')
         self.configure(width=width, height=height)
         
@@ -17,7 +20,9 @@ class Btn(CTkButton):
     def set_text(self, text):
         if isarabic(text):
             text = render_text(text)
-            self.configure(text=text)
+        self.configure(text=text)
+
+
 
 class Input(CTkEntry):
     def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True,just_english:bool=False, **kwargs):
