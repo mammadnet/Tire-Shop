@@ -50,7 +50,9 @@ class Input(CTkEntry):
         
         if self.placeholder_text:
             self.textvariable.set(self.placeholder_text)
-            
+        self._set_limit()
+        self._set_just_english()
+        self._set_justify()
         
     def _entry_update_callback(self, *k):
         val = self.textvariable.get()
@@ -66,7 +68,6 @@ class Input(CTkEntry):
     
     def _set_limit(self):
         self.textvariable.trace_add('write', self._entry_update_callback)
-    
     def _add_justify_for_arabic(self, *k):
         val = self.textvariable.get()
         if len(val) == 1:
@@ -219,16 +220,14 @@ def create_updatable_labels(window, label_name, row, column, field_key, containe
         return label_val
     return container[field_key]
 
-def create_input_fields(window, label_text, row, column, field_key, container:dict,font_size=13, **kwargs):
+def create_input_fields(window, label_text, row, column, field_key, container:dict,font_size=13, char_limit = 20,just_english=False, err_callback=None, **kwargs):
     if (container is None) or field_key not in container:
         frame = CTkFrame(window, fg_color="transparent", bg_color="transparent")
         frame.grid(row=row, column=column, sticky="ew", **kwargs)
         label = CTkLabel(frame, text=label_text, text_color="white", font=(None, font_size))
         label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         var = StringVar()
-        input_widget = Input(frame, 15, 150, 35, None, var, placeholder_empty=False)
-        input_widget.set_textvariable(var)
-        input_widget.textvariable.set('')
+        input_widget = Input(frame, 15, 150, 35, None, var, placeholder_empty=False, just_english=just_english, char_limit=char_limit, show_err_callback=err_callback)
         input_widget.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         if container is not None:
             container[field_key] = input_widget
