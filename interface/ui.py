@@ -334,34 +334,45 @@ class ForgotPasswordDialog(CTkToplevel):
         # The message window will automatically destroy itself after 2.5 seconds.
         win.after(2500, win.destroy)
 
+# This is a base class for all main application pages (e.g., Admin, Manager, Employee).
+# It establishes a common layout with a main content area and a sidebar for navigation and user info.
 class Page:
     def __init__(self, root, name:str, lastname:str, rule:str, logout_callback=None):
+        # The main container frame for this page.
         self.main_frame = CTkFrame(root)
         self.main_frame.pack(expand=True, fill='both')
         
+        # A callback function to be executed when the logout button is clicked.
         self.logout_callback = logout_callback
         
+        # The right-hand sidebar, typically used for navigation buttons and user profile.
         self.items_frame = CTkFrame(self.main_frame)
         self.items_frame.configure(fg_color='#5B5D76')
         self.items_frame.place(relwidth = .3, relheight=1, relx=.7, rely=0, anchor='nw')
         
+        # The main content area on the left, where different functional panels will be displayed.
         self.control_frame = CTkFrame(self.main_frame)
         self.control_frame.configure(fg_color='#494A5F')
         self.control_frame.place(relwidth=.7,relheight=1, relx=0, rely=0)
         
+        # A container at the top of the sidebar for the user profile section.
         self.user_profile_container = CTkFrame(self.items_frame)
         self.user_profile_container.configure(fg_color='transparent')
         self.user_profile_container.place(x=0, y=0, relwidth = 1, relheight=.15)
         
+        # The inner frame that visually holds the user's name, role, and logout button.
         self.user_profile_frame = CTkFrame(self.user_profile_container)
         self.user_profile_frame.configure(fg_color='#393A4E', corner_radius=18)
         self.user_profile_frame.place(relx=.5, rely=.5, relwidth=.75, relheight=.6, anchor='center')
         
+        # Initialize the user profile display and the logout button.
         self.set_profile(name, lastname, rule)
         self._set_logout_btn()
         
     
+    # Populates the user profile frame with the logged-in user's information.
     def set_profile(self, name:str, lastname:str, rule:str)   :
+        # Capitalize strings for consistent display formatting.
         name = name.capitalize()
         lastname= lastname.capitalize()
         rule = rule.capitalize()
@@ -374,7 +385,9 @@ class Page:
         self.rule.configure(text_color="white", height=20)
         self.rule.place(relx=.25, rely=.47)
         
+    # A private helper method to create and configure the logout button.
     def _set_logout_btn(self):
+        # Load the logout icon from the assets directory.
         p = os.path.dirname(os.path.realpath(__file__))
         img = Image.open(p + "/assets/logout.png")
         logoutImage = CTkImage(img)
@@ -384,17 +397,17 @@ class Page:
         # self.btn_logout.disable_hover()
         self.btn_logout.place(relx=.9, rely=.5, anchor='center')
         
+        # If a logout callback function was provided, assign it to the button's command.
         if self.logout_callback:
             self.btn_logout.configure(command=lambda : self.logout_callback(self))
-        
         
          
     
     
+    # Removes the page's main frame from the window, effectively closing the page.
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
-
         
 
 class Admin_page(Page):
