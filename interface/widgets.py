@@ -239,7 +239,10 @@ class DropDown(CTkComboBox):
         
         
 
+# A factory function to create a labeled field with an updatable value.
+# It uses a container dictionary to prevent re-creating the widget if called multiple times.
 def create_updatable_labels(window, label_name, row, column, field_key, container:dict,font_size=13, **kwargs):
+    # Only create the widget if it doesn't already exist in the container.
     if field_key not in container:
         temp_frame = CTkFrame(window, fg_color="#444759", corner_radius=10)
         temp_frame.grid(row=row, column=column, sticky="ew", **kwargs)
@@ -247,12 +250,17 @@ def create_updatable_labels(window, label_name, row, column, field_key, containe
         label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         label_val = CTkLabel(temp_frame, text="?", text_color="white", font=(None, font_size))
         label_val.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+        # Store the created value label in the container for future access.
         if container is not None:
             container[field_key] = label_val
         return label_val
+    # If the widget already exists, return the stored reference from the container.
     return container[field_key]
 
+# A factory function to create a labeled input field.
+# It uses a container dictionary to store a reference to the created widget, preventing duplicates.
 def create_input_fields(window, label_text, row, column, field_key, container:dict,font_size=13, **kwargs):
+    # Only create the widget if it doesn't already exist in the container.
     if (container is None) or field_key not in container:
         frame = CTkFrame(window, fg_color="transparent", bg_color="transparent")
         frame.grid(row=row, column=column, sticky="ew", **kwargs)
@@ -263,7 +271,9 @@ def create_input_fields(window, label_text, row, column, field_key, container:di
         input_widget.set_textvariable(var)
         input_widget.textvariable.set('')
         input_widget.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+        # Store the created input widget in the container for future access.
         if container is not None:
             container[field_key] = input_widget
         return input_widget
+    # If the widget already exists, return the stored reference.
     return container[field_key]
