@@ -410,22 +410,29 @@ class Page:
         self.main_frame.destroy()
         
 
+# Defines the specific user interface for the 'Admin' user.
+# It inherits the basic layout from the Page class and adds navigation
+# for admin-specific functions like user management and data backup/restore.
 class Admin_page(Page):
     def __init__(self, root, name:str, lastname:str, rule:str, logout_callback=None):
+        # Initialize the parent Page class to set up the basic layout.
         super().__init__(root, name, lastname, rule, logout_callback)
         
+        # Create a frame within the sidebar to hold the navigation buttons.
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
         self.buttons_frame.place(relx=0, rely=.15, relwidth=1, relheight=.85)
         
-        
+        # Configure the grid layout for the buttons frame to space buttons evenly.
         self.buttons_frame.rowconfigure((0,1,2,3,4,5,6,7,8), weight=1)
         self.buttons_frame.columnconfigure(0, weight=1)
         
+        # Define common styling for the navigation buttons.
         self.button_font_size = 14
         self.button_color = "#393A4E"
         self.button_hover_color = "#434357"
         
+        # --- Navigation Buttons ---
         user_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         user_btn.set_text('کاربران', fill='#FFFFFF', font_size=self.button_font_size)
         user_btn.set_action(lambda _: self.toggle_panel('users'))
@@ -441,23 +448,37 @@ class Admin_page(Page):
         backup_btn.set_text('بازیابی', fill='#FFFFFF', font_size=self.button_font_size)
         backup_btn.grid(row=4, column=0, sticky='e')
         
+        # This variable keeps track of which panel is currently being displayed.
         self.current_panel = None
         
         #----------------DELETE THIS LINES AFTER FINISH THE ADMIN PANEL DEVELOPMENT-----------
         # self.employee_panel(self.control_frame)
+
+        # Initialize attributes to hold the frame instances for each panel.
         self.employee_frame = None
         self.backup_frame = None
         self.restore_frame = None
+
+        # Display the 'users' panel by default when the admin page is first loaded.
         self.toggle_panel('users')
     
+    # This method acts as a controller to switch between different content panels
+    # in the main content area (self.control_frame).
     def toggle_panel(self, panel:str):
+        # --- Users Panel ---
+        # Only switch if the requested panel is not already the current one.
         if panel == 'users' and self.current_panel != 'users':
+            # Destroy other panels to free up memory and prevent overlap.
             if self.backup_frame:
                 self.backup_frame.destroy()
             if self.restore_frame:
                 self.restore_frame.destroy()
+            # Create and display the new panel.
             self.employee_frame = AdminEmployeePanel(self.control_frame)
+            # Update the state of the current panel.
             self.current_panel = 'users'
+
+        # --- Backup Panel ---
         elif panel == 'backup' and self.current_panel != 'backup':
             if self.employee_frame:
                 self.employee_frame.destroy()
@@ -465,6 +486,8 @@ class Admin_page(Page):
                 self.restore_frame.destroy()
             self.backup_frame = AdminBackupPanel(self.control_frame)
             self.current_panel = 'backup'
+
+        # --- Restore Panel ---
         elif panel == 'restore' and self.current_panel != 'restore':
             if self.employee_frame:
                 self.employee_frame.destroy()
@@ -480,16 +503,16 @@ class Admin_page(Page):
         
         
         
+    # This seems to be an unused helper method, possibly for debugging purposes.
     def _set_semple_lable(self, message):
         self.loggedin_lable = CTkLabel(self.main_frame, text_color='blue', text=message)
         self.loggedin_lable.pack(expand=True, fill='both')
         
     
+    # Destroys the main frame of the page to clean up all its widgets.
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
-
-
 
 class Manager_page(Page):
     def __init__(self, root, name, lastname, rule, logout_callback=None):
