@@ -341,7 +341,7 @@ class AdminEmployeePanel(Panel):
         text = render_text("نام کاربری:")
         username_label = CTkLabel(content_frame, text=text, text_color="white", font=(None, 15))
         username_label.grid(row=0, column=1)
-        combo_delete_items = [f'{user['username']}:{user['name']} {user['lastname']}' for user in users]
+        combo_delete_items = ["{}:{} {}".format(user['username'], user['name'], user['lastname']) for user in users]
         if self.delete_user_comboBox:
             self.delete_user_comboBox.destroy()
         
@@ -869,7 +869,7 @@ class ManagerProductPanel(Panel):
         
         # Fetch all products and populate the dropdown
         products = get_all_products_json(session)
-        combo_delete_items = [f'{product['brand']}:{product['size']['width']}/{product['size']['ratio']}/{product['size']['rim']}' for product in products]
+        combo_delete_items = ["{}:{} {}".format(product['brand'], product['size']['width'], product['size']['ratio'], product['size']['rim']) for product in products]
 
         if self.delete_product_combobox:
             self.delete_product_combobox.destroy()
@@ -1271,7 +1271,7 @@ class ManagerEmployeePanel(Panel):
         text = render_text("نام کاربری:")
         username_label = CTkLabel(content_frame, text=text, text_color="white", font=(None, 15))
         username_label.grid(row=0, column=1)
-        combo_delete_items = [f'{user['username']}:{user['name']} {user['lastname']}' for user in users]
+        combo_delete_items = ["{}:{} {}".format(user['username'], user['name'], user['lastname']) for user in users]
         if self.delete_user_comboBox:
             self.delete_user_comboBox.destroy()
         
