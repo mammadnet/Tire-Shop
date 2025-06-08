@@ -64,7 +64,7 @@ class Login_page:
         login_frame = CTkFrame(login_frame_container, bg_color='transparent', fg_color='transparent')
         login_frame.grid(row=1, column=1)
 
-        login_frame.rowconfigure((0, 1, 2), weight=1, pad=30)
+        login_frame.rowconfigure((0, 1, 2, 4), weight=1, pad=30)
         login_frame.columnconfigure(0, weight=1)
 
         self.error_massage_lable = CTkLabel(login_frame, text_color='firebrick1')
