@@ -513,23 +513,29 @@ class Admin_page(Page):
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
-
+# Defines the specific user interface for the 'Manager' user.
+# It inherits from the Page class and provides navigation to panels for
+# dashboard, product management, employee management, and reports.
 class Manager_page(Page):
     def __init__(self, root, name, lastname, rule, logout_callback=None):
+        # Initialize the parent Page class to set up the basic layout.
         super().__init__(root, name, lastname, rule, logout_callback)
         
+        # Create a frame within the sidebar for the navigation buttons.
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
         self.buttons_frame.place(relx=0, rely=.15, relwidth=1, relheight=.85)
         
-        
+        # Configure the grid layout for the buttons frame.
         self.buttons_frame.rowconfigure((0,1,2,3,4,5,6,7,8), weight=1)
         self.buttons_frame.columnconfigure(0, weight=1)
         
+        # Define common styling for the navigation buttons.
         self.button_font_size = 14
         self.button_color = "#393A4E"
         self.button_hover_color = "#434357"
         
+        # --- Navigation Buttons ---
         dashboard_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         dashboard_btn.set_action(lambda _: self.toggle_panel('dashboard'))
         dashboard_btn.set_text('داشبورد', fill='#FFFFFF', font_size=self.button_font_size)
@@ -550,16 +556,20 @@ class Manager_page(Page):
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         reports_btn.grid(row=3, column=0, sticky='e')
 
+        # Initialize attributes to hold the frame instance for each panel.
         self.current_panel = None
         self.product_frame = None
         self.employee_frame = None
         self.report_frame = None
         self.dashboard_frame = None
+        # Set the 'dashboard' as the default panel to display.
         self.toggle_panel('dashboard')
         
-    # Function to toggle between different panels
+    # This method manages switching between the different content panels.
+    # It destroys the old panel before creating the new one to manage resources.
     def toggle_panel(self, panel:str):
         if panel == 'products' and self.current_panel != 'products':
+            # Destroy all other panels before creating the new one.
             if self.dashboard_frame:
                 self.dashboard_frame.destroy()
             if self.employee_frame:
@@ -596,11 +606,14 @@ class Manager_page(Page):
             self.dashboard_frame = ManagerDashboardPanel(self.control_frame)
             self.current_panel = 'dashboard'
         else:
+            # This case handles an invalid panel name, which can be useful for debugging.
             print("Panel not found")
 
+    # Destroys the main frame of the page to clean up all its widgets.
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
+        
         
         
         
