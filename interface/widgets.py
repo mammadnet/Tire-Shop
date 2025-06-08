@@ -142,23 +142,28 @@ class Input(CTkEntry):
     def clear(self):
         self.textvariable.set('')
         
-        
+ # A simple subclass of CTk to create a root window, with an option for fullscreen.
 class Root(CTk):
     def __init__(self, fullscreen=True, **kwargs):
         super().__init__(**kwargs)
         
+        # If fullscreen is requested, maximize the window.
         if fullscreen:
             self.win_max()
     
+    # A method to set the window geometry to the maximum screen size.
     def win_max(self):
         max_width = self.winfo_screenwidth()
         max_height = self.winfo_screenheight()
         self.geometry('{}x{}+0+0'.format(max_width, max_height))
     
+# A highly custom button created using a Canvas to allow for individually rounded corners.
+# This class manually draws a polygon and binds mouse events to simulate a button.
 class Item_button(CTkCanvas):
     def __init__(self, root, width:int=0, height:int=0, color='#AFB3ED',hover_color="#4e4e61",background="#5B5D76", raduis:int=None, rtopleft:int=0, rtopright:int=0, rbottomleft:int=0, rbottomtright:int=0, **kwargs):
         super().__init__(root,width=width, height=height, background=background, highlightthickness=0)
         self.color=color
+        # If a single radius is provided, apply it to all corners.
         if raduis:
             rtopleft, rtopright, rbottomleft, rbottomtright = (raduis, raduis, raduis, raduis)
         
@@ -170,37 +175,42 @@ class Item_button(CTkCanvas):
         self.width = width
         self.height = height
         self.hover_color = hover_color
+        # Create the main polygon shape of the button and store its ID.
         self.polygon_id = self.create_rounded_box(0, 0, width, height)
         self._set_hover()
     
+    # A static method to generate the points for a 90-degree arc (a rounded corner).
     @staticmethod
     def get_cos_sin(radius: int) -> Iterator[tuple[float, float]]:
+        # The number of steps determines the smoothness of the curve.
         steps = max(radius, 10)
         for i in range(steps + 1):
-            angle = pi * (i / steps) * 0.5
+            angle = pi * (i / steps) * 0.5 # Angle ranges from 0 to pi/2 (90 degrees).
             yield (cos(angle) - 1) * radius, (sin(angle) - 1) * radius
 
-        
+    # Creates the polygon shape for the button with the specified corner radii.
     def create_rounded_box(self, x1: int, y1: int, x2: int, y2: int) -> int:
         points = []
+        # Get the lists of points that define the curve for each corner.
         TR_angle_point = tuple(Item_button.get_cos_sin(self.rtopright))
         BR_angle_point = tuple(Item_button.get_cos_sin(self.rbottomtright))
         BL_angle_point = tuple(Item_button.get_cos_sin(self.rbottomleft))
         TL_angle_point = tuple(Item_button.get_cos_sin(self.rtopleft))
         
-        
+        # Calculate the absolute coordinates for the polygon by combining the corner arcs.
         for cos_r, sin_r in TR_angle_point:
-            points.append((x2 + sin_r, y1 - cos_r))         # Top right
+            points.append((x2 + sin_r, y1 - cos_r))         # Top right corner
         for cos_r, sin_r in BR_angle_point:
-            points.append((x2 + cos_r, y2 + sin_r))         # Botton right
+            points.append((x2 + cos_r, y2 + sin_r))         # Bottom right corner
         for cos_r, sin_r in BL_angle_point:
-            points.append((x1 - sin_r, y2 + cos_r))         # Botton left
+            points.append((x1 - sin_r, y2 + cos_r))         # Bottom left corner
         for cos_r, sin_r in TL_angle_point:
-            points.append((x1 - cos_r, y1 - sin_r))         # Top left
+            points.append((x1 - cos_r, y1 - sin_r))         # Top left corner
         
-        
+        # Create the polygon on the canvas using the calculated points.
         return self.create_polygon(points, fill=self.color, smooth=True, joinstyle='round')
 
+    # Creates and centers text on top of the canvas-based button.
     def set_text(self, text:str, fill, font_size):
         if isarabic(text):
             text = render_text(text)
@@ -208,13 +218,17 @@ class Item_button(CTkCanvas):
         y = self.height / 2
         self.create_text(x, y, text = text, fill=fill, font=(None, font_size))
     
+    # Manually binds mouse enter/leave events to the canvas to simulate a hover effect.
     def _set_hover(self):
         self.bind("<Enter>", lambda _: self.itemconfig(self.polygon_id, fill=self.hover_color))
         self.bind("<Leave>", lambda _: self.itemconfig(self.polygon_id, fill=self.color))
         
     
+    # Binds a click action (mouse button 1) to the canvas widget.
     def set_action(self, action):
         self.bind("<Button-1>", action)
+        
+# A customized CTkComboBox that provides a consistent, predefined style.
         
 class DropDown(CTkComboBox):
     def __init__(self, window, width=140, height=28, dropdown_fg_color='#393A4E', dropdown_text_color="white",button_color="#8889a6", fg_color="#393A4E",text_color="white", border_color="#8889a6", **kwargs):
