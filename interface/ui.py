@@ -1,12 +1,7 @@
-from customtkinter import CTk
 from customtkinter import *
-from tkinter import ttk
 from .widgets import *
-from utilities import Concur, is_windows, get_current_datetime
+from utilities import Concur
 from time import sleep
-
-from database import get_all_employees,get_all_employees_json, session, create_new_user, remove_user_by_username, update_user_by_username, get_all_username, user_by_username
-from database import UsernameAlreadyExistsException, NationalNumberAlreadyExistsException
 
 from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, ManagerEmployeePanel, ManagerReportPanel, EmployeeSellPanel, EmployeeReportPanel, ManagerDashboardPanel, AdminRestorePanel
 
