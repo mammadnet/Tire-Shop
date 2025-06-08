@@ -614,13 +614,14 @@ class Manager_page(Page):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
         
-        
-        
-        
+# Defines the specific user interface for the 'Employee' user.
+# It inherits from the Page class and provides navigation for sales and reports.
 class Employee_page(Page):
     def __init__(self, root, name, lastname, rule, logout_callback=None):
+        # Initialize the parent Page class to set up the basic layout.
         super().__init__(root, name, lastname, rule, logout_callback)
         
+        # Create a frame within the sidebar for the navigation buttons.
         self.buttons_frame = CTkFrame(self.items_frame)
         self.buttons_frame.configure(fg_color='transparent')
         self.buttons_frame.place(relx=0, rely=.15, relwidth=1, relheight=.85)
@@ -633,11 +634,14 @@ class Employee_page(Page):
         self.button_color = "#393A4E"
         self.button_hover_color = "#434357"
         
+        # --- Navigation Buttons ---
         sell_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         sell_btn.set_action(lambda _: self.toggle_panel('sell'))
         sell_btn.set_text('فروش', fill='#FFFFFF', font_size=self.button_font_size)
         sell_btn.grid(row=0, column=0, sticky='e')
         
+        # NOTE: This 'products' button is created but has no action assigned to it via set_action().
+        # As a result, clicking it will do nothing. This may be an incomplete feature.
         products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
         products_btn.grid(row=1, column=0, sticky='e')
@@ -647,24 +651,32 @@ class Employee_page(Page):
         reports_btn.set_text('گزارش', fill='#FFFFFF', font_size=self.button_font_size)
         reports_btn.grid(row=2, column=0, sticky='e')
         
+        # Initialize attributes to hold the frame instance for each panel.
         self.current_panel = None
         self.employee_sell_panel = None
         self.employee_report_panel = None
         
+        # Set the 'sell' panel as the default view for the employee page.
         self.toggle_panel("sell")
 
+    # This method manages switching between the 'sell' and 'report' panels.
     def toggle_panel(self, panel:str):
         if panel == 'sell' and self.current_panel != 'sell':
+            # If the report panel exists, destroy it.
             if self.employee_report_panel:
                 self.employee_report_panel.destroy()
+            # Create the sales panel.
             self.employee_sell_panel = EmployeeSellPanel(self.control_frame)
             self.current_panel = 'sell'
         elif panel == 'report' and self.current_panel != 'report':
+            # If the sales panel exists, destroy it.
             if self.employee_sell_panel:
                 self.employee_sell_panel.destroy()
+            # Create the report panel.
             self.employee_report_panel = EmployeeReportPanel(self.control_frame)
             self.current_panel = 'report'
+
+    # Destroys the main frame of the page to clean up all its widgets.
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
-        
