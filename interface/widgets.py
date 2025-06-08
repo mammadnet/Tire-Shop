@@ -218,3 +218,19 @@ def create_updatable_labels(window, label_name, row, column, field_key, containe
             container[field_key] = label_val
         return label_val
     return container[field_key]
+
+def create_input_fields(window, label_text, row, column, field_key, container:dict,font_size=13, **kwargs):
+    if (container is None) or field_key not in container:
+        frame = CTkFrame(window, fg_color="transparent", bg_color="transparent")
+        frame.grid(row=row, column=column, sticky="ew", **kwargs)
+        label = CTkLabel(frame, text=label_text, text_color="white", font=(None, font_size))
+        label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+        var = StringVar()
+        input_widget = Input(frame, 15, 150, 35, None, var, placeholder_empty=False)
+        input_widget.set_textvariable(var)
+        input_widget.textvariable.set('')
+        input_widget.pack(expand=True, fill="both", padx=10, pady=5, side="right")
+        if container is not None:
+            container[field_key] = input_widget
+        return input_widget
+    return container[field_key]
