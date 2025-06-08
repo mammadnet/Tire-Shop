@@ -7,11 +7,12 @@ from .panels import AdminEmployeePanel, AdminBackupPanel, ManagerProductPanel, M
 
 from PIL import Image
 import os
-
+# Handles the creation and management of all widgets and logic for the user login interface.
 class Login_page:
     def __init__(self, root, login_action):
         self.root = root
         
+        # A callback function passed from the main application to handle the login verification logic.
         self.login_action = login_action
         
         self.main_frame = CTkFrame(root, fg_color='#494A5F')
@@ -19,7 +20,7 @@ class Login_page:
         # Main container for contain whole widgets of page
         self.main_frame.pack(expand=True, fill='both')
 
-        # Bind the "Enter" key to the login button command
+        # Bind the "Enter" key to the login button command for better user experience.
         root.bind('<Return>', lambda event: self.btn_command())
 
         # Left frame of login page
@@ -28,7 +29,7 @@ class Login_page:
         left_frame = CTkFrame(self.main_frame, fg_color='#494A5F')
         left_frame.place(relx=0, rely=0, relwidth=0.6, relheight=1)
 
-        # Load background image
+        # Load background image from the assets folder.
         currentpath = os.path.dirname(os.path.realpath(__file__))
         back = Image.open(currentpath + '/assets/login-background.png')
         image = CTkImage(back, size=(back.width*.715, back.height*.715))
@@ -41,6 +42,7 @@ class Login_page:
         right_frame = CTkFrame(self.main_frame, fg_color='transparent')
         right_frame.place(relx=.6, rely=0, relwidth=0.4, relheight=1)
 
+        # Configure the grid layout to make the widgets within this frame responsive.
         right_frame.rowconfigure((0, 1, 2, 3), weight=1, uniform='a')
         right_frame.columnconfigure(0, weight=1, uniform='a')
         
@@ -54,6 +56,7 @@ class Login_page:
         login_frame_container = CTkFrame(right_frame, fg_color='#494A5F')
         login_frame_container.grid(row=1, column=0, rowspan=2, sticky='nsew')
 
+        # Configure the grid layout for the container to center the login form.
         login_frame_container.rowconfigure((0,2), weight=1, uniform='a')
         login_frame_container.rowconfigure(1, weight=10, uniform='a')
 
@@ -67,17 +70,19 @@ class Login_page:
         login_frame.rowconfigure((0, 1, 2, 4), weight=1, pad=30)
         login_frame.columnconfigure(0, weight=1)
 
+        # A label to display login error messages.
         self.error_massage_lable = CTkLabel(login_frame, text_color='firebrick1')
         
         self.username = StringVar()
         self.password = StringVar()
         
-
+        # Custom input widget for the username.
         username_entry = Input(login_frame, 30, 300, 50, 'نام کاربری', self.username, show_err_callback=self.login_error_message, just_english=True)
         username_entry.configure(font=(None, 18))
         username_entry.set_placeholder_text("نام کاربری")
         username_entry.grid(row=1, column=0)
 
+        # Custom input widget for the password.
         password_entry = Input(login_frame, 30, 300, 50, 'رمز', self.password, show='*', show_err_callback = self.login_error_message)
         password_entry.configure(font=(None, 18))
         password_entry.set_placeholder_text("رمز")
@@ -100,26 +105,33 @@ class Login_page:
     def get_frame(self):
         return self.main_frame
     
+    # This method is called when the login button is pressed or Enter is hit.
     def btn_command(self):
-        self.root.unbind('<Return>')  # Unbind the "Enter" key to prevent multiple calls
+        self.root.unbind('<Return>')  # Unbind the "Enter" key to prevent multiple calls while processing.
         self.login_action(self.username.get(), self.password.get(), self)
         
+    # Displays a temporary error message on the screen.
     def login_error_message(self, message:str=None):
         if message:
             self.error_massage_lable.configure(text=message)
             self.error_massage_lable.grid(row=5, column=0, pady=(10, 0))  # Move error message below forgot password button
+            # Use Concur to run the clearing function in a separate thread, so it doesn't freeze the UI.
             Concur(lambda : self._clear_login_error(5)).start()
     
+    # A private helper method to automatically remove the error message after a delay.
     def _clear_login_error(self, sec):
         sleep(sec)
         self.error_massage_lable.grid_remove()
         
+    # Destroys the login page frame to clean up resources.
     def destroy(self):
         self.main_frame.pack_forget()
         self.main_frame.destroy()
 
+    # Creates and displays the "Forgot Password" dialog window.
     def show_forgot_password_dialog(self):
         dialog = ForgotPasswordDialog(self.root)
+        # This waits for the dialog to be closed before the main window can be interacted with again.
         self.root.wait_window(dialog)
 
 class ForgotPasswordDialog(CTkToplevel):
