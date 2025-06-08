@@ -1,34 +1,71 @@
 from .models import User,Employee,Admin,Manager,Order,Customer,Product,Size,Brand, ProductsOrder
-
 from sqlalchemy.orm import Session, InstrumentedAttribute
-
 from sqlalchemy import select, exists, func
-
 from .connection import session
-
 from utilities import hashing
-
 from .Exeptions import NationalNumberAlreadyExistsException, UsernameAlreadyExistsException, UsernameNotExistsException, ProductAlreadyExistsException, ProductNotExistsException, CustomerNotExistsException
 from datetime import datetime, timedelta
 
-# Check if a user is exist
+# A generic function to check if a record with a specific value in a specific column exists.
 def exist_check(session:Session, by:InstrumentedAttribute, pat):
+    """
+    Checks if a value exists in a given table column.
+
+    Args:
+        session: The database session object.
+        by: The SQLAlchemy model attribute (column) to search in (e.g., User.user_name).
+        pat: The pattern or value to search for.
+
+    Returns:
+        True if the value exists, False otherwise.
+    """
+    # Creates a subquery to check for the existence of the pattern.
     subq = exists(by).where(by == pat).select()
+    # Executes the subquery and returns the boolean result.
     exist_check = session.execute(subq).scalar()
     return exist_check
 
+# Fetches a user from the database by their username.
 def user_by_username(db:Session, username:str):
+    """
+    Retrieves a single user object by their username.
+
+    Args:
+        db: The database session object.
+        username: The username to search for.
+
+    Raises:
+        UsernameNotExistsException: If no user with the given username is found.
+
+    Returns:
+        The User object if found.
+    """
     query = select(User).where(User.user_name == username)
     user = db.execute(query).first()
+    # If the query returns no result, raise an exception.
     if not user or not user[0]:
         raise UsernameNotExistsException(username)
     
+    # The result of .first() is a tuple-like Row object, so we return the first element.
     return user[0]
 
+# Fetches a user by their username and a plain-text password.
 def user_by_username_pass(session:Session, username:str, passwd:str):
+    """
+    Finds a user by username and verifies their password.
+
+    Args:
+        session: The database session object.
+        username: The user's username.
+        passwd: The user's plain-text password.
+
+    Returns:
+        The User object if the username and password match, otherwise None.
+    """
     with session as db:
-        
+        # The password is hashed before being used in the query for comparison.
         query = select(User).where(User.user_name == username).where(User.hashed_passwd == hashing(passwd))
+        # .scalar() is used to get a single value from the first row of the result.
         user = db.execute(query).scalar()
         return user
     return None
@@ -37,6 +74,7 @@ def get_all_users(session:Session):
     """Get all users from the database"""
     query = select(User)
     result = session.execute(query).all()
+    # The result is a list of Row objects, so we extract the User object from each row.
     return [user[0] for user in result]
 
 def user_by_national_id_phone(session:Session, national_id:str, phone:str) -> User:
@@ -48,13 +86,35 @@ def user_by_national_id_phone(session:Session, national_id:str, phone:str) -> Us
         )
         result = session.execute(query).first()
         if result:
-            return result[0]  # Return the first element of the tuple
+            return result[0]  # Return the first element of the tuple (the User object)
         return None
     except Exception as e:
         raise e
 
+# Creates a new user (Admin, Manager, or Employee) in the database.
 def create_new_user(session: Session, name:str, lastname:str, phone:str, national_number:str, level_type:str, username:str, passwd:str) -> User:
+    """
+    Creates a new user with a specific role (Admin, Manager, or Employee).
+
+    Args:
+        session: The database session object.
+        name: The user's first name.
+        lastname: The user's last name.
+        phone: The user's phone number.
+        national_number: The user's national ID number.
+        level_type: The user's role ('admin', 'manager', or 'employee').
+        username: The desired username.
+        passwd: The desired plain-text password.
+
+    Raises:
+        NationalNumberAlreadyExistsException: If the national number is already in use.
+        UsernameAlreadyExistsException: If the username is already in use.
+
+    Returns:
+        None. The function has a side effect of adding a user to the database.
+    """
     level_type = level_type.lower()
+    # Create the appropriate user object based on the level_type.
     if level_type == 'admin':
         new_user = Admin(name=name, lastname=lastname, phone=phone, national_number=national_number, user_name=username)
     elif level_type == 'manager':
@@ -67,6 +127,7 @@ def create_new_user(session: Session, name:str, lastname:str, phone:str, nationa
     
     
     with session as db:
+        # Check for uniqueness constraints before adding the new user.
         exist_national_id_check = exist_check(session, User.national_number, national_number)
         exist_username_check = exist_check(session, User.user_name, username)
 
@@ -76,15 +137,24 @@ def create_new_user(session: Session, name:str, lastname:str, phone:str, nationa
         if exist_username_check:
             raise UsernameAlreadyExistsException(username)
 
+        # Hash the password before storing it.
         new_user.hashed_passwd = hashing(passwd)
         db.add(new_user)
         db.commit()
             
     # TODO rais an error that the national code already exist
+    # NOTE: This function returns None even on successful creation.
     return None
         
 
+# A simple wrapper to check login credentials.
 def login_permission(session, username, passwd) -> bool:
+    """
+    Checks if a given username and password are valid.
+
+    Returns:
+        True if the credentials are correct, False otherwise.
+    """
     user = user_by_username_pass(session, username, passwd)
     if user:
         return True
@@ -92,16 +162,31 @@ def login_permission(session, username, passwd) -> bool:
         return False
     
     
+# Retrieves all records from the Employee table.
 def get_all_employees(session:Session):
+    """
+    Fetches all employee records from the database.
+
+    Returns:
+        A list of Row objects, where each row contains an Employee object.
+    """
     stmt = select(Employee)
     
     content = session.execute(stmt).fetchall()
     return content
 
+# Retrieves all employees and formats them as a list of dictionaries.
 def get_all_employees_json(session:Session):
+    """
+    Fetches all employees and converts their data to a JSON-like format (list of dicts).
+
+    Returns:
+        A list of dictionaries, where each dictionary represents an employee.
+    """
     rows = get_all_employees(session)
     json = []
     
+    # Iterate through the rows and call the to_dict() method on each Employee object.
     for row in rows:
         json.append(row[0].to_dict())
     
