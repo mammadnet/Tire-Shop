@@ -173,42 +173,42 @@ class AdminEmployeePanel(Panel):
         rule_comboBox.grid(row=0, column=2)
 
         name = StringVar()
-        name_input = create_input_fields(content_frame, render_text("نام:"), 1, 1, "name", None)
+        name_input = create_input_fields(content_frame, render_text("نام:"), 1, 1, "name", None, err_callback=self.show_error_message)
         name_input.set_textvariable(name)
         self.new_employee_inputs.append(name_input)
 
         lastname = StringVar()
-        lastname_input = create_input_fields(content_frame, render_text("نام خونوادگی:"), 1, 3, "name", None)
+        lastname_input = create_input_fields(content_frame, render_text("نام خونوادگی:"), 1, 3, "name", None, err_callback=self.show_error_message)
         lastname_input.set_textvariable(lastname)
         self.new_employee_inputs.append(lastname_input)
         
 
         national = StringVar()
-        national_input =  create_input_fields(content_frame, render_text("کد ملی:"), 2, 1, "national", None)
+        national_input =  create_input_fields(content_frame, render_text("کد ملی:"), 2, 1, "national", None, err_callback=self.show_error_message)
         national_input.set_textvariable(national)
         self.new_employee_inputs.append(national_input)
         
 
         # Second column
         phone = StringVar()
-        phone_input =  create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None)
+        phone_input =  create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None, err_callback=self.show_error_message)
         phone_input.set_textvariable(phone)
         self.new_employee_inputs.append(phone_input)
         
 
         username = StringVar()
-        username_input =  create_input_fields(content_frame, render_text("نام کاربری"), 3, 1, "username", None)
+        username_input =  create_input_fields(content_frame, render_text("نام کاربری:"), 3, 1, "username", None,just_english=True, err_callback=self.show_error_message)
         username_input.set_textvariable(username)
         self.new_employee_inputs.append(username_input)
         
 
         password = StringVar()
-        password_input =  create_input_fields(content_frame, render_text("رمز:"), 3, 3, "password", None)
+        password_input =  create_input_fields(content_frame, render_text("رمز:"), 3, 3, "password", None, char_limit=25, err_callback=self.show_error_message)
         password_input.set_textvariable(password)
         self.new_employee_inputs.append(password_input)
 
         password_repeate = StringVar()
-        password_repeate_input =  create_input_fields(content_frame, render_text("تکرار رمز عبور:"), 4, 3, "repeat_password", None)
+        password_repeate_input =  create_input_fields(content_frame, render_text("تکرار رمز عبور:"), 4, 3, "repeat_password", None,char_limit=25, err_callback=self.show_error_message)
         password_repeate_input.set_textvariable(password_repeate)
         self.new_employee_inputs.append(password_repeate_input)
 
