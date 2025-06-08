@@ -1,7 +1,7 @@
 from customtkinter import *
 from math import cos, pi, sin
 from typing import Iterator
-from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text, render_text
+from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text, render_text, is_neutral
 
 class Btn(CTkButton):
     def __init__(self, master, width, height, corner_radius=20, text='', **kwargs):
@@ -228,6 +228,7 @@ def create_input_fields(window, label_text, row, column, field_key, container:di
         label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         var = StringVar()
         input_widget = Input(frame, 15, 150, 35, None, var, placeholder_empty=False, just_english=just_english, char_limit=char_limit, show_err_callback=err_callback)
+        input_widget.set_textvariable(var)
         input_widget.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         if container is not None:
             container[field_key] = input_widget
