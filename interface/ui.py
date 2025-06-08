@@ -133,7 +133,7 @@ class ForgotPasswordDialog(CTkToplevel):
         self.title("فراموشی رمز عبور")
         self.geometry("480x480")  # Larger window
         self.transient(parent)
-        self.grab_set()
+        self.after(10, self.grab_set)
         self.verified_user = None
 
         # Remove black margin by using only one main frame, fill all
@@ -147,7 +147,7 @@ class ForgotPasswordDialog(CTkToplevel):
         main_frame.grid_columnconfigure(0, weight=1)
 
         # Title
-        title_label = CTkLabel(main_frame, text="بازیابی رمز عبور", font=(None, 28, 'bold'))
+        title_label = CTkLabel(main_frame, text=render_text("بازیابی رمز عبور"), font=(None, 28, 'bold'))
         title_label.grid(row=0, column=0, pady=(30, 30))
 
         self.national_id = StringVar()
@@ -159,15 +159,15 @@ class ForgotPasswordDialog(CTkToplevel):
         input_frame.grid_columnconfigure(0, weight=1)
 
         # National ID
-        national_id_label = CTkLabel(input_frame, text="کد ملی:", font=(None, 16))
+        national_id_label = CTkLabel(input_frame, text=render_text("کد ملی:"), font=(None, 16))
         national_id_label.grid(row=0, column=0, pady=(0, 5), sticky='w')
-        national_id_entry = CTkEntry(input_frame, textvariable=self.national_id, width=340, height=44, font=(None, 15), placeholder_text="کد ملی را وارد کنید")
+        national_id_entry = CTkEntry(input_frame, textvariable=self.national_id, width=340, height=44, font=(None, 15), placeholder_text=render_text("کد ملی را وارد کنید"))
         national_id_entry.grid(row=1, column=0, pady=(0, 20))
 
         # Phone
-        phone_label = CTkLabel(input_frame, text="شماره تلفن:", font=(None, 16))
+        phone_label = CTkLabel(input_frame, text=render_text("شماره تلفن:"), font=(None, 16))
         phone_label.grid(row=2, column=0, pady=(0, 5), sticky='w')
-        phone_entry = CTkEntry(input_frame, textvariable=self.phone, width=340, height=44, font=(None, 15), placeholder_text="شماره تلفن را وارد کنید")
+        phone_entry = CTkEntry(input_frame, textvariable=self.phone, width=340, height=44, font=(None, 15), placeholder_text=render_text("شماره تلفن را وارد کنید"))
         phone_entry.grid(row=3, column=0, pady=(0, 20))
 
         # Check info button (larger, new text)
@@ -184,14 +184,14 @@ class ForgotPasswordDialog(CTkToplevel):
         self.pass_frame.grid_remove()
         self.pass_frame.grid_columnconfigure(0, weight=1)
 
-        new_pass_label = CTkLabel(self.pass_frame, text="رمز عبور جدید:", font=(None, 16))
+        new_pass_label = CTkLabel(self.pass_frame, text=render_text("رمز عبور جدید:"), font=(None, 16))
         new_pass_label.grid(row=0, column=0, pady=(0, 5), sticky='w')
-        new_pass_entry = CTkEntry(self.pass_frame, textvariable=self.new_pass_var, width=340, height=44, font=(None, 15), show='*', placeholder_text="رمز عبور جدید را وارد کنید")
+        new_pass_entry = CTkEntry(self.pass_frame, textvariable=self.new_pass_var, width=340, height=44, font=(None, 15), show='*', placeholder_text=render_text("رمز عبور جدید را وارد کنید"))
         new_pass_entry.grid(row=1, column=0, pady=(0, 15))
 
-        confirm_pass_label = CTkLabel(self.pass_frame, text="تکرار رمز عبور:", font=(None, 16))
+        confirm_pass_label = CTkLabel(self.pass_frame, text=render_text("تکرار رمز عبور:"), font=(None, 16))
         confirm_pass_label.grid(row=2, column=0, pady=(0, 5), sticky='w')
-        confirm_pass_entry = CTkEntry(self.pass_frame, textvariable=self.confirm_pass_var, width=340, height=44, font=(None, 15), show='*', placeholder_text="تکرار رمز عبور جدید")
+        confirm_pass_entry = CTkEntry(self.pass_frame, textvariable=self.confirm_pass_var, width=340, height=44, font=(None, 15), show='*', placeholder_text=render_text("تکرار رمز عبور جدید"))
         confirm_pass_entry.grid(row=3, column=0, pady=(0, 15))
 
         self.set_pass_btn = Btn(self.pass_frame, 220, 44, 20, "ثبت رمز جدید")
@@ -212,7 +212,7 @@ class ForgotPasswordDialog(CTkToplevel):
         self.pass_frame.grid_remove()
         self.verified_user = None
         if not national_id or not phone:
-            self.show_message("لطفا تمام فیلدها را پر کنید", error=True)
+            self.show_message(render_text("لطفا تمام فیلدها را پر کنید"), error=True)
             return
         try:
             from database import session
@@ -222,27 +222,27 @@ class ForgotPasswordDialog(CTkToplevel):
                 self.verified_user = user
                 self.show_password_reset_window(user)
             else:
-                self.show_message("کاربری با این مشخصات یافت نشد.\nلطفا کد ملی و شماره تلفن را با دقت وارد کنید.", error=True)
+                self.show_message(render_text("کاربری با این مشخصات یافت نشد.\nلطفا کد ملی و شماره تلفن را با دقت وارد کنید."), error=True)
         except Exception as e:
-            self.show_message(f"خطا در جستجوی کاربر: {str(e)}", error=True)
+            self.show_message(render_text("خطا در جستجوی کاربر:"), error=True)
 
     def show_password_reset_window(self, user):
         win = CTkToplevel(self)
         win.title("تغییر رمز عبور")
         win.geometry("400x320")
         win.transient(self)
-        win.grab_set()
+        win.after(10, win.grab_set)
         win.grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
         win.grid_columnconfigure(0, weight=1)
         title = CTkLabel(win, text=f"نام کاربری: {user.user_name}", font=(None, 18, 'bold'))
         title.grid(row=0, column=0, pady=(20, 10))
         new_pass_var = StringVar()
         confirm_pass_var = StringVar()
-        new_pass_label = CTkLabel(win, text="رمز عبور جدید:", font=(None, 15))
+        new_pass_label = CTkLabel(win, text=render_text("رمز عبور جدید:"), font=(None, 15))
         new_pass_label.grid(row=1, column=0, pady=(0, 5), sticky='w', padx=40)
-        new_pass_entry = CTkEntry(win, textvariable=new_pass_var, width=260, height=40, font=(None, 14), show='*', placeholder_text="رمز عبور جدید را وارد کنید")
+        new_pass_entry = CTkEntry(win, textvariable=new_pass_var, width=260, height=40, font=(None, 14), show='*', placeholder_text=render_text("رمز عبور جدید را وارد کنید"))
         new_pass_entry.grid(row=2, column=0, pady=(0, 10))
-        confirm_pass_label = CTkLabel(win, text="تکرار رمز عبور:", font=(None, 15))
+        confirm_pass_label = CTkLabel(win, text=render_text("تکرار رمز عبور:"), font=(None, 15))
         confirm_pass_label.grid(row=3, column=0, pady=(0, 5), sticky='w', padx=40)
         confirm_pass_entry = CTkEntry(win, textvariable=confirm_pass_var, width=260, height=40, font=(None, 14), show='*', placeholder_text="تکرار رمز عبور جدید")
         confirm_pass_entry.grid(row=4, column=0, pady=(0, 10))
@@ -252,22 +252,22 @@ class ForgotPasswordDialog(CTkToplevel):
             new_pass = new_pass_var.get().strip()
             confirm_pass = confirm_pass_var.get().strip()
             if not new_pass or not confirm_pass:
-                msg_label.configure(text="لطفا هر دو فیلد رمز عبور را پر کنید.", text_color="firebrick1")
+                msg_label.configure(text=render_text("لطفا هر دو فیلد رمز عبور را پر کنید."), text_color="firebrick1")
                 return
             if new_pass != confirm_pass:
-                msg_label.configure(text="رمزهای عبور مطابقت ندارند!", text_color="firebrick1")
+                msg_label.configure(text=render_text("رمزهای عبور مطابقت ندارند!"), text_color="firebrick1")
                 return
             if len(new_pass) < 4:
-                msg_label.configure(text="رمز عبور باید حداقل ۴ کاراکتر باشد.", text_color="firebrick1")
+                msg_label.configure(text=render_text("رمز عبور باید حداقل ۴ کاراکتر باشد."), text_color="firebrick1")
                 return
             try:
                 from database import session
                 from database.crud import update_user_by_username
                 update_user_by_username(session, user.user_name, password=new_pass)
-                msg_label.configure(text="رمز عبور با موفقیت تغییر کرد!", text_color="green")
+                msg_label.configure(text=render_text("رمز عبور با موفقیت تغییر کرد!"), text_color="green")
                 win.after(1500, win.destroy)
             except Exception as e:
-                msg_label.configure(text=f"خطا در تغییر رمز عبور: {str(e)}", text_color="firebrick1")
+                msg_label.configure(text=render_text("خطا در تغییر رمز عبور:"), text_color="firebrick1")
         reset_btn = Btn(win, 180, 40, 18, "ثبت رمز جدید")
         reset_btn.grid(row=6, column=0, pady=10)
         reset_btn.configure(font=(None, 15))
@@ -278,21 +278,21 @@ class ForgotPasswordDialog(CTkToplevel):
         new_pass = self.new_pass_var.get().strip()
         confirm_pass = self.confirm_pass_var.get().strip()
         if not new_pass or not confirm_pass:
-            self.show_message("لطفا هر دو فیلد رمز عبور را پر کنید.", error=True)
+            self.show_message(render_text("لطفا هر دو فیلد رمز عبور را پر کنید."), error=True)
             return
         if new_pass != confirm_pass:
-            self.show_message("رمزهای عبور مطابقت ندارند!", error=True)
+            self.show_message(render_text("رمزهای عبور مطابقت ندارند!"), error=True)
             return
         if len(new_pass) < 4:
-            self.show_message("رمز عبور باید حداقل ۴ کاراکتر باشد.", error=True)
+            self.show_message(render_text("رمز عبور باید حداقل ۴ کاراکتر باشد."), error=True)
             return
         try:
             from database import session
             from database.crud import update_user_by_username
             update_user_by_username(session, self.verified_user.user_name, password=new_pass)
-            self.show_message("رمز عبور با موفقیت تغییر کرد!", error=False)
+            self.show_message(render_text("رمز عبور با موفقیت تغییر کرد!"), error=False)
         except Exception as e:
-            self.show_message(f"خطا در تغییر رمز عبور: {str(e)}", error=True)
+            self.show_message(render_text("خطا در تغییر رمز عبور:"), error=True)
 
     def show_message(self, msg, error=False):
         # Show a temporary message in a popup window
@@ -300,7 +300,7 @@ class ForgotPasswordDialog(CTkToplevel):
         win.title("پیام")
         win.geometry("340x120")
         win.transient(self)
-        win.grab_set()
+        win.after(10, win.grab_set)
         label = CTkLabel(win, text=msg, text_color="firebrick1" if error else "green", font=(None, 15), wraplength=320)
         label.pack(expand=True, fill='both', padx=20, pady=20)
         win.after(2500, win.destroy)
