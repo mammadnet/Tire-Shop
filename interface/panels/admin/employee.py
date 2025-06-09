@@ -174,12 +174,12 @@ class AdminEmployeePanel(Panel):
         rule_comboBox.grid(row=0, column=2)
 
         name = StringVar()
-        name_input = create_input_fields(content_frame, render_text("نام:"), 1, 1, "name", None, show_err_callback=self.show_error_message)
+        name_input = create_input_fields(content_frame, render_text("نام:"), 1, 1, "name", None,just_text=True, show_err_callback=self.show_error_message)
         name_input.set_textvariable(name)
         self.new_employee_inputs.append(name_input)
 
         lastname = StringVar()
-        lastname_input = create_input_fields(content_frame, render_text("نام خونوادگی:"), 1, 3, "name", None, show_err_callback=self.show_error_message)
+        lastname_input = create_input_fields(content_frame, render_text("نام خونوادگی:"), 1, 3, "name", None,just_text=True, show_err_callback=self.show_error_message)
         lastname_input.set_textvariable(lastname)
         self.new_employee_inputs.append(lastname_input)
         
@@ -335,11 +335,11 @@ class AdminEmployeePanel(Panel):
         if not self.edit_user_inputs:
             self.edit_user_inputs = {}
         
-        self.create_input_field(content_frame, render_text("نام:"), 1, 1, 'name')
-        self.create_input_field(content_frame, render_text("نام خانوادگی:"), 1, 3, 'lastname')
+        self.create_input_field(content_frame, render_text("نام:"), 1, 1, 'name', just_text=True, show_err_callback=self.show_error_message)
+        self.create_input_field(content_frame, render_text("نام خانوادگی:"), 1, 3, 'lastname', just_text=True, show_err_callback=self.show_error_message)
         self.create_input_field(content_frame, render_text("شماره ملی:"), 2, 1, 'national', just_number=True, just_english=True, show_err_callback=self.show_error_message)
         self.create_input_field(content_frame, render_text("شماره تلفن:"), 2, 3, 'phone', just_number=True,just_english=True, show_err_callback=self.show_error_message)
-        self.create_input_field(content_frame, render_text("نام کاربری:"), 3, 1, 'username')
+        self.create_input_field(content_frame, render_text("نام کاربری:"), 3, 1, 'username', show_err_callback=self.show_error_message, just_english=True)
         
         
         update_btn = Btn(content_frame, 160, 45)
