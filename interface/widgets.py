@@ -71,7 +71,7 @@ class Input(CTkEntry):
                 if self.err_message:
                     self.show_err_callback(self.err_message)
                 else:
-                    message = f'Cannot be more than {self.char_limit} characters.'
+                    message = render_text("بیش از حد بودن کاراکتر های وارد شده")
                     self.show_err_callback(message)
     
     def _set_limit(self):
@@ -105,7 +105,7 @@ class Input(CTkEntry):
                 number = False
                 
             if (not number) and self.show_err_callback:
-                message = 'Only numbers are allowed.'
+                message = render_text("وارد کردن عدد")
                 self.show_err_callback(message)
         
     def _set_english_only(self, *k):
@@ -125,7 +125,7 @@ class Input(CTkEntry):
                 arabic = True
                 
             if arabic and self.show_err_callback:
-                message = 'Only English characters are allowed.'
+                message = render_text("وارد کردن کاراکتر انگلیسی")
                 self.show_err_callback(message)
     
     def _set_just_english(self):

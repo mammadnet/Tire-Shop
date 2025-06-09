@@ -242,15 +242,15 @@ class ManagerEmployeePanel(Panel):
                         username:str=None, password:str=None, repeat_password:str=None):
                     
         if not (name and lastname and national and phone and username and password and repeat_password):
-            show_err_callback("Inputs cannot be empty.")
+            show_err_callback(render_text("خالی بودن ورودی"))
             return False
         
         if not (password == repeat_password):
-            show_err_callback("password and repeated password should be the same")
+            show_err_callback(render_text("مساوی نبودن رمز عبور و تکرار آن"))
             return False
         
         if len(password) < 8:
-            show_err_callback("The minimum number of characters in the password must be 8")
+            show_err_callback(render_text("کم بودن تعداد کاراکتر ها"))
             return False
         
         return True
