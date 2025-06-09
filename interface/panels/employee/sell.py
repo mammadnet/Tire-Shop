@@ -39,8 +39,7 @@ class EmployeeSellPanel(Panel):
         self.success_message_label = CTkLabel(self, text_color="green")
         
         # # Create table 
-        # self.table = self.initialize_table(self)
-        # self.insert_content_to_table(self.table, get_all_products_json(session))
+        self.table = self.initialize_table(self)
         
         self.sell_frame = None
         self.sell_inputs = {}
@@ -55,7 +54,19 @@ class EmployeeSellPanel(Panel):
         # Show table by default
         self.current_view = None
         
-
+    def toggle_view(self, view_name):
+        if view_name == 'list' and self.current_view != 'list':
+            if self.sell_frame:
+                self.sell_frame.place_forget()
+            # Show the table
+            self.insert_content_to_table(self.table, get_all_products_json(session))
+            self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            self.current_view = 'list'
+        elif view_name == 'sell' and self.current_view != 'sell':
+            if hasattr(self, 'table'):
+                self.table.place_forget()
+            self.sell(self)
+            self.current_view = 'sell'
     #--------------------------------------------------------------------
 
     def initialize_table(self, window):
