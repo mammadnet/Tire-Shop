@@ -26,10 +26,6 @@ class EmployeeSellPanel(Panel):
         sell_btn.grid(row=0,column=0 ,sticky="e")
         sell_btn.set_action(lambda e: self.toggle_view('sell'))
         
-        multi_sell_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")    
-        multi_sell_btn.set_text("فروش چند محصول", "white", 13)
-        multi_sell_btn.grid(row=1,column=0 , sticky="e")
-        
         product_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
         product_list_btn.set_text("لیست محصولات", "white", 13)
         product_list_btn.grid(row=2,column=0 , sticky="e")
