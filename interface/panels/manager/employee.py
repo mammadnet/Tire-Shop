@@ -6,6 +6,7 @@ from database import remove_user_by_username, update_user_by_username, user_by_u
 from database import get_all_employee_usernames
 from utilities import is_windows
 from tkinter import ttk
+from awesometkinter.bidirender import isarabic, derender_text
 
 
 
@@ -310,11 +311,13 @@ class ManagerEmployeePanel(Panel):
             
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
-        content_frame.columnconfigure((0, 3), weight=1, pad=40, uniform='a')
+        content_frame.columnconfigure((1,2,3), weight=10)
+        content_frame.columnconfigure(0, weight=1, pad=20)
+        content_frame.columnconfigure(4, weight=1, pad=20)
 
         # Label and dropdown to select user by username
         select_user_label = CTkLabel(content_frame, text="Username:", text_color="white", font=(None, 15))
-        select_user_label.grid(row=0, column=0)
+        select_user_label.grid(row=0, column=1)
 
         usernames = get_all_employee_usernames(session)  # Fetch list of usernames
         selected_username = StringVar()
@@ -322,18 +325,18 @@ class ManagerEmployeePanel(Panel):
             self.edit_user_combobox.grid_forget()
             self.edit_user_combobox.destroy()
         self.edit_user_combobox = DropDown(content_frame, values=usernames, variable=selected_username, command=self.load_user_data)
-        self.edit_user_combobox.grid(row=0, column=1)
+        self.edit_user_combobox.grid(row=0, column=2)
 
         # Dictionary to hold Input objects
         if not self.edit_user_inputs:
             self.edit_user_inputs = {}
         
-        self.create_input_field(content_frame, "Name:", 1, 0, 'name')
-        self.create_input_field(content_frame, "Lastname:", 1, 2, 'lastname')
-        self.create_input_field(content_frame, "National Number:", 2, 0, 'national')
-        self.create_input_field(content_frame, "Phone Number:", 2, 2, 'phone')
-        self.create_input_field(content_frame, "Username:", 3, 0, 'username')
-        
+        create_input_fields(content_frame, render_text("نام:"), 1, 1, 'name', container=self.edit_user_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("نام خانوادگی:"), 1, 3, 'lastname', container=self.edit_user_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, 'national', container=self.edit_user_inputs, just_english=True, just_number=True, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, 'phone', container=self.edit_user_inputs, just_english=True, just_number=True, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("نام کاربری:"), 3, 1, 'username', container=self.edit_user_inputs, just_english=True, show_err_callback=self.show_error_message)
+
         
         
         update_btn = Btn(content_frame, 160, 45)
@@ -371,11 +374,11 @@ class ManagerEmployeePanel(Panel):
     def load_user_data(self, username):
         user_data = user_by_username(session, username)
         if user_data:
-            self.edit_user_inputs['name'].set_placeholder_text(user_data.name)
-            self.edit_user_inputs['lastname'].set_placeholder_text(user_data.lastname)
-            self.edit_user_inputs['national'].set_placeholder_text(user_data.national_number)
-            self.edit_user_inputs['phone'].set_placeholder_text(user_data.phone)
-            self.edit_user_inputs['username'].set_placeholder_text(user_data.user_name)
+            self.edit_user_inputs['name'].set_placeholder_text(derender_text(user_data.name) if isarabic(user_data.name) else user_data.name)
+            self.edit_user_inputs['lastname'].set_placeholder_text(derender_text(user_data.lastname) if isarabic(user_data.lastname) else user_data.lastname)
+            self.edit_user_inputs['national'].set_placeholder_text(derender_text(user_data.national_number) if isarabic(user_data.national_number) else user_data.national_number)
+            self.edit_user_inputs['phone'].set_placeholder_text(derender_text(user_data.phone) if isarabic(user_data.phone) else user_data.phone)
+            self.edit_user_inputs['username'].set_placeholder_text(derender_text(user_data.user_name) if isarabic(user_data.user_name) else user_data.user_name)
             # self.edit_user_inputs['password'].set_placeholder_text(user_data.password)
 
     
