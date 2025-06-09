@@ -158,9 +158,9 @@ class EmployeeSellPanel(Panel):
         self.sell_userinfo_combobox = DropDown(content_frame, values=self.user_info_combo_items, width=250, variable=selected_customer, command=self.update_customer_info_inputs)
         self.sell_userinfo_combobox.grid(row=4, column=2)
         
-        create_input_fields(content_frame, render_text("نام مشتری:"), 5, 1, 'customer_name', container=self.customer_sell_inputs)
+        create_input_fields(content_frame, render_text("نام مشتری:"), 5, 1, 'customer_name',just_text=True, container=self.customer_sell_inputs, show_err_callback=self.show_error_message)
         create_input_fields(content_frame, render_text("تلفن مشتری:"), 5, 3, 'customer_phone',just_english=True, just_number=True, container=self.customer_sell_inputs, show_err_callback=self.show_error_message)
-        create_input_fields(content_frame, render_text("آدرس مشتری:"), 6, 1, 'customer_address', container=self.customer_sell_inputs)
+        create_input_fields(content_frame, render_text("آدرس مشتری:"), 6, 1, 'customer_address', container=self.customer_sell_inputs, char_limit=30, show_err_callback=self.show_error_message)
         create_input_fields(content_frame, render_text("شماره ملی:"), 6, 3, 'customer_national_number',just_english=True, just_number=True, container=self.customer_sell_inputs, show_err_callback=self.show_error_message)
 
 
