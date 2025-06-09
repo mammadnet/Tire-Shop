@@ -20,7 +20,7 @@ class Btn(CTkButton):
             self.configure(text=text)
 
 class Input(CTkEntry):
-    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True,just_english:bool=False, **kwargs):
+    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True,just_english:bool=False,just_number=False, **kwargs):
         super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text,show=show, **kwargs)
         add_bidi_support_for_entry(self._entry)
         
@@ -33,10 +33,12 @@ class Input(CTkEntry):
         self.placeholder_text = placeholder_text
         self.placeholder_empty = placeholder_empty
         self.just_english = just_english
+        self.just_number = just_number
         
         self._set_limit()
         self._set_just_english()
         self._set_justify()
+        self._set_just_number()
         
     def disable(self):
         self.configure(state='disabled')
@@ -53,6 +55,8 @@ class Input(CTkEntry):
         self._set_limit()
         self._set_just_english()
         self._set_justify()
+        self._set_just_number()
+        
         
     def _entry_update_callback(self, *k):
         val = self.textvariable.get()
@@ -79,6 +83,26 @@ class Input(CTkEntry):
     def _set_justify(self):
         if not self.just_english:
             self.textvariable.trace_add('write', self._add_justify_for_arabic)
+    def _set_just_number(self):
+        if self.just_number:
+            self.textvariable.trace_add('write', self.set_just_number)
+        
+    
+    def set_just_number(self, *k):
+        val = self.textvariable.get()
+        number = True
+        if val:
+            if not val[0].isdigit():
+                self.textvariable.set(val[1:])
+                number = False
+            
+            elif not val[-1].isdigit():
+                self.textvariable.set(val[:-1])
+                number = False
+                
+            if (not number) and self.show_err_callback:
+                message = 'Only numbers are allowed.'
+                self.show_err_callback(message)
         
     def _set_english_only(self, *k):
         val = self.textvariable.get()
@@ -220,14 +244,14 @@ def create_updatable_labels(window, label_name, row, column, field_key, containe
         return label_val
     return container[field_key]
 
-def create_input_fields(window, label_text, row, column, field_key, container:dict,font_size=13, char_limit = 20,just_english=False, err_callback=None, **kwargs):
+def create_input_fields(window, label_text, row, column, field_key, container:dict,font_size=13, char_limit = 20,just_english=False,just_number=False, show_err_callback=None, **kwargs):
     if (container is None) or field_key not in container:
         frame = CTkFrame(window, fg_color="transparent", bg_color="transparent")
         frame.grid(row=row, column=column, sticky="ew", **kwargs)
         label = CTkLabel(frame, text=label_text, text_color="white", font=(None, font_size))
         label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         var = StringVar()
-        input_widget = Input(frame, 15, 150, 35, None, var, placeholder_empty=False, just_english=just_english, char_limit=char_limit, show_err_callback=err_callback)
+        input_widget = Input(frame, 15, 150, 35, None, var, placeholder_empty=False, just_english=just_english, just_number=just_number, char_limit=char_limit, show_err_callback=show_err_callback)
         input_widget.set_textvariable(var)
         input_widget.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         if container is not None:
