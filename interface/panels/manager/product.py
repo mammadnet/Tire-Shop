@@ -1,6 +1,6 @@
 from customtkinter import *
 from ..panel import Panel
-from ...widgets import Item_button, Input, Btn, DropDown, render_text
+from ...widgets import Item_button, Input, Btn, DropDown, render_text, create_input_fields
 from database import session, create_product
 from database import get_all_products_json, delete_product_by_name_and_size, get_product_by_id_json, update_product_by_id
 from utilities import is_windows
@@ -147,56 +147,38 @@ class ManagerProductPanel(Panel):
             
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
-        content_frame.columnconfigure((0, 3), weight=1, uniform='a')
+        content_frame.columnconfigure((1,2,3), weight=10)
+        content_frame.columnconfigure(0, weight=1)
+        content_frame.columnconfigure(4, weight=1)
 
-        name_label = CTkLabel(content_frame, text=render_text("برند:"), text_color="white", font=(None, 13))
-        name_label.grid(row=1, column=1, sticky='e', ipadx=60)
         name = StringVar()
-        name_input = Input(content_frame, 15, 150, 35, "Name", name, just_english=True, show_err_callback=self.show_error_message)
+        name_input = create_input_fields(content_frame, render_text("نام محصول:"), 1, 1, 'name',None, just_english=True, show_err_callback=self.show_error_message)
         name_input.set_textvariable(name)
-        name_input.grid(row=1, column=0)
         self.new_product_inputs.append(name_input)
 
-        
-        # قیمت
         price = StringVar()
-        price_label = CTkLabel(content_frame, text=render_text("قیمت:"), text_color="white", font=(None, 13))
-        price_label.grid(row=2, column=1, sticky='e', ipadx=60)
-        price_input = Input(content_frame, 15, 150, 35, "Price", price, just_english=True, show_err_callback=self.show_error_message)
+        price_input = create_input_fields(content_frame, render_text("قیمت:"), 2, 1, 'price',None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         price_input.set_textvariable(price)
-        price_input.grid(row=2, column=0)
         self.new_product_inputs.append(price_input)
-        # تعداد
+
         quantity = StringVar()
-        quantity_label = CTkLabel(content_frame, text=render_text("تعداد:"), text_color="white", font=(None, 13))
-        quantity_label.grid(row=3, column=1, sticky='e', ipadx=60)
-        quantity_input = Input(content_frame, 15, 150, 35, "Quantity", quantity, just_english=True, show_err_callback=self.show_error_message)
+        quantity_input = create_input_fields(content_frame, render_text("تعداد:"), 3, 1, 'quantity',None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         quantity_input.set_textvariable(quantity)
-        quantity_input.grid(row=3, column=0)
         self.new_product_inputs.append(quantity_input)
-        # پهنا
+        
         width = StringVar()
-        width_label = CTkLabel(content_frame, text=render_text("پهنا:"), text_color="white", font=(None, 13))
-        width_label.grid(row=1, column=3, sticky='e', ipadx=60)
-        width_input = Input(content_frame, 15, 150, 35, "Width", width, just_english=True, show_err_callback=self.show_error_message)
+        width_input = create_input_fields(content_frame, render_text("پهنا:"), 1, 3, 'width',None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         width_input.set_textvariable(width)
-        width_input.grid(row=1, column=2)
         self.new_product_inputs.append(width_input)
-        # نسبت
+        
         ratio = StringVar()
-        ratio_label = CTkLabel(content_frame, text=render_text("نسبت:"), text_color="white", font=(None, 13))
-        ratio_label.grid(row=2, column=3, sticky='e', ipadx=60)
-        ratio_input = Input(content_frame, 15, 150, 35, "Ratio", ratio, just_english=True, show_err_callback=self.show_error_message)
+        ratio_input = create_input_fields(content_frame, render_text("نسبت:"), 2, 3, 'ratio',None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         ratio_input.set_textvariable(ratio)
-        ratio_input.grid(row=2, column=2, sticky='e')
-        self.new_product_inputs.append(ratio_input)
-        # رینگ
         rim = StringVar()
-        rim_label = CTkLabel(content_frame, text=render_text("رینگ:"), text_color="white", font=(None, 13))
-        rim_label.grid(row=3, column=3, sticky='e', ipadx=60)
-        rim_input = Input(content_frame, 15, 150, 35, "Rim", rim, just_english=True, show_err_callback=self.show_error_message)
+        self.new_product_inputs.append(ratio_input)
+
+        rim_input = create_input_fields(content_frame, render_text("رینگ:"), 3, 3, 'rim',None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         rim_input.set_textvariable(rim)
-        rim_input.grid(row=3, column=2)
         self.new_product_inputs.append(rim_input)
         
         btn = Btn(content_frame, 160, 45)
@@ -292,11 +274,13 @@ class ManagerProductPanel(Panel):
             
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
-        content_frame.columnconfigure((0, 3), weight=1, pad=40, uniform='a')
+        content_frame.columnconfigure((1,2, 3), weight=10)
+        content_frame.columnconfigure(0, weight=1)
+        content_frame.columnconfigure(4, weight=1)
 
         # Label and dropdown to select product by brand and size
         select_product_label = CTkLabel(content_frame, text="Product:", text_color="white", font=(None, 15))
-        select_product_label.grid(row=0, column=0)
+        select_product_label.grid(row=0, column=1)
 
         products = get_all_products_json(session)
         combo_items = [f'{product["id"]}:{product["brand"]}:{product["size"]["width"]}/{product["size"]["ratio"]}/{product["size"]["rim"]}' for product in products]
@@ -306,14 +290,14 @@ class ManagerProductPanel(Panel):
             self.edit_product_combobox.destroy()
 
         self.edit_product_combobox = DropDown(content_frame, values=combo_items, width=250, command=self.load_product_data)
-        self.edit_product_combobox.grid(row=0, column=1)
+        self.edit_product_combobox.grid(row=0, column=2)
 
-        self.create_input_field(content_frame, render_text("برند:"), 1, 0, 'brand')
-        self.create_input_field(content_frame, render_text("پهنا:"), 1, 2, 'width')
-        self.create_input_field(content_frame, render_text("نسبت:"), 2, 0, 'ratio')
-        self.create_input_field(content_frame, render_text("رینگ:"), 2, 2, 'rim')
-        self.create_input_field(content_frame, render_text("قیمت:"), 3, 0, 'price')
-        self.create_input_field(content_frame, render_text("تعداد:"), 3, 2, 'quantity')
+        create_input_fields(content_frame, render_text("برند:"), 1, 1, 'brand',container=self.edit_product_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("قیمت:"), 2, 1, 'price', just_english=True, just_number=True, container=self.edit_product_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("تعداد:"), 3, 1, 'quantity', just_english=True, just_number=True, container=self.edit_product_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("پهنا:"), 1, 3, 'width', just_english=True, just_number=True, container=self.edit_product_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("نسبت:"), 2, 3, 'ratio', just_english=True, just_number=True, container=self.edit_product_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("رینگ:"), 3, 3, 'rim', just_english=True, just_number=True, container=self.edit_product_inputs, show_err_callback=self.show_error_message)
 
         update_btn = Btn(content_frame, 160, 45, text='ویرایش محصول')
         update_btn.configure(command=lambda: self.edit_product_action(
@@ -326,17 +310,6 @@ class ManagerProductPanel(Panel):
         update_btn.grid(row=6, column=0, columnspan=4)
         # Helper function to create an input field
         
-        
-    def create_input_field(self, window, label_text, row, column, field_key, **kwargs):
-        if field_key not in self.edit_product_inputs:
-            label = CTkLabel(window, text=label_text, text_color="white", font=(None, 13))
-            label.grid(row=row, column=column+1, **kwargs)
-            var = StringVar()
-            input_widget = Input(window, 15, 150, 35, None, var, placeholder_empty=False)
-            input_widget.set_textvariable(var)
-            input_widget.textvariable.set('')
-            input_widget.grid(row=row, column=column)
-            self.edit_product_inputs[field_key] = input_widget
             
     def edit_product_action(self, product_info, show_error_callback, show_success_callback):
         try:
