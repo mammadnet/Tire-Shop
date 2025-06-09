@@ -1,6 +1,6 @@
 from customtkinter import *
 from ..panel import Panel
-from ...widgets import Item_button, Input, Btn, DropDown, render_text
+from ...widgets import Item_button, Input, Btn, DropDown, render_text, create_input_fields
 from database import session, get_all_employees_json, create_new_user
 from database import remove_user_by_username, update_user_by_username, user_by_username
 from database import get_all_employee_usernames
@@ -163,68 +163,48 @@ class ManagerEmployeePanel(Panel):
         content_frame = CTkFrame(window, fg_color="#5B5D76")
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
-        content_frame.columnconfigure((0, 3), weight=1, pad=20, uniform='a')
+        content_frame.columnconfigure((1,2,3), weight=10, pad=20)
+        content_frame.columnconfigure(0, weight=1, pad=20)
+        content_frame.columnconfigure(4, weight=1, pad=20)
 
-
-        name_label = CTkLabel(content_frame, text="Name:", text_color="white", font=(None, 13))
-        name_label.grid(row=1, column=0)
         name = StringVar()
-        name_input = Input(content_frame, 15, 150, 35, "Name", name)
+        name_input = create_input_fields(content_frame, render_text("نام:"), 1, 1, "name",None, show_err_callback=self.show_error_message)
         name_input.set_textvariable(name)
-        name_input.grid(row=1, column=1)
         self.new_employee_inputs.append(name_input)
 
-        lastname_label = CTkLabel(content_frame, text="Lastname:", text_color="white", font=(None, 13))
-        lastname_label.grid(row=1, column=2)
         lastname = StringVar()
-        lastname_input = Input(content_frame, 15, 150, 35, "Lastname", lastname)
+        lastname_input = create_input_fields(content_frame, render_text("نام خانوادگی:"), 1, 3, "lastname", None, show_err_callback=self.show_error_message)
         lastname_input.set_textvariable(lastname)
-        lastname_input.grid(row=1, column=3)
         self.new_employee_inputs.append(lastname_input)
         
 
-        national_label = CTkLabel(content_frame, text="National Number:", text_color="white", font=(None, 13))
-        national_label.grid(row=2, column=0)
         national = StringVar()
-        national_input = Input(content_frame, 15, 150, 35, "National Number", national)
+        national_input = create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, "national", None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         national_input.set_textvariable(national)
-        national_input.grid(row=2, column=1)
         self.new_employee_inputs.append(national_input)
         
 
-        # Second column
-        phone_label = CTkLabel(content_frame, text="Phone Number:", text_color="white", font=(None, 13))
-        phone_label.grid(row=2, column=2)
+        
         phone = StringVar()
-        phone_input = Input(content_frame, 15, 150, 35, "Phone Number", phone)
+        phone_input = create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         phone_input.set_textvariable(phone)
-        phone_input.grid(row=2, column=3)
         self.new_employee_inputs.append(phone_input)
         
 
-        username_label = CTkLabel(content_frame, text="Username:", text_color="white", font=(None, 13))
-        username_label.grid(row=3, column=0)
         username = StringVar()
-        username_input = Input(content_frame, 15, 150, 35, "Username", username)
+        username_input = create_input_fields(content_frame, render_text("نام کاربری:"), 3, 1, "username", None, just_english=True, show_err_callback=self.show_error_message)
         username_input.set_textvariable(username)
-        username_input.grid(row=3, column=1)
         self.new_employee_inputs.append(username_input)
         
 
-        password_label = CTkLabel(content_frame, text="Password:", text_color="white", font=(None, 13))
-        password_label.grid(row=3, column=2)
         password = StringVar()
-        password_input = Input(content_frame, 15, 150, 35, "password", password)
+        password_input = create_input_fields(content_frame, render_text("رمز عبور:"), 3, 3, "password", None, show_err_callback=self.show_error_message)
         password_input.set_textvariable(password)
-        password_input.grid(row=3, column=3)
         self.new_employee_inputs.append(password_input)
 
-        password_repeate_label = CTkLabel(content_frame, text="Repeat Password:", text_color="white", font=(None, 13))
-        password_repeate_label.grid(row=4, column=2)
         password_repeate = StringVar()
-        password_repeate_input = Input(content_frame, 15, 150, 35, "repeat password", password_repeate)
+        password_repeate_input = create_input_fields(content_frame, render_text("تکرار رمز:"), 4, 3, "password_repeate", None, show_err_callback=self.show_error_message)
         password_repeate_input.set_textvariable(password_repeate)
-        password_repeate_input.grid(row=4, column=3)
         self.new_employee_inputs.append(password_repeate_input)
 
         btn = Btn(content_frame, 160, 45)
