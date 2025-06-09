@@ -306,7 +306,6 @@ class ManagerProductPanel(Panel):
             self.show_success_message
         ))
         update_btn.configure(font=(None, 16))
-        update_btn.set_text(text="Update Product")
         update_btn.grid(row=6, column=0, columnspan=4)
         # Helper function to create an input field
         
