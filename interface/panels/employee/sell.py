@@ -1,6 +1,6 @@
 from customtkinter import *
 from ..panel import Panel
-from ...widgets import Item_button, Input, Btn, DropDown, render_text
+from ...widgets import Item_button, Input, Btn, DropDown, render_text, create_input_fields
 from database import session
 from database import get_all_products_json, get_product_by_id, get_product_by_id_json
 from database import get_all_customers, get_customer_by_id, create_order, get_or_create_customer
@@ -26,10 +26,6 @@ class EmployeeSellPanel(Panel):
         sell_btn.grid(row=0,column=0 ,sticky="e")
         sell_btn.set_action(lambda e: self.toggle_view('sell'))
         
-        multi_sell_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")    
-        multi_sell_btn.set_text("فروش چند محصول", "white", 13)
-        multi_sell_btn.grid(row=1,column=0 , sticky="e")
-        
         product_list_btn = Item_button(self.btn_frame, 150, 50, rtopleft=20, rbottomleft=20, color="#393A4E", hover_color="#434357", background="#494A5F")
         product_list_btn.set_text("لیست محصولات", "white", 13)
         product_list_btn.grid(row=2,column=0 , sticky="e")
@@ -39,8 +35,7 @@ class EmployeeSellPanel(Panel):
         self.success_message_label = CTkLabel(self, text_color="green")
         
         # # Create table 
-        # self.table = self.initialize_table(self)
-        # self.insert_content_to_table(self.table, get_all_products_json(session))
+        self.table = self.initialize_table(self)
         
         self.sell_frame = None
         self.sell_inputs = {}
@@ -55,7 +50,19 @@ class EmployeeSellPanel(Panel):
         # Show table by default
         self.current_view = None
         
-
+    def toggle_view(self, view_name):
+        if view_name == 'list' and self.current_view != 'list':
+            if self.sell_frame:
+                self.sell_frame.place_forget()
+            # Show the table
+            self.insert_content_to_table(self.table, get_all_products_json(session))
+            self.table.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
+            self.current_view = 'list'
+        elif view_name == 'sell' and self.current_view != 'sell':
+            if hasattr(self, 'table'):
+                self.table.place_forget()
+            self.sell(self)
+            self.current_view = 'sell'
     #--------------------------------------------------------------------
 
     def initialize_table(self, window):
@@ -139,7 +146,7 @@ class EmployeeSellPanel(Panel):
         self.create_sell_labels(content_frame, render_text("سایز:"), 2, 1, 'size')
         self.create_sell_labels(content_frame, render_text("موجودی:"), 2, 3, 'quantity')
 
-        self.create_input_field(content_frame, render_text("تعداد:"), 3, 2, 'quantity', container=self.sell_inputs)
+        create_input_fields(content_frame, render_text("تعداد:"), 3, 2, 'quantity', container=self.sell_inputs, just_english=True, just_number=True, show_err_callback=self.show_error_message)
 
         customers = get_all_customers(session)
         self.user_info_combo_items = [f'{customer.id}:{customer.name}' for customer in customers]
@@ -151,10 +158,10 @@ class EmployeeSellPanel(Panel):
         self.sell_userinfo_combobox = DropDown(content_frame, values=self.user_info_combo_items, width=250, variable=selected_customer, command=self.update_customer_info_inputs)
         self.sell_userinfo_combobox.grid(row=4, column=2)
         
-        self.create_input_field(content_frame, render_text("نام مشتری:"), 5, 1, 'customer_name', container=self.customer_sell_inputs)
-        self.create_input_field(content_frame, render_text("تلفن مشتری:"), 5, 3, 'customer_phone', container=self.customer_sell_inputs)
-        self.create_input_field(content_frame, render_text("آدرس مشتری:"), 6, 1, 'customer_address', container=self.customer_sell_inputs)
-        self.create_input_field(content_frame, render_text("شماره ملی:"), 6, 3, 'customer_national_number', container=self.customer_sell_inputs)
+        create_input_fields(content_frame, render_text("نام مشتری:"), 5, 1, 'customer_name',just_text=True, container=self.customer_sell_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("تلفن مشتری:"), 5, 3, 'customer_phone',just_english=True, just_number=True, container=self.customer_sell_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("آدرس مشتری:"), 6, 1, 'customer_address', container=self.customer_sell_inputs, char_limit=30, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("شماره ملی:"), 6, 3, 'customer_national_number',just_english=True, just_number=True, container=self.customer_sell_inputs, show_err_callback=self.show_error_message)
 
 
         sell_btn = Btn(content_frame, 160, 45)
@@ -165,22 +172,7 @@ class EmployeeSellPanel(Panel):
             self.show_success_message
         ))
         sell_btn.grid(row=7, column=0, columnspan=4)
-
-    def create_input_field(self, window, label_text, row, column, field_key, container, **kwargs):
-        if field_key not in self.sell_inputs:
-            temp_frame = CTkFrame(window, fg_color="transparent", corner_radius=10)
-            temp_frame.grid(row=row, column=column, sticky="ew", **kwargs)
-
-            label = CTkLabel(temp_frame, text=label_text, text_color="white", font=(None, 13))
-            label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
-            var = StringVar()
-            input_widget = Input(temp_frame, 15, 150, 35, None, var, placeholder_empty=False)
-            input_widget.set_textvariable(var)
-            input_widget.textvariable.set('')
-            input_widget.pack(expand=True, fill="both", padx=10, pady=5, side="right")
-            container[field_key] = input_widget
-
-            
+          
     def create_sell_labels(self, window, label_name, row, column, field_key, **kwargs):
         if field_key not in self.sell_labels:
             temp_frame = CTkFrame(window, fg_color="#444759", corner_radius=10)

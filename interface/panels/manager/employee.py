@@ -1,11 +1,12 @@
 from customtkinter import *
 from ..panel import Panel
-from ...widgets import Item_button, Input, Btn, DropDown, render_text
+from ...widgets import Item_button, Input, Btn, DropDown, render_text, create_input_fields
 from database import session, get_all_employees_json, create_new_user
 from database import remove_user_by_username, update_user_by_username, user_by_username
 from database import get_all_employee_usernames
 from utilities import is_windows
 from tkinter import ttk
+from awesometkinter.bidirender import isarabic, derender_text
 
 
 
@@ -163,68 +164,48 @@ class ManagerEmployeePanel(Panel):
         content_frame = CTkFrame(window, fg_color="#5B5D76")
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
-        content_frame.columnconfigure((0, 3), weight=1, pad=20, uniform='a')
+        content_frame.columnconfigure((1,2,3), weight=10, pad=20)
+        content_frame.columnconfigure(0, weight=1, pad=20)
+        content_frame.columnconfigure(4, weight=1, pad=20)
 
-
-        name_label = CTkLabel(content_frame, text="Name:", text_color="white", font=(None, 13))
-        name_label.grid(row=1, column=0)
         name = StringVar()
-        name_input = Input(content_frame, 15, 150, 35, "Name", name)
+        name_input = create_input_fields(content_frame, render_text("نام:"), 1, 1, "name",None, show_err_callback=self.show_error_message)
         name_input.set_textvariable(name)
-        name_input.grid(row=1, column=1)
         self.new_employee_inputs.append(name_input)
 
-        lastname_label = CTkLabel(content_frame, text="Lastname:", text_color="white", font=(None, 13))
-        lastname_label.grid(row=1, column=2)
         lastname = StringVar()
-        lastname_input = Input(content_frame, 15, 150, 35, "Lastname", lastname)
+        lastname_input = create_input_fields(content_frame, render_text("نام خانوادگی:"), 1, 3, "lastname", None, show_err_callback=self.show_error_message)
         lastname_input.set_textvariable(lastname)
-        lastname_input.grid(row=1, column=3)
         self.new_employee_inputs.append(lastname_input)
         
 
-        national_label = CTkLabel(content_frame, text="National Number:", text_color="white", font=(None, 13))
-        national_label.grid(row=2, column=0)
         national = StringVar()
-        national_input = Input(content_frame, 15, 150, 35, "National Number", national)
+        national_input = create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, "national", None, just_text=True, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         national_input.set_textvariable(national)
-        national_input.grid(row=2, column=1)
         self.new_employee_inputs.append(national_input)
         
 
-        # Second column
-        phone_label = CTkLabel(content_frame, text="Phone Number:", text_color="white", font=(None, 13))
-        phone_label.grid(row=2, column=2)
+        
         phone = StringVar()
-        phone_input = Input(content_frame, 15, 150, 35, "Phone Number", phone)
+        phone_input = create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None, just_text=True, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         phone_input.set_textvariable(phone)
-        phone_input.grid(row=2, column=3)
         self.new_employee_inputs.append(phone_input)
         
 
-        username_label = CTkLabel(content_frame, text="Username:", text_color="white", font=(None, 13))
-        username_label.grid(row=3, column=0)
         username = StringVar()
-        username_input = Input(content_frame, 15, 150, 35, "Username", username)
+        username_input = create_input_fields(content_frame, render_text("نام کاربری:"), 3, 1, "username", None, just_english=True, show_err_callback=self.show_error_message)
         username_input.set_textvariable(username)
-        username_input.grid(row=3, column=1)
         self.new_employee_inputs.append(username_input)
         
 
-        password_label = CTkLabel(content_frame, text="Password:", text_color="white", font=(None, 13))
-        password_label.grid(row=3, column=2)
         password = StringVar()
-        password_input = Input(content_frame, 15, 150, 35, "password", password)
+        password_input = create_input_fields(content_frame, render_text("رمز عبور:"), 3, 3, "password", None, show_err_callback=self.show_error_message)
         password_input.set_textvariable(password)
-        password_input.grid(row=3, column=3)
         self.new_employee_inputs.append(password_input)
 
-        password_repeate_label = CTkLabel(content_frame, text="Repeat Password:", text_color="white", font=(None, 13))
-        password_repeate_label.grid(row=4, column=2)
         password_repeate = StringVar()
-        password_repeate_input = Input(content_frame, 15, 150, 35, "repeat password", password_repeate)
+        password_repeate_input = create_input_fields(content_frame, render_text("تکرار رمز:"), 4, 3, "password_repeate", None, show_err_callback=self.show_error_message)
         password_repeate_input.set_textvariable(password_repeate)
-        password_repeate_input.grid(row=4, column=3)
         self.new_employee_inputs.append(password_repeate_input)
 
         btn = Btn(content_frame, 160, 45)
@@ -261,15 +242,15 @@ class ManagerEmployeePanel(Panel):
                         username:str=None, password:str=None, repeat_password:str=None):
                     
         if not (name and lastname and national and phone and username and password and repeat_password):
-            show_err_callback("Inputs cannot be empty.")
+            show_err_callback(render_text("خالی بودن ورودی"))
             return False
         
         if not (password == repeat_password):
-            show_err_callback("password and repeated password should be the same")
+            show_err_callback(render_text("مساوی نبودن رمز عبور و تکرار آن"))
             return False
         
         if len(password) < 8:
-            show_err_callback("The minimum number of characters in the password must be 8")
+            show_err_callback(render_text("کم بودن تعداد کاراکتر ها"))
             return False
         
         return True
@@ -330,11 +311,13 @@ class ManagerEmployeePanel(Panel):
             
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
-        content_frame.columnconfigure((0, 3), weight=1, pad=40, uniform='a')
+        content_frame.columnconfigure((1,2,3), weight=10)
+        content_frame.columnconfigure(0, weight=1, pad=20)
+        content_frame.columnconfigure(4, weight=1, pad=20)
 
         # Label and dropdown to select user by username
         select_user_label = CTkLabel(content_frame, text="Username:", text_color="white", font=(None, 15))
-        select_user_label.grid(row=0, column=0)
+        select_user_label.grid(row=0, column=1)
 
         usernames = get_all_employee_usernames(session)  # Fetch list of usernames
         selected_username = StringVar()
@@ -342,18 +325,18 @@ class ManagerEmployeePanel(Panel):
             self.edit_user_combobox.grid_forget()
             self.edit_user_combobox.destroy()
         self.edit_user_combobox = DropDown(content_frame, values=usernames, variable=selected_username, command=self.load_user_data)
-        self.edit_user_combobox.grid(row=0, column=1)
+        self.edit_user_combobox.grid(row=0, column=2)
 
         # Dictionary to hold Input objects
         if not self.edit_user_inputs:
             self.edit_user_inputs = {}
         
-        self.create_input_field(content_frame, "Name:", 1, 0, 'name')
-        self.create_input_field(content_frame, "Lastname:", 1, 2, 'lastname')
-        self.create_input_field(content_frame, "National Number:", 2, 0, 'national')
-        self.create_input_field(content_frame, "Phone Number:", 2, 2, 'phone')
-        self.create_input_field(content_frame, "Username:", 3, 0, 'username')
-        
+        create_input_fields(content_frame, render_text("نام:"), 1, 1, 'name', container=self.edit_user_inputs,just_text=True, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("نام خانوادگی:"), 1, 3, 'lastname', container=self.edit_user_inputs,just_text=True, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, 'national', container=self.edit_user_inputs, just_english=True, just_number=True, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, 'phone', container=self.edit_user_inputs, just_english=True, just_number=True, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("نام کاربری:"), 3, 1, 'username', container=self.edit_user_inputs, just_english=True, show_err_callback=self.show_error_message)
+
         
         
         update_btn = Btn(content_frame, 160, 45)
@@ -391,11 +374,11 @@ class ManagerEmployeePanel(Panel):
     def load_user_data(self, username):
         user_data = user_by_username(session, username)
         if user_data:
-            self.edit_user_inputs['name'].set_placeholder_text(user_data.name)
-            self.edit_user_inputs['lastname'].set_placeholder_text(user_data.lastname)
-            self.edit_user_inputs['national'].set_placeholder_text(user_data.national_number)
-            self.edit_user_inputs['phone'].set_placeholder_text(user_data.phone)
-            self.edit_user_inputs['username'].set_placeholder_text(user_data.user_name)
+            self.edit_user_inputs['name'].set_placeholder_text(derender_text(user_data.name) if isarabic(user_data.name) else user_data.name)
+            self.edit_user_inputs['lastname'].set_placeholder_text(derender_text(user_data.lastname) if isarabic(user_data.lastname) else user_data.lastname)
+            self.edit_user_inputs['national'].set_placeholder_text(derender_text(user_data.national_number) if isarabic(user_data.national_number) else user_data.national_number)
+            self.edit_user_inputs['phone'].set_placeholder_text(derender_text(user_data.phone) if isarabic(user_data.phone) else user_data.phone)
+            self.edit_user_inputs['username'].set_placeholder_text(derender_text(user_data.user_name) if isarabic(user_data.user_name) else user_data.user_name)
             # self.edit_user_inputs['password'].set_placeholder_text(user_data.password)
 
     

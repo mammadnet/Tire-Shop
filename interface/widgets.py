@@ -1,7 +1,7 @@
 from customtkinter import *
 from math import cos, pi, sin
 from typing import Iterator
-from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text, render_text
+from awesometkinter.bidirender import add_bidi_support_for_entry, isarabic, derender_text, render_text, is_neutral
 
 # A customized CTkButton with a predefined style and bidi text support.
 class Btn(CTkButton):
@@ -26,7 +26,7 @@ class Btn(CTkButton):
 # A customized CTkEntry with advanced features like character limits,
 # bidi text support, and placeholder handling.
 class Input(CTkEntry):
-    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True,just_english:bool=False, **kwargs):
+    def __init__(self,master, corner_radius, width, height, placeholder_text,textvariable:StringVar, show=None, char_limit:int=20, show_err_callback=None, err_message=None, placeholder_empty=True,just_text=False, just_english:bool=False,just_number=False, **kwargs):
         super().__init__(master=master,corner_radius=corner_radius, width=width, height=height, placeholder_text=placeholder_text,show=show, **kwargs)
         # Enable bidi support for right-to-left languages within the entry widget.
         add_bidi_support_for_entry(self._entry)
@@ -41,11 +41,16 @@ class Input(CTkEntry):
         self.placeholder_text = placeholder_text
         self.placeholder_empty = placeholder_empty # If True, get() returns "" when the placeholder is visible.
         self.just_english = just_english
+        self.just_number = just_number
+        self.just_text = just_text
         
         # Set up the validation and behavior by binding callbacks to the textvariable.
         self._set_limit()
         self._set_just_english()
         self._set_justify()
+        self._set_just_number()
+        self._set_just_text()
+        
         
     def disable(self):
         self.configure(state='disabled')
@@ -60,7 +65,12 @@ class Input(CTkEntry):
         # Display the placeholder text initially if it exists.
         if self.placeholder_text:
             self.textvariable.set(self.placeholder_text)
-            
+        self._set_limit()
+        self._set_just_english()
+        self._set_justify()
+        self._set_just_number()
+        self._set_just_text()
+        
         
     # This callback is triggered by trace_add whenever the entry's text is changed.
     def _entry_update_callback(self, *k):
@@ -74,7 +84,7 @@ class Input(CTkEntry):
                 if self.err_message:
                     self.show_err_callback(self.err_message)
                 else:
-                    message = f'Cannot be more than {self.char_limit} characters.'
+                    message = render_text("بیش از حد بودن کاراکتر های وارد شده")
                     self.show_err_callback(message)
     
     # Binds the character limit validation to the textvariable's 'write' event.
@@ -82,6 +92,7 @@ class Input(CTkEntry):
         self.textvariable.trace_add('write', self._entry_update_callback)
     
     # Callback to automatically adjust text justification based on the first character's language.
+
     def _add_justify_for_arabic(self, *k):
         val = self.textvariable.get()
         if len(val) == 1:
@@ -94,6 +105,26 @@ class Input(CTkEntry):
     def _set_justify(self):
         if not self.just_english:
             self.textvariable.trace_add('write', self._add_justify_for_arabic)
+    def _set_just_number(self):
+        if self.just_number:
+            self.textvariable.trace_add('write', self.set_just_number)
+        
+    
+    def set_just_number(self, *k):
+        val = self.textvariable.get()
+        number = True
+        if val:
+            if not val[0].isdigit():
+                self.textvariable.set(val[1:])
+                number = False
+            
+            elif not val[-1].isdigit():
+                self.textvariable.set(val[:-1])
+                number = False
+                
+            if (not number) and self.show_err_callback:
+                message = render_text("وارد کردن عدد")
+                self.show_err_callback(message)
         
     # Callback to enforce that only English characters can be entered.
     def _set_english_only(self, *k):
@@ -115,13 +146,36 @@ class Input(CTkEntry):
                 
             # If an invalid character was removed, show an error message.
             if arabic and self.show_err_callback:
-                message = 'Only English characters are allowed.'
+                message = render_text("وارد کردن کاراکتر انگلیسی")
                 self.show_err_callback(message)
     
     # Binds the English-only validation callback if the 'just_english' flag is set.
     def _set_just_english(self):
         if self.just_english:
             self.textvariable.trace_add('write', self._set_english_only)
+    
+    def _set_just_text(self):
+        if self.just_text:
+            self.textvariable.trace_add('write', self.set_just_text)
+    
+    def set_just_text(self, *k):
+        val = self.textvariable.get()
+        
+        text = True
+        if val:
+            # Check if the first or last character is Arabic
+            if val[0].isdigit():
+                self.textvariable.set(val[1:])
+                text = False
+            
+            elif val[-1].isdigit():
+                self.textvariable.set(val[:-1])
+                text = False
+            
+            if not text and self.show_err_callback:
+                    message = render_text("وارد کردن کاراکتر")
+                    self.show_err_callback(message)
+        
     
     def set_placeholder_text(self, text:str):
         if isarabic(text):
@@ -259,17 +313,17 @@ def create_updatable_labels(window, label_name, row, column, field_key, containe
 
 # A factory function to create a labeled input field.
 # It uses a container dictionary to store a reference to the created widget, preventing duplicates.
-def create_input_fields(window, label_text, row, column, field_key, container:dict,font_size=13, **kwargs):
+def create_input_fields(window, label_text, row, column, field_key, container:dict,font_size=13, char_limit = 20,just_english=False,just_number=False,just_text=False, show_err_callback=None, **kwargs):
     # Only create the widget if it doesn't already exist in the container.
+
     if (container is None) or field_key not in container:
         frame = CTkFrame(window, fg_color="transparent", bg_color="transparent")
         frame.grid(row=row, column=column, sticky="ew", **kwargs)
         label = CTkLabel(frame, text=label_text, text_color="white", font=(None, font_size))
         label.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         var = StringVar()
-        input_widget = Input(frame, 15, 150, 35, None, var, placeholder_empty=False)
+        input_widget = Input(frame, 15, 150, 35, None, var, placeholder_empty=False, just_english=just_english, just_number=just_number, just_text=just_text,char_limit=char_limit, show_err_callback=show_err_callback)
         input_widget.set_textvariable(var)
-        input_widget.textvariable.set('')
         input_widget.pack(expand=True, fill="both", padx=10, pady=5, side="right")
         # Store the created input widget in the container for future access.
         if container is not None:

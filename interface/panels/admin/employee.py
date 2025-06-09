@@ -1,6 +1,7 @@
 from customtkinter import *
 from ..panel import Panel
 from ...widgets import Item_button, Input, Btn, DropDown, render_text, create_input_fields
+from awesometkinter.bidirender import derender_text, isarabic
 from database import session, create_new_user
 from database import remove_user_by_username, update_user_by_username, user_by_username
 from database import get_all_employee_and_manager_json, get_all_employee_and_manager_usernames
@@ -193,37 +194,37 @@ class AdminEmployeePanel(Panel):
 
         # --- Input Fields ---
         name = StringVar()
-        name_input = create_input_fields(content_frame, render_text("نام:"), 1, 1, "name", None)
+        name_input = create_input_fields(content_frame, render_text("نام:"), 1, 1, "name", None,just_text=True, show_err_callback=self.show_error_message)
         name_input.set_textvariable(name)
         self.new_employee_inputs.append(name_input)
 
         lastname = StringVar()
-        lastname_input = create_input_fields(content_frame, render_text("نام خونوادگی:"), 1, 3, "name", None)
+        lastname_input = create_input_fields(content_frame, render_text("نام خونوادگی:"), 1, 3, "name", None,just_text=True, show_err_callback=self.show_error_message)
         lastname_input.set_textvariable(lastname)
         self.new_employee_inputs.append(lastname_input)
 
         national = StringVar()
-        national_input =  create_input_fields(content_frame, render_text("کد ملی:"), 2, 1, "national", None)
+        national_input =  create_input_fields(content_frame, render_text("کد ملی:"), 2, 1, "national", None,just_english=True, just_number=True, show_err_callback=self.show_error_message)
         national_input.set_textvariable(national)
         self.new_employee_inputs.append(national_input)
 
         phone = StringVar()
-        phone_input =  create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None)
+        phone_input =  create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None,just_english=True,just_number=True, show_err_callback=self.show_error_message)
         phone_input.set_textvariable(phone)
         self.new_employee_inputs.append(phone_input)
 
         username = StringVar()
-        username_input =  create_input_fields(content_frame, render_text("نام کاربری"), 3, 1, "username", None)
+        username_input =  create_input_fields(content_frame, render_text("نام کاربری:"), 3, 1, "username", None,just_english=True, show_err_callback=self.show_error_message)
         username_input.set_textvariable(username)
         self.new_employee_inputs.append(username_input)
 
         password = StringVar()
-        password_input =  create_input_fields(content_frame, render_text("رمز:"), 3, 3, "password", None)
+        password_input =  create_input_fields(content_frame, render_text("رمز:"), 3, 3, "password", None,just_english=True, char_limit=25, show_err_callback=self.show_error_message)
         password_input.set_textvariable(password)
         self.new_employee_inputs.append(password_input)
 
         password_repeate = StringVar()
-        password_repeate_input =  create_input_fields(content_frame, render_text("تکرار رمز عبور:"), 4, 3, "repeat_password", None)
+        password_repeate_input =  create_input_fields(content_frame, render_text("تکرار رمز عبور:"), 4, 3, "repeat_password", None,just_english=True, char_limit=25, show_err_callback=self.show_error_message)
         password_repeate_input.set_textvariable(password_repeate)
         self.new_employee_inputs.append(password_repeate_input)
 
@@ -344,11 +345,15 @@ class AdminEmployeePanel(Panel):
             
         content_frame.place(relheight=.9, relwidth=.8, relx=.02, rely=.05)
         content_frame.rowconfigure(tuple(range(0, 8)), weight=1)
-        content_frame.columnconfigure((0, 3), weight=1, pad=40, uniform='a')
 
-        # Dropdown to select the user to be edited.
+
+        content_frame.columnconfigure((1,2, 3), weight=10, pad=40, uniform='a')
+        content_frame.columnconfigure(0, weight=1, pad=20, uniform='a')
+        content_frame.columnconfigure(4, weight=1, pad=20, uniform='a')
+        # Label and dropdown to select user by username
+
         select_user_label = CTkLabel(content_frame, text="Username:", text_color="white", font=(None, 15))
-        select_user_label.grid(row=0, column=0)
+        select_user_label.grid(row=0, column=1)
 
         usernames = get_all_employee_and_manager_usernames(session)
         selected_username = StringVar()
@@ -358,19 +363,18 @@ class AdminEmployeePanel(Panel):
             self.edit_user_combobox.destroy()
         # The 'command' argument links the load_user_data method to the dropdown's selection event.
         self.edit_user_combobox = DropDown(content_frame, values=usernames, variable=selected_username, command=self.load_user_data)
-        self.edit_user_combobox.grid(row=0, column=1)
+        self.edit_user_combobox.grid(row=0, column=2)
 
         # Dictionary to hold the input field widgets for easy access.
         if not self.edit_user_inputs:
             self.edit_user_inputs = {}
         
-        # Create the input fields for user data.
-        self.create_input_field(content_frame, "Name:", 1, 0, 'name')
-        self.create_input_field(content_frame, "Lastname:", 1, 2, 'lastname')
-        self.create_input_field(content_frame, "National Number:", 2, 0, 'national')
-        self.create_input_field(content_frame, "Phone Number:", 2, 2, 'phone')
-        self.create_input_field(content_frame, "Username:", 3, 0, 'username')
-        
+
+        self.create_input_field(content_frame, render_text("نام:"), 1, 1, 'name', just_text=True, show_err_callback=self.show_error_message)
+        self.create_input_field(content_frame, render_text("نام خانوادگی:"), 1, 3, 'lastname', just_text=True, show_err_callback=self.show_error_message)
+        self.create_input_field(content_frame, render_text("شماره ملی:"), 2, 1, 'national', just_number=True, just_english=True, show_err_callback=self.show_error_message)
+        self.create_input_field(content_frame, render_text("شماره تلفن:"), 2, 3, 'phone', just_number=True,just_english=True, show_err_callback=self.show_error_message)
+        self.create_input_field(content_frame, render_text("نام کاربری:"), 3, 1, 'username', show_err_callback=self.show_error_message, just_english=True)
         
         # The 'Update Information' button.
         update_btn = Btn(content_frame, 160, 45)
@@ -392,16 +396,9 @@ class AdminEmployeePanel(Panel):
 
     # Helper function to create a labeled input field within the edit form.
     def create_input_field(self, window, label_text, row, column, field_key, **kwargs):
-        # Creates the widget only if it doesn't already exist in the dictionary.
-        if field_key not in self.edit_user_inputs:
-            label = CTkLabel(window, text=label_text, text_color="white", font=(None, 13))
-            label.grid(row=row, column=column, **kwargs)
-            var = StringVar()
-            input_widget = Input(window, 15, 150, 35, None, var, placeholder_empty=False)
-            input_widget.set_textvariable(var)
-            input_widget.textvariable.set('')
-            input_widget.grid(row=row, column=column+1)
-            self.edit_user_inputs[field_key] = input_widget
+
+        create_input_fields(window, label_text, row, column, field_key, container=self.edit_user_inputs, font_size=15, **kwargs)
+        
 
 
     # This method is called whenever a new user is selected in the 'edit' dropdown.
@@ -409,12 +406,16 @@ class AdminEmployeePanel(Panel):
         """Fetches the selected user's data and populates the form fields with it."""
         user_data = user_by_username(session, username)
         if user_data:
+
             # Use set_placeholder_text to show the current data in the input fields.
-            self.edit_user_inputs['name'].set_placeholder_text(user_data.name)
-            self.edit_user_inputs['lastname'].set_placeholder_text(user_data.lastname)
-            self.edit_user_inputs['national'].set_placeholder_text(user_data.national_number)
-            self.edit_user_inputs['phone'].set_placeholder_text(user_data.phone)
-            self.edit_user_inputs['username'].set_placeholder_text(user_data.user_name)
+             
+            self.edit_user_inputs['name'].set_placeholder_text(derender_text(user_data.name) if isarabic(user_data.name) else user_data.name)
+            self.edit_user_inputs['lastname'].set_placeholder_text(derender_text(user_data.lastname) if isarabic(user_data.lastname) else user_data.lastname)
+            self.edit_user_inputs['national'].set_placeholder_text(derender_text(user_data.national_number) if isarabic(user_data.national_number) else user_data.national_number)
+            self.edit_user_inputs['phone'].set_placeholder_text(derender_text(user_data.phone) if isarabic(user_data.phone) else user_data.phone)
+            self.edit_user_inputs['username'].set_placeholder_text(derender_text(user_data.user_name) if isarabic(user_data.user_name) else user_data.user_name)
+            # self.edit_user_inputs['password'].set_placeholder_text(user_data.password)
+
     
     # The logic executed when the 'Update Information' button is clicked.
     def update_user_action(self, username, name, lastname, phone, national, new_username, password, show_error_callback, show_success_callback):
