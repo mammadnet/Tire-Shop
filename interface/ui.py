@@ -555,9 +555,6 @@ class Employee_page(Page):
         sell_btn.set_text('فروش', fill='#FFFFFF', font_size=self.button_font_size)
         sell_btn.grid(row=0, column=0, sticky='e')
         
-        products_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
-        products_btn.set_text('محصولات', fill='#FFFFFF', font_size=self.button_font_size)
-        products_btn.grid(row=1, column=0, sticky='e')
         
         reports_btn = Item_button(self.buttons_frame, 290, 64, rtopleft=15, rbottomleft=15, color=self.button_color,hover_color=self.button_hover_color,background="#5B5D76")
         reports_btn.set_action(lambda _: self.toggle_panel('report'))
