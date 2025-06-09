@@ -180,14 +180,14 @@ class ManagerEmployeePanel(Panel):
         
 
         national = StringVar()
-        national_input = create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, "national", None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
+        national_input = create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, "national", None, just_text=True, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         national_input.set_textvariable(national)
         self.new_employee_inputs.append(national_input)
         
 
         
         phone = StringVar()
-        phone_input = create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
+        phone_input = create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None, just_text=True, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         phone_input.set_textvariable(phone)
         self.new_employee_inputs.append(phone_input)
         
@@ -331,8 +331,8 @@ class ManagerEmployeePanel(Panel):
         if not self.edit_user_inputs:
             self.edit_user_inputs = {}
         
-        create_input_fields(content_frame, render_text("نام:"), 1, 1, 'name', container=self.edit_user_inputs, show_err_callback=self.show_error_message)
-        create_input_fields(content_frame, render_text("نام خانوادگی:"), 1, 3, 'lastname', container=self.edit_user_inputs, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("نام:"), 1, 1, 'name', container=self.edit_user_inputs,just_text=True, show_err_callback=self.show_error_message)
+        create_input_fields(content_frame, render_text("نام خانوادگی:"), 1, 3, 'lastname', container=self.edit_user_inputs,just_text=True, show_err_callback=self.show_error_message)
         create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, 'national', container=self.edit_user_inputs, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, 'phone', container=self.edit_user_inputs, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         create_input_fields(content_frame, render_text("نام کاربری:"), 3, 1, 'username', container=self.edit_user_inputs, just_english=True, show_err_callback=self.show_error_message)
