@@ -180,14 +180,14 @@ class ManagerEmployeePanel(Panel):
         
 
         national = StringVar()
-        national_input = create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, "national", None, just_text=True, just_english=True, just_number=True, show_err_callback=self.show_error_message)
+        national_input = create_input_fields(content_frame, render_text("شماره ملی:"), 2, 1, "national", None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         national_input.set_textvariable(national)
         self.new_employee_inputs.append(national_input)
         
 
         
         phone = StringVar()
-        phone_input = create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None, just_text=True, just_english=True, just_number=True, show_err_callback=self.show_error_message)
+        phone_input = create_input_fields(content_frame, render_text("شماره تلفن:"), 2, 3, "phone", None, just_english=True, just_number=True, show_err_callback=self.show_error_message)
         phone_input.set_textvariable(phone)
         self.new_employee_inputs.append(phone_input)
         
