@@ -14,19 +14,7 @@ This application is designed to streamline tire shop operations with a focus on 
 
 The entire system is built using pure Python, utilizing only built-in libraries and minimal external dependencies, making it lightweight and fast.
 
-## Interface Demonstrations
 
-### Login Page
-![Login Page](./login_page.gif)
-
-### Admin Dashboard
-![Admin Dashboard](./admin_page.gif)
-
-### Manager Dashboard
-![Manager Dashboard](./manager_page.gif)
-
-### Employee Dashboard
-![Employee Dashboard](./employee_page.gif)
 
 ## Features
 
@@ -77,6 +65,20 @@ tireshop/
 ├── assets/           # Images and resources
 └── tests/            # Unit tests
 ```
+
+## Interface Demonstrations
+
+### Login Page
+![Login Page](./login_page.gif)
+
+### Admin Dashboard
+![Admin Dashboard](./admin_page.gif)
+
+### Manager Dashboard
+![Manager Dashboard](./manager_page.gif)
+
+### Employee Dashboard
+![Employee Dashboard](./employee_page.gif)
 
 
 
