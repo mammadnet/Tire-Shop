@@ -1,6 +1,6 @@
 # Tire Shop Management System
 
-A comprehensive tire shop management system developed entirely in pure Python, demonstrating the power of Python for building professional desktop applications.
+A comprehensive tire shop management system developed entirely in Python, demonstrating the power of Python for building professional desktop applications.
 ## About The Project
 
 This application is designed to streamline tire shop operations with a focus on Persian-language markets. It handles everything from inventory management to sales tracking, featuring:
